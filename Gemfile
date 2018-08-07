@@ -29,7 +29,6 @@ gem 'jbuilder', '~> 2.5'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'figaro', '~> 1.1', '>= 1.1.1'
-gem 'coveralls', '~> 0.8.22'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -37,6 +36,7 @@ group :development, :test do
   gem 'rspec-rails', ">= 2.0.0.beta"
   gem 'rspec', '~> 3.7'
   gem 'faker', '~> 1.9', '>= 1.9.1'
+  gem 'simplecov', '~> 0.16.1'
 end
 
 group :development do

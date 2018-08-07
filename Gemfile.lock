@@ -78,6 +78,7 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.5)
     crass (1.0.4)
+    database_cleaner (1.7.0)
     diff-lcs (1.3)
     docile (1.3.1)
     erubi (1.7.1)
@@ -199,6 +200,8 @@ GEM
     selenium-webdriver (3.14.0)
       childprocess (~> 0.5)
       rubyzip (~> 1.2)
+    shoulda-matchers (3.1.2)
+      activesupport (>= 4.0.0)
     simplecov (0.16.1)
       docile (~> 1.1)
       json (>= 1.8, < 3)
@@ -247,6 +250,7 @@ DEPENDENCIES
   capybara (>= 2.15, < 4.0)
   chromedriver-helper
   coffee-rails (~> 4.2)
+  database_cleaner
   factory_bot_rails (~> 4.10)
   faker (~> 1.9, >= 1.9.1)
   figaro (~> 1.1, >= 1.1.1)
@@ -260,6 +264,7 @@ DEPENDENCIES
   rspec-rails (>= 2.0.0.beta)
   sass-rails (~> 5.0)
   selenium-webdriver
+  shoulda-matchers (~> 3.1)
   simplecov (~> 0.16.1)
   spring
   spring-watcher-listen (~> 2.0.0)

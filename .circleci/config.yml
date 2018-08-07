@@ -1,0 +1,54 @@
+---
+version: 2
+jobs:
+  build:
+    working_directory: ~/dimba-api
+    docker:
+      - image: circleci/ruby:2.4.1-node
+        environment:
+          PGHOST: localhost
+          PGUSER: dimba-api
+          RAILS_ENV: test
+          DATABASE_URL: postgresql://dimba-api@localhost/dimba-api
+      - image: postgres:9.5
+        environment:
+          POSTGRES_USER: dimba-api
+          POSTGRES_DB: dimba-api
+          POSTGRES_PASSWORD: ""
+    steps:
+      - checkout
+
+      # Restore Cached Dependencies
+      - type: cache-restore
+        name: Restore bundle cache
+        key: dimba-api-{{ checksum "Gemfile.lock" }}
+
+      # Bundle install dependencies
+      - run: bundle install --path vendor/bundle
+
+      # Cache Dependencies
+      - type: cache-save
+        name: Store bundle cache
+        key: dimba-api-{{ checksum "Gemfile.lock" }}
+        paths:
+          - vendor/bundle
+
+      # Wait for DB
+      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      # Setup the environment
+      # - run: figaro install
+
+      # Setup the database
+      - run:
+          name: Set up DB
+          command: |
+            bundle exec rake db:create db:schema:load --trace
+            bundle exec rake db:migrate
+          environment:
+            DATABASE_URL: "postgres://dimba-api@localhost:5432/dimba-api"
+
+
+      # Run the tests
+      - run: bundle exec rspec spec
+      - run: bundle exec rake coveralls:push

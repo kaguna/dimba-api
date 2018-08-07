@@ -258,7 +258,7 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   coveralls (~> 0.8.22)
   factory_bot_rails (~> 4.10)
-  faker
+  faker (~> 1.9, >= 1.9.1)
   figaro (~> 1.1, >= 1.1.1)
   jbuilder (~> 2.5)
   jquery-rails
@@ -281,4 +281,4 @@ RUBY VERSION
    ruby 2.4.1p111
 
 BUNDLED WITH
-   1.16.1
+   1.16.2

@@ -1,0 +1,5 @@
+POSTGRES_USER: 'postgres'
+POSTGRES_PASSWORD: 'PASSWORD'
+POSTGRES_HOST: 'localhost'
+POSTGRES_DB: 'dimba'
+POSTGRES_TEST_DB: 'dimba_test'

@@ -1,24 +1,54 @@
-# README
+# DIMBA API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Dimba is an application used to manage local football leagues. This is the API of the app
 
-Things you may want to cover:
+## Installation
 
-* Ruby version
+To get started with this project:
 
-* System dependencies
+>- Clone this repository
+        
+        git clone https://github.com/kaguna/dimba-api.git
+        cd dimba-api
 
-* Configuration
+>- Install all the required dependencies
 
-* Database creation
+        bundle
+>- Setup the database
 
-* Database initialization
+This project uses Postgresql. You will need to install postgres.On a Mac do: 
 
-* How to run the test suite
+        brew install postgres
 
-* Services (job queues, cache servers, search engines, etc.)
+Now setup all the environment variables:
 
-* Deployment instructions
+        figaro install
 
-* ...
+Inside the generated file in `config/application.yml` file, paste the sample data from `config/applicaion.yml.sample` file. Edit these variables to fit your local configuration of postgres.
+
+Now do:
+
+        rails db:create
+        rails db:migrate
+
+If you want data sample data in your database, do:
+
+        rails db:seed
+
+- Run the Server
+
+        rails s
+
+#### Tests
+
+To run tests
+
+    rspec spec
+
+#### Contribution
+This repository is a safe place for contribution.
+1. Fork it (https://github.com/yourname/yourproject/fork)
+2. Create your feature branch (git checkout -b feature/fooBar)
+3. Commit your changes (git commit -am 'Add some fooBar')
+4. Push to the branch (git push origin feature/fooBar)
+5. Create a new Pull Request

@@ -20,9 +20,11 @@
 .idea/
 .DS_Store
 .ruby-version
+lib/tasks/.keep
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
 # Ignore application configuration
 /config/application.yml
+coverage

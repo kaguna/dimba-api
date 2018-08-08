@@ -6,6 +6,7 @@ jobs:
     docker:
       - image: circleci/ruby:2.4.1-node
         environment:
+          CC_TEST_REPORTER_ID: 3b1eb72982e5d07c429f5e28389be86acc4f108999e3a8e6248d99b78c9236a4
           PGHOST: localhost
           PGUSER: dimba-api
           RAILS_ENV: test
@@ -36,9 +37,6 @@ jobs:
       # Wait for DB
       - run: dockerize -wait tcp://localhost:5432 -timeout 1m
 
-      # Setup the environment
-      # - run: figaro install
-
       # Setup the database
       - run:
           name: Set up DB
@@ -48,7 +46,15 @@ jobs:
           environment:
             DATABASE_URL: "postgres://dimba-api@localhost:5432/dimba-api"
 
-
-      # Run the tests
-      - run: bundle exec rspec spec
-      - run: bundle exec rake coveralls:push
+      - run:
+          name: Setup Code Climate test-reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+      
+      - run:
+          name: Run tests
+          command: |
+            bundle exec rspec
+            ./cc-test-reporter before-build
+            ./cc-test-reporter after-build --exit-code $?

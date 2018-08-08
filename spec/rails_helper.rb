@@ -1,11 +1,6 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 require 'simplecov'
-if ENV['CI']
-  require 'coveralls'
-  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
-  Coveralls.wear!('rails')
-end
 SimpleCov.start 'rails'
 >>>>>>> feat(teamPage): enable team creation (#1)
 ENV['RAILS_ENV'] ||= 'test'

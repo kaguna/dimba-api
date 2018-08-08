@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # require database cleaner at the top level
 require 'database_cleaner'
 
@@ -26,8 +25,4 @@ RSpec.configure do |config|
       example.run
     end
   end
-=======
-RSpec.configure do |config|
-  config.include FactoryBot::Syntax::Methods
->>>>>>> feat(teamPage): enable team creation (#1)
 end

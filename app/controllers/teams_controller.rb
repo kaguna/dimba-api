@@ -42,6 +42,18 @@ class TeamsController < ApplicationController
     end
   end
 
+  def destroy
+    delete_team = Team.find_by(id: params[:team_id])
+
+    if delete_team
+      delete_team.destroy
+      render json: { message: "Team was successfully deleted" }, status: :ok
+
+    else
+      render json: { errors: "The team does not exist" }, status: :bad_request
+    end
+  end
+
   private
 
   def team_params

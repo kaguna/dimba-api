@@ -66,6 +66,28 @@ RSpec.describe Team, type: :request do
     end
   end
 
+  describe "DELETE /team/delete/:team_id" do
+
+    context "when the request is valid" do
+      before { delete "/teams/delete/#{team_id}" }
+
+      it "returns a success message and status code 200" do
+        expect(json["message"]).to eq("Team was successfully deleted")
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context "when the request is invalid" do
+      let(:team_id) { 100 }
+      before { delete "/teams/delete/#{team_id}" }
+
+      it "returns an error message and status code 400" do
+        expect(json["errors"]).to eq("The team does not exist")
+        expect(response).to have_http_status(400)
+      end
+    end
+  end
+
   describe 'GET /teams/show/:id' do
 
     context 'when the request is valid' do

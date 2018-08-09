@@ -4,15 +4,16 @@ require './spec/support/request_helper'
 RSpec.describe Team, type: :request do
   include RequestSpecHelper
   let(:team_params) {
-      {
+   {
         name: 'Kabonge',
         description: 'where pride meets passion',
         location: 'Kirinyaga',
         nickname: '11 Bullets'
-      }
+   }
    }
 
   let!(:teams) { create_list(:team, 10) }
+  let(:team_id) { teams.first.id }
 
   describe 'POST teams/create' do
 
@@ -64,5 +65,57 @@ RSpec.describe Team, type: :request do
       end
     end
   end
-end
 
+  describe 'GET /teams/show/:id' do
+
+    context 'when the request is valid' do
+      before { get "/teams/show/#{team_id}" }
+
+      it 'returns a hash with 7 keys' do
+        expect(json.size).to eq 7
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when the request is invalid' do
+      let(:team_id) { 100 }
+      before { get "/teams/show/#{team_id}" }
+
+      it 'returns an error message and status code 400' do
+        expect(response).to have_http_status(400)
+        expect(json['errors']).to eq("The team does not exist")
+      end
+    end
+  end
+
+  describe 'PUT /teams/edit/:id' do
+
+    context 'when the request is valid' do
+      before { put "/teams/edit/#{team_id}" }
+
+      it 'returns a hash with 7 keys' do
+        expect(json.size).to eq 7
+      end
+
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when the request is invalid' do
+      let(:team_id) { 100 }
+      before { put "/teams/edit/#{team_id}" }
+
+      it 'returns an error message' do
+        expect(json['errors']).to eq("The team does not exist")
+      end
+
+      it 'returns status code 400' do
+        expect(response).to have_http_status(400)
+      end
+    end
+  end
+end

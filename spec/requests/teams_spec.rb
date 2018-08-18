@@ -3,25 +3,18 @@ require "./spec/support/request_helper"
 
 RSpec.describe Team, type: :request do
   include RequestSpecHelper
-  let(:team_params) {
-   {
-        name: "Kabonge",
-        description: "where pride meets passion",
-        location: "Kirinyaga",
-        nickname: "11 Bullets"
-   }
-   }
 
   let!(:teams) { create_list(:team, 10) }
   let(:team_id) { teams.first.id }
 
-  describe "POST teams/create" do
+  let(:team_params) { attributes_for(:team) }
 
+  describe "POST teams/create" do
     context "when the request is valid" do
       before { post "/teams", params: team_params }
 
-      it "creates a new team" do
-        expect(json["name"]).to eq("Kabonge")
+      it "creates a new team with 7 attributes" do
+        expect(json.size).to eq 7
       end
 
       it "returns status code 201" do
@@ -52,11 +45,10 @@ RSpec.describe Team, type: :request do
   end
 
   describe "GET /teams" do
-
     context "when the request is valid" do
       before { get "/teams" }
 
-      it "shows at least one team with a name" do
+      it "shows an array of 10 teams" do
         expect(json.size).to eq 10
       end
 
@@ -67,7 +59,6 @@ RSpec.describe Team, type: :request do
   end
 
   describe "DELETE /team/:team_id" do
-
     context "when the request is valid" do
       before { delete "/teams/#{team_id}" }
 
@@ -89,7 +80,6 @@ RSpec.describe Team, type: :request do
   end
 
   describe "GET /teams/show/:id" do
-
     context "when the request is valid" do
       before { get "/teams/#{team_id}" }
 
@@ -114,7 +104,6 @@ RSpec.describe Team, type: :request do
   end
 
   describe "PUT /teams/edit/:id" do
-
     context "when the request is valid" do
       before { put "/teams/#{team_id}" }
 

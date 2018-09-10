@@ -1,5 +1,5 @@
-require 'rails_helper'
-require './spec/support/request_helper'
+require "rails_helper"
+require "./spec/support/request_helper"
 
 RSpec.describe Event, type: :model do
   it "is valid with valid attributes" do

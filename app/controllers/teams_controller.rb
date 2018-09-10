@@ -1,5 +1,4 @@
 class TeamsController < ApplicationController
-
   def index
     render json: Team.all, status: :ok
   end
@@ -12,7 +11,7 @@ class TeamsController < ApplicationController
 
     else
       render json: {
-          errors: 'The team does not exist'
+        errors: "The team does not exist"
       }, status: :bad_request
     end
   end
@@ -37,7 +36,7 @@ class TeamsController < ApplicationController
 
     else
       render json: {
-          errors: 'The team does not exist'
+        errors: "The team does not exist"
       }, status: :bad_request
     end
   end
@@ -58,10 +57,10 @@ class TeamsController < ApplicationController
 
   def team_params
     params.permit(
-        :name,
-        :description,
-        :location,
-        :nickname
+      :name,
+      :description,
+      :location,
+      :nickname
     )
   end
 end

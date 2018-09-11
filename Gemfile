@@ -36,6 +36,7 @@ group :development, :test do
   gem 'guard-rspec', require: false
   gem 'rspec-rails', ">= 2.0.0.beta"
   gem 'rspec', '~> 3.7'
+  gem 'guard-rspec'
   gem 'faker', '~> 1.9', '>= 1.9.1'
   gem 'simplecov', '~> 0.16.1'
 end

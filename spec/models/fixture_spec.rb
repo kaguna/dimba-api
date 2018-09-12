@@ -1,5 +1,5 @@
-require 'rails_helper'
-require './spec/support/request_helper'
+require "rails_helper"
+require "./spec/support/request_helper"
 
 RSpec.describe Fixture, type: :model do
   describe "Validations" do

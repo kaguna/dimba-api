@@ -33,8 +33,10 @@ gem 'figaro', '~> 1.1', '>= 1.1.1'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'guard-rspec', require: false
   gem 'rspec-rails', ">= 2.0.0.beta"
   gem 'rspec', '~> 3.7'
+  gem 'guard-rspec'
   gem 'faker', '~> 1.9', '>= 1.9.1'
   gem 'simplecov', '~> 0.16.1'
 end

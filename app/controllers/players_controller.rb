@@ -1,4 +1,5 @@
 class PlayersController < ApplicationController
+  before_action authenticate_user_from_token!
   before_action :set_player, only: [:show, :update, :destroy]
 
   def index

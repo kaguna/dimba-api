@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  # devise_for :users
+  scope "user" do
+    post "/login" => "sessions#create"
+    post "/sign_up" => "users#signup"
+  end
+
   scope "teams" do
     get "/" => "teams#index"
     get "/:team_id" => "teams#show"

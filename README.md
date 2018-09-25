@@ -2,6 +2,7 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/24673a0d1280b4efe7d1/maintainability)](https://codeclimate.com/github/kaguna/dimba-api/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/24673a0d1280b4efe7d1/test_coverage)](https://codeclimate.com/github/kaguna/dimba-api/test_coverage)
+[![Open Source Helpers](https://www.codetriage.com/kaguna/dimba-api/badges/users.svg)](https://www.codetriage.com/kaguna/dimba-api)
 
 Dimba is an application used to manage local football leagues. This is the API of the app
 

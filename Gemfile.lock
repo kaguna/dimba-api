@@ -48,7 +48,7 @@ GEM
       io-like (~> 0.3.0)
     arel (9.0.0)
     ast (2.4.0)
-    autoprefixer-rails (9.1.4)
+    autoprefixer-rails (9.1.1)
       execjs
     bcrypt (3.1.12)
     bindex (0.5.0)
@@ -99,6 +99,10 @@ GEM
     formatador (0.2.5)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
+    graphiql-rails (1.4.11)
+      railties
+      sprockets-rails
+    graphql (1.7.4)
     guard (2.14.2)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
@@ -301,6 +305,8 @@ DEPENDENCIES
   factory_bot_rails (~> 4.10)
   faker (~> 1.9, >= 1.9.1)
   figaro (~> 1.1, >= 1.1.1)
+  graphiql-rails
+  graphql (= 1.7.4)
   guard-rspec
   jbuilder (~> 2.5)
   jquery-rails

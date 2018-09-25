@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  scope "user" do
+    post "/sign_up" => "register#signup"
+    post "/login" => "user_token#create"
+  end
+
   scope "teams" do
     get "/" => "teams#index"
     get "/:team_id" => "teams#show"

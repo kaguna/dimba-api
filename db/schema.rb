@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_20_122946) do
+ActiveRecord::Schema.define(version: 2018_09_25_134218) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,27 @@ ActiveRecord::Schema.define(version: 2018_09_20_122946) do
     t.integer "away_team"
     t.text "season"
     t.date "match_day"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "leagues", force: :cascade do |t|
+    t.text "title"
+    t.text "season"
+    t.integer "leagues_teams_id"
+    t.integer "sponsor_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "leagues_sponsors", force: :cascade do |t|
+    t.integer "league_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "leagues_teams", force: :cascade do |t|
+    t.integer "team_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -62,6 +83,24 @@ ActiveRecord::Schema.define(version: 2018_09_20_122946) do
     t.index ["teams_id"], name: "index_results_on_teams_id"
   end
 
+  create_table "roles", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "sponsors", force: :cascade do |t|
+    t.text "name"
+    t.text "description"
+    t.text "contacts"
+    t.integer "duration"
+    t.float "budget_amount"
+    t.integer "league_sponsor_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "teams", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -74,7 +113,7 @@ ActiveRecord::Schema.define(version: 2018_09_20_122946) do
   create_table "users", force: :cascade do |t|
     t.string "username"
     t.string "email"
-    t.integer "role"
+    t.integer "role_id"
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -85,7 +124,12 @@ ActiveRecord::Schema.define(version: 2018_09_20_122946) do
   add_foreign_key "events", "teams", column: "teams_id"
   add_foreign_key "fixtures", "teams", column: "away_team"
   add_foreign_key "fixtures", "teams", column: "home_team"
+  add_foreign_key "leagues", "leagues_teams", column: "leagues_teams_id"
+  add_foreign_key "leagues_sponsors", "leagues"
+  add_foreign_key "leagues_teams", "teams"
   add_foreign_key "players", "teams"
   add_foreign_key "results", "fixtures", column: "fixtures_id"
   add_foreign_key "results", "teams", column: "teams_id"
+  add_foreign_key "sponsors", "leagues_sponsors", column: "league_sponsor_id"
+  add_foreign_key "users", "roles"
 end

@@ -15,4 +15,30 @@ class User < ApplicationRecord
   validates :email,
             uniqueness: { case_sensitive: false },
             presence: true, allow_blank: false
+
+  belongs_to :role
+
+  def admin?
+    role.name == "Admin"
+  end
+
+  def referee?
+    role.name == "Referee"
+  end
+
+  def sponsor?
+    role.name == "Sponsor"
+  end
+
+  def user?
+    role.name == "User"
+  end
+
+  def coach?
+    role.name == "Coach"
+  end
+
+  def player?
+    role.name == "Player"
+  end
 end

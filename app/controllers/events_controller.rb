@@ -1,19 +1,22 @@
 class EventsController < ApplicationController
+  before_action :authenticate_current_user, except: [:index]
   before_action :set_event, only: %i(update destroy)
+  after_action :verify_authorized, except: [:index]
 
   def index
     event = Event.where(fixtures_id: params[:fixture_id])
+
     if event.empty?
       render json: { "error": "No events for this game." },
              status: :bad_request
     else
       render json: event, status: :ok
     end
-
   end
 
   def create
     create_event = Event.new(event_params)
+    authorize create_event
 
     if create_event.save
       render json: create_event, status: :created
@@ -45,6 +48,7 @@ class EventsController < ApplicationController
 
   def set_event
     @event = Event.find_by(id: params[:event_id])
+    authorize @event
   end
 
   def event_params

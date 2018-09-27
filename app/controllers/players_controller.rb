@@ -1,8 +1,11 @@
 class PlayersController < ApplicationController
+  before_action :authenticate_current_user, except: [:index, :show]
   before_action :set_player, only: [:show, :update, :destroy]
+  after_action :verify_authorized, except: [:index, :show]
 
   def index
     players = Player.where(team_id: params[:team_id])
+
     if players.empty?
       render json: { errors: "The team does not exist" },
              status: :bad_request
@@ -24,6 +27,7 @@ class PlayersController < ApplicationController
 
   def create
     create_player = Player.new(player_params)
+    authorize create_player
 
     if create_player.save
       render json: create_player, status: :created
@@ -35,6 +39,7 @@ class PlayersController < ApplicationController
 
   def update
     if @player
+      authorize @player
       @player.update_attributes(player_params)
       render json: @player, status: :ok
 
@@ -46,6 +51,7 @@ class PlayersController < ApplicationController
 
   def destroy
     if @player
+      authorize @player
       @player.destroy
       render json: { message: "Player was successfully deleted" }, status: :ok
 

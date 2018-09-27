@@ -1,5 +1,7 @@
 class TeamsController < ApplicationController
-  before_action :authenticate_user, except: [:index, :show]
+  before_action :authenticate_current_user, except: [:index, :show]
+  before_action :set_team, only: [:show, :update, :destroy]
+  after_action :verify_authorized, except: [:index, :show]
 
   def index
     render json: Team.all, status: :ok
@@ -20,6 +22,7 @@ class TeamsController < ApplicationController
 
   def create
     @create_team = Team.new(team_params)
+    authorize @create_team
 
     if @create_team.save
       render json: @create_team, status: :created
@@ -30,11 +33,11 @@ class TeamsController < ApplicationController
   end
 
   def update
-    edit_team = Team.find_by(id: params[:team_id])
 
-    if edit_team
-      edit_team.update_attributes(team_params)
-      render json: edit_team, status: :ok
+    if @team
+      authorize @team
+      @team.update_attributes(team_params)
+      render json: @team, status: :ok
 
     else
       render json: {
@@ -44,10 +47,10 @@ class TeamsController < ApplicationController
   end
 
   def destroy
-    delete_team = Team.find_by(id: params[:team_id])
 
-    if delete_team
-      delete_team.destroy
+    if @team
+      authorize @team
+      @team.destroy
       render json: { message: "Team was successfully deleted" }, status: :ok
 
     else
@@ -56,6 +59,10 @@ class TeamsController < ApplicationController
   end
 
   private
+
+  def set_team
+    @team = Team.find_by(id: params[:team_id])
+  end
 
   def team_params
     params.permit(

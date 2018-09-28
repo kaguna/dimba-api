@@ -38,8 +38,8 @@ class PlayersController < ApplicationController
   end
 
   def update
+
     if @player
-      authorize @player
       @player.update_attributes(player_params)
       render json: @player, status: :ok
 
@@ -50,8 +50,8 @@ class PlayersController < ApplicationController
   end
 
   def destroy
+
     if @player
-      authorize @player
       @player.destroy
       render json: { message: "Player was successfully deleted" }, status: :ok
 
@@ -64,6 +64,7 @@ class PlayersController < ApplicationController
 
   def set_player
     @player = Player.find_by(id: params[:player_id], team_id: params[:team_id])
+    authorize @player
   end
 
   def player_params

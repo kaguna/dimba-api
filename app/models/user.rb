@@ -16,7 +16,7 @@ class User < ApplicationRecord
             uniqueness: { case_sensitive: false },
             presence: true, allow_blank: false
 
-  belongs_to :role
+  belongs_to :role, optional: true
 
   def admin?
     role.name == "Admin"

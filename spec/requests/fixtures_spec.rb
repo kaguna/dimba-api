@@ -3,7 +3,14 @@ require "./spec/support/request_helper"
 RSpec.describe Fixture, type: :request do
 
   include RequestSpecHelper
+  include AuthenticationSpecHelper
+
+  let!(:role) { create(:role, name: "Admin") }
+
+  let!(:user) { create(:user, role_id: role.id) }
+
   let!(:team) { create_list(:team, 10) }
+
   let!(:fixtures) do
     create_list(
       :fixture, 10,
@@ -25,7 +32,12 @@ RSpec.describe Fixture, type: :request do
 
   describe "POST fixture/create" do
     context "when the request is valid" do
-      before { post "/fixtures", params: fixture_params }
+
+      before do
+        post "/fixtures",
+             headers: authenticated_header(user),
+             params: fixture_params
+      end
 
       it "creates a new fixture" do
         expect(json.size).to eq 7
@@ -66,7 +78,11 @@ RSpec.describe Fixture, type: :request do
 
   describe "DELETE /fixture/:fixture_id" do
     context "when the request is valid" do
-      before { delete "/fixtures/#{fixture_id}" }
+
+      before do
+        delete "/fixtures/#{fixture_id}",
+               headers: authenticated_header(user)
+      end
 
       it "returns a success message" do
         expect(json["message"]).to eq("Fixture was successfully deleted")
@@ -78,8 +94,13 @@ RSpec.describe Fixture, type: :request do
     end
 
     context "when the request is invalid" do
+
       let(:fixture_id) { 0 }
-      before { delete "/fixtures/#{fixture_id}" }
+
+      before do
+        delete "/fixtures/#{fixture_id}",
+               headers: authenticated_header(user)
+      end
 
       it "returns an error message" do
         expect(json["errors"]).to eq("The fixture does not exist")
@@ -93,7 +114,11 @@ RSpec.describe Fixture, type: :request do
 
   describe "PUT /fixtures/:fixture_id" do
     context "when the request is valid" do
-      before { put "/fixtures/#{fixture_id}" }
+
+      before do
+        put "/fixtures/#{fixture_id}",
+               headers: authenticated_header(user)
+      end
 
       it "returns a hash with 7 keys" do
         expect(json.size).to eq 7
@@ -105,8 +130,13 @@ RSpec.describe Fixture, type: :request do
     end
 
     context "when the request is invalid" do
+
       let(:fixture_id) { 0 }
-      before { put "/fixtures/#{fixture_id}" }
+
+      before do
+        put "/fixtures/#{fixture_id}",
+            headers: authenticated_header(user)
+      end
 
       it "returns an error message" do
         expect(json["errors"]).to eq("The fixture does not exist")

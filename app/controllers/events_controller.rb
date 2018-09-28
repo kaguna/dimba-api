@@ -37,7 +37,6 @@ class EventsController < ApplicationController
 
   def destroy
     if @event
-      @event.destroy
       render json: { message: "Event was successfully deleted" }, status: :ok
     else
       render json: { errors: "The events does not exist" }, status: :bad_request

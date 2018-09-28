@@ -3,12 +3,18 @@ require "./spec/support/request_helper"
 RSpec.describe User, type: :request do
   include RequestSpecHelper
 
-  let!(:user) { create(:user) }
+  let(:role) { create(:role, name: "Admin") }
+
+  let(:user) { create(:user, role_id: role.id) }
+
   let(:user_params) { attributes_for(:user) }
 
   describe "POST user/signup" do
     context "when the request is valid" do
-      before { post "/user/sign_up", params: user_params }
+
+      before do
+        post "/user/sign_up", params: user_params
+      end
 
       it "creates a new user with 7 attributes" do
         expect(json.size).to eq 7
@@ -24,7 +30,7 @@ RSpec.describe User, type: :request do
         {
             username: "",
             email: "",
-            role: 1,
+            role_id: 1,
             password: "qwerty123",
         }
       }

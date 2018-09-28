@@ -6,23 +6,21 @@ class FixturesController < ApplicationController
   def index
     fixtures = Fixture.all
 
-    if fixtures.empty?
+    if fixtures
+      render json: fixtures, status: :ok
+    else
       render json: { errors: "No fixture available." },
              status: :bad_request
-
-    else
-      render json: fixtures, status: :ok
     end
   end
 
   def show
 
-    if @fixture.empty?
+    if @fixture
+      render json: fixture, status: :ok
+    else
       render json: { error: "The fixture is not available." },
              status: :bad_request
-
-    else
-      render json: fixture, status: :ok
     end
   end
 
@@ -42,7 +40,6 @@ class FixturesController < ApplicationController
   def update
 
     if @fixture
-      authorize @fixture
       @fixture.update_attributes(fixture_params)
       render json: @fixture, status: :ok
 
@@ -55,7 +52,6 @@ class FixturesController < ApplicationController
   def destroy
 
     if @fixture
-      authorize @fixture
       @fixture.destroy
       render json: { message: "Fixture was successfully deleted" },
              status: :ok
@@ -70,6 +66,7 @@ class FixturesController < ApplicationController
 
   def set_fixture
     @fixture = Fixture.find_by(id: params[:fixture_id])
+    authorize @fixture
   end
 
   def fixture_params

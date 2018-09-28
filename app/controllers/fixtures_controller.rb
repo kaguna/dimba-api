@@ -1,4 +1,5 @@
 class FixturesController < ApplicationController
+  include FixturesControllerHelper
   before_action :authenticate_current_user, except: [:index, :show]
   before_action :set_fixture, only: %i(update destroy)
   after_action :verify_authorized, except: [:index, :show]
@@ -12,6 +13,10 @@ class FixturesController < ApplicationController
       render json: { errors: "No fixture available." },
              status: :bad_request
     end
+  end
+
+  def generate_fixture
+    render json: generate, status: :ok
   end
 
   def show

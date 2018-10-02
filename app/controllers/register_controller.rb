@@ -15,7 +15,7 @@ class RegisterController < ApplicationController
     params.permit(
         :username,
         :email,
-        :role,
+        :role_id,
         :password,
         :password_confirmation
     )

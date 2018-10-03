@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(version: 2018_09_27_170652) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
-
+  
   create_table "leagues_sponsors", force: :cascade do |t|
     t.integer "league_id"
     t.integer "sponsor_id"

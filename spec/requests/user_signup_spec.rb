@@ -2,7 +2,7 @@ require "rails_helper"
 require "./spec/support/request_helper"
 RSpec.describe User, type: :request do
   include RequestSpecHelper
-
+  
   let(:role) { create(:role, name: "Admin") }
 
   let(:user) { create(:user, role_id: role.id) }

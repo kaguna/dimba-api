@@ -16,12 +16,13 @@ class FixturesController < ApplicationController
   end
 
   def generate_fixture
-    render json: generate, status: :ok
+    authorize self
+    render json: generate(fixture_params[:league_id]), status: :ok
   end
 
   def show
-
-    if @fixture
+    fixture = Fixture.find_by(id: params[:fixture_id])
+    if fixture
       render json: fixture, status: :ok
     else
       render json: { error: "The fixture is not available." },
@@ -79,6 +80,7 @@ class FixturesController < ApplicationController
         :home_team,
         :away_team,
         :season,
+        :league_id,
         :match_day
     )
   end

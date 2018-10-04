@@ -29,7 +29,7 @@ Rails.application.routes.draw do
 
   scope "fixtures" do
     get "/" => "fixtures#index"
-    get "/fixture_auto_gen" => "fixtures#generate_fixture"
+    get "/:league_id/fixture_auto_gen" => "fixtures#generate_fixture"
     post "/" => "fixtures#create"
     get "/:fixture_id" => "fixtures#show"
     put "/:fixture_id" => "fixtures#update"

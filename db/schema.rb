@@ -48,8 +48,6 @@ ActiveRecord::Schema.define(version: 2018_10_03_151200) do
   create_table "leagues", force: :cascade do |t|
     t.text "title"
     t.text "season"
-    t.integer "leagues_teams_id"
-    t.integer "sponsor_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -63,6 +61,7 @@ ActiveRecord::Schema.define(version: 2018_10_03_151200) do
 
   create_table "leagues_teams", force: :cascade do |t|
     t.integer "team_id"
+    t.integer "league_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -143,10 +142,6 @@ ActiveRecord::Schema.define(version: 2018_10_03_151200) do
   add_foreign_key "events", "teams", column: "teams_id"
   add_foreign_key "fixtures", "teams", column: "away_team"
   add_foreign_key "fixtures", "teams", column: "home_team"
-  add_foreign_key "league_fixtures", "fixtures", column: "match_id"
-  add_foreign_key "league_fixtures", "leagues"
-  add_foreign_key "leagues", "leagues_teams", column: "leagues_teams_id"
-  add_foreign_key "leagues_sponsors", "leagues"
   add_foreign_key "leagues_sponsors", "sponsors"
   add_foreign_key "leagues_teams", "teams"
   add_foreign_key "players", "teams"

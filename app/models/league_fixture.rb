@@ -1,0 +1,2 @@
+class LeagueFixture < ApplicationRecord
+end

@@ -142,6 +142,7 @@ ActiveRecord::Schema.define(version: 2018_10_03_151200) do
   add_foreign_key "events", "teams", column: "teams_id"
   add_foreign_key "fixtures", "teams", column: "away_team"
   add_foreign_key "fixtures", "teams", column: "home_team"
+  add_foreign_key "league_fixtures", "fixtures", column: "match_id"
   add_foreign_key "leagues_sponsors", "sponsors"
   add_foreign_key "leagues_teams", "teams"
   add_foreign_key "players", "teams"

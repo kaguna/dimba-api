@@ -1,4 +1,5 @@
 class FixturesController < ApplicationController
+  include FixturesControllerHelper
   before_action :authenticate_current_user, except: [:index, :show]
   before_action :set_fixture, only: %i(update destroy)
   after_action :verify_authorized, except: [:index, :show]
@@ -14,9 +15,14 @@ class FixturesController < ApplicationController
     end
   end
 
-  def show
+  def generate_fixture
+    authorize self
+    render json: generate(fixture_params[:league_id]), status: :ok
+  end
 
-    if @fixture
+  def show
+    fixture = Fixture.find_by(id: params[:fixture_id])
+    if fixture
       render json: fixture, status: :ok
     else
       render json: { error: "The fixture is not available." },
@@ -74,6 +80,7 @@ class FixturesController < ApplicationController
         :home_team,
         :away_team,
         :season,
+        :league_id,
         :match_day
     )
   end

@@ -35,4 +35,12 @@ Rails.application.routes.draw do
     put "/:fixture_id" => "fixtures#update"
     delete "/:fixture_id" => "fixtures#destroy"
   end
+
+  scope "leagues" do
+    get "/" => "leagues#index"
+    post "/" => "leagues#create"
+    get "/:league_id" => "leagues#show"
+    put "/:league_id" => "leagues#update"
+    delete "/:league_id" => "leagues#destroy"
+  end
 end

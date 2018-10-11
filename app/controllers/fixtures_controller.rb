@@ -5,7 +5,7 @@ class FixturesController < ApplicationController
   after_action :verify_authorized, except: [:index, :show]
 
   def index
-    fixtures = Fixture.all
+    fixtures = Fixture.where(league_id: params[:league_id])
 
     if fixtures
       render json: fixtures, status: :ok
@@ -21,12 +21,14 @@ class FixturesController < ApplicationController
   end
 
   def show
-    fixture = Fixture.find_by(id: params[:fixture_id])
-    if fixture
-      render json: fixture, status: :ok
-    else
+    fixture = Fixture.where(id: params[:fixture_id],
+                            league_id: params[:league_id])
+
+    if fixture.empty?
       render json: { error: "The fixture is not available." },
              status: :bad_request
+    else
+      render json: fixture, status: :ok
     end
   end
 
@@ -44,7 +46,6 @@ class FixturesController < ApplicationController
   end
 
   def update
-
     if @fixture
       @fixture.update_attributes(fixture_params)
       render json: @fixture, status: :ok
@@ -56,7 +57,6 @@ class FixturesController < ApplicationController
   end
 
   def destroy
-
     if @fixture
       @fixture.destroy
       render json: { message: "Fixture was successfully deleted" },
@@ -71,7 +71,8 @@ class FixturesController < ApplicationController
   private
 
   def set_fixture
-    @fixture = Fixture.find_by(id: params[:fixture_id])
+    @fixture = Fixture.find_by(id: params[:fixture_id],
+                               league_id: params[:league_id])
     authorize @fixture
   end
 

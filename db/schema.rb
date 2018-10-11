@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_03_151200) do
+ActiveRecord::Schema.define(version: 2018_09_27_170652) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,15 +32,12 @@ ActiveRecord::Schema.define(version: 2018_10_03_151200) do
   create_table "fixtures", force: :cascade do |t|
     t.integer "home_team"
     t.integer "away_team"
+    t.integer "league_id"
+    t.integer "center_referee"
+    t.integer "right_side_referee"
+    t.integer "left_side_referee"
     t.text "season"
     t.date "match_day"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "league_fixtures", force: :cascade do |t|
-    t.integer "league_id"
-    t.integer "match_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -103,7 +100,6 @@ ActiveRecord::Schema.define(version: 2018_10_03_151200) do
     t.text "contacts"
     t.integer "duration"
     t.float "budget_amount"
-    t.integer "league_sponsor_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -140,10 +136,15 @@ ActiveRecord::Schema.define(version: 2018_10_03_151200) do
   add_foreign_key "events", "fixtures", column: "fixtures_id"
   add_foreign_key "events", "players", column: "players_id"
   add_foreign_key "events", "teams", column: "teams_id"
+  add_foreign_key "fixtures", "leagues"
   add_foreign_key "fixtures", "teams", column: "away_team"
   add_foreign_key "fixtures", "teams", column: "home_team"
-  add_foreign_key "league_fixtures", "fixtures", column: "match_id"
+  add_foreign_key "fixtures", "users", column: "center_referee"
+  add_foreign_key "fixtures", "users", column: "left_side_referee"
+  add_foreign_key "fixtures", "users", column: "right_side_referee"
+  add_foreign_key "leagues_sponsors", "leagues"
   add_foreign_key "leagues_sponsors", "sponsors"
+  add_foreign_key "leagues_teams", "leagues"
   add_foreign_key "leagues_teams", "teams"
   add_foreign_key "players", "teams"
   add_foreign_key "results", "fixtures", column: "fixtures_id"

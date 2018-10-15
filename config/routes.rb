@@ -27,9 +27,9 @@ Rails.application.routes.draw do
     delete "/:event_id" => "events#destroy"
   end
 
-  scope "fixtures" do
+  scope "league/:league_id/fixtures" do
     get "/" => "fixtures#index"
-    get "/:league_id/fixture_auto_gen" => "fixtures#generate_fixture"
+    get "/fixture_auto_gen" => "fixtures#generate_fixture"
     post "/" => "fixtures#create"
     get "/:fixture_id" => "fixtures#show"
     put "/:fixture_id" => "fixtures#update"

@@ -11,36 +11,41 @@ RSpec.describe Fixture, type: :request do
 
   let!(:team) { create_list(:team, 10) }
 
+  let!(:league) { create(:league) }
+
   let!(:fixtures) do
     create_list(
       :fixture, 10,
       home_team: team.last.id,
-      away_team: team.first.id
+      away_team: team.first.id,
+      league_id: league.id
     )
   end
 
+  let(:league_id) { league.id }
   let(:team_id) { team.first.id }
   let(:fixture_id) { fixtures.first.id }
   let(:fixture_params) {
     {
         "home_team": team.last.id,
         "away_team": team.first.id,
+        "league_id": league.id,
         "season": "2017/2018",
         "match_day": "2018-09-09",
     }
   }
 
-  describe "POST fixture/create" do
+  describe "POST /league/:league_id/fixtures" do
     context "when the request is valid" do
 
       before do
-        post "/fixtures",
+        post "/league/#{league_id}/fixtures",
              headers: authenticated_header(user),
              params: fixture_params
       end
 
       it "creates a new fixture" do
-        expect(json.size).to eq 7
+        expect(json.size).to eq 11
       end
 
       it "returns status code 201" do
@@ -49,9 +54,11 @@ RSpec.describe Fixture, type: :request do
     end
   end
 
-  describe "GET /fixtures" do
+  describe "GET /league/:league_id/fixtures" do
     context "when the request is valid" do
-      before { get "/fixtures" }
+      before do
+        get "/league/#{league_id}/fixtures"
+      end
 
       it "returns a list with 10 hashes" do
         expect(json.size).to eq 10
@@ -63,8 +70,10 @@ RSpec.describe Fixture, type: :request do
     end
 
     context "when the request is invalid" do
-      let!(:fixture_id) { 1 }
-      before { get "/fixtures/#{fixture_id}" }
+      let!(:fixture_id) { 0 }
+      before do
+        get "/league/#{league_id}/fixtures/#{fixture_id}"
+      end
 
       it "returns an error message" do
         expect(json["error"]).to eq("The fixture is not available.")
@@ -76,11 +85,11 @@ RSpec.describe Fixture, type: :request do
     end
   end
 
-  describe "DELETE /fixture/:fixture_id" do
+  describe "DELETE /league/:league_id/fixtures/:fixture_id" do
     context "when the request is valid" do
 
       before do
-        delete "/fixtures/#{fixture_id}",
+        delete "/league/#{league_id}/fixtures/#{fixture_id}",
                headers: authenticated_header(user)
       end
 
@@ -98,7 +107,7 @@ RSpec.describe Fixture, type: :request do
       let(:fixture_id) { 0 }
 
       before do
-        delete "/fixtures/#{fixture_id}",
+        delete "/league/#{league_id}/fixtures/#{fixture_id}",
                headers: authenticated_header(user)
       end
 
@@ -112,16 +121,16 @@ RSpec.describe Fixture, type: :request do
     end
   end
 
-  describe "PUT /fixtures/:fixture_id" do
+  describe "PUT /league/:league_id/fixtures/:fixture_id" do
     context "when the request is valid" do
 
       before do
-        put "/fixtures/#{fixture_id}",
-               headers: authenticated_header(user)
+        put "/league/#{league_id}/fixtures/#{fixture_id}",
+            headers: authenticated_header(user)
       end
 
-      it "returns a hash with 7 keys" do
-        expect(json.size).to eq 7
+      it "returns a hash with 11 keys" do
+        expect(json.size).to eq 11
       end
 
       it "returns status code 200" do
@@ -134,7 +143,7 @@ RSpec.describe Fixture, type: :request do
       let(:fixture_id) { 0 }
 
       before do
-        put "/fixtures/#{fixture_id}",
+        put "/league/#{league_id}/fixtures/#{fixture_id}",
             headers: authenticated_header(user)
       end
 

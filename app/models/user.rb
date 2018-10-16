@@ -30,6 +30,10 @@ class User < ApplicationRecord
     role.name == "Sponsor"
   end
 
+  def official
+    role.name == "Official"
+  end
+
   def user?
     role.name == "User"
   end

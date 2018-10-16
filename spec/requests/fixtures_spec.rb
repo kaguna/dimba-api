@@ -7,7 +7,15 @@ RSpec.describe Fixture, type: :request do
 
   let!(:role) { create(:role, name: "Admin") }
 
+  let!(:ref_role) { create(:role, name: "Referee") }
+
   let!(:user) { create(:user, role_id: role.id) }
+
+  let!(:user_ref) {
+    create_list(:user, 3,
+                role_id: ref_role.id
+    )
+  }
 
   let!(:team) { create_list(:team, 10) }
 
@@ -18,7 +26,10 @@ RSpec.describe Fixture, type: :request do
       :fixture, 10,
       home_team: team.last.id,
       away_team: team.first.id,
-      league_id: league.id
+      league_id: league.id,
+      center_referee: user_ref.first.id,
+      right_side_referee: user_ref.last.id,
+      left_side_referee: user_ref.second.id
     )
   end
 

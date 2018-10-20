@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_27_170652) do
+ActiveRecord::Schema.define(version: 2018_10_20_194250) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,18 @@ ActiveRecord::Schema.define(version: 2018_09_27_170652) do
     t.string "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "fixture_squads", force: :cascade do |t|
+    t.bigint "players_id"
+    t.boolean "playing", default: true
+    t.bigint "fixtures_id"
+    t.bigint "teams_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["fixtures_id"], name: "index_fixture_squads_on_fixtures_id"
+    t.index ["players_id"], name: "index_fixture_squads_on_players_id"
+    t.index ["teams_id"], name: "index_fixture_squads_on_teams_id"
   end
 
   create_table "fixtures", force: :cascade do |t|
@@ -145,6 +157,9 @@ ActiveRecord::Schema.define(version: 2018_09_27_170652) do
   add_foreign_key "commentaries", "fixtures", column: "fixtures_id"
   add_foreign_key "commentaries", "players", column: "players_id"
   add_foreign_key "commentaries", "teams", column: "teams_id"
+  add_foreign_key "fixture_squads", "fixtures", column: "fixtures_id"
+  add_foreign_key "fixture_squads", "players", column: "players_id"
+  add_foreign_key "fixture_squads", "teams", column: "teams_id"
   add_foreign_key "fixtures", "leagues"
   add_foreign_key "fixtures", "teams", column: "away_team"
   add_foreign_key "fixtures", "teams", column: "home_team"

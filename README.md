@@ -48,6 +48,19 @@ To run tests
 
     rspec spec
 
+#### Local Development Docker Setup
+Ensure that you have [docker](https://docs.docker.com/install/) and [compose](https://docs.docker.com/compose/install/#install-compose) installed before proceeding.
+
+- Open `application.yml` and update accordingly as shown below
+  ```
+  POSTGRES_USER: postgres
+  POSTGRES_HOST: db
+   ```
+- On your terminal run: `docker-compose build`
+- You also need to create the databases. In another terminal, run:
+  `docker-compose run web rake:db create`
+- Finally start up application `docker-compose up` and visit [localhost:3000/](localhost:3000/)
+
 #### Contribution
 This repository is a safe place for contribution.
 1. Fork it (https://github.com/yourname/yourproject/fork)

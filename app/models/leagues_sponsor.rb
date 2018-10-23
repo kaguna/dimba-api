@@ -1,0 +1,2 @@
+class LeaguesSponsor < ApplicationRecord
+end

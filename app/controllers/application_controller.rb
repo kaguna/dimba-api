@@ -1,2 +1,4 @@
-class ApplicationController < ActionController::API
+class ApplicationController < ErrorsController
+  include Pundit
+  include Knock::Authenticable
 end

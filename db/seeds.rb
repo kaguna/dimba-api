@@ -29,3 +29,20 @@ teams.each do |id|
     )
   end
 end
+
+6.times do
+  League.create(
+      title: Faker::Football.competition,
+      season: Faker::Name.middle_name,
+      )
+end
+
+roles = [:Admin, :Referee, :Official, :Coach, :Sponsor, :Player, :User]
+
+
+(roles.length).times do |i|
+  Role.create(
+      name: roles[i],
+      description: Faker::Lorem.paragraph
+  )
+end

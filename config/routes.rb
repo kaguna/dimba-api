@@ -20,11 +20,11 @@ Rails.application.routes.draw do
     delete "/player/:player_id" => "players#destroy"
   end
 
-  scope "fixture/:fixture_id/events" do
-    get "/" => "events#index"
-    post "/" => "events#create"
-    put "/:event_id" => "events#update"
-    delete "/:event_id" => "events#destroy"
+  scope "fixture/:fixture_id/commentaries" do
+    get "/" => "commentaries#index"
+    post "/" => "commentaries#create"
+    put "/:commentary_id" => "commentaries#update"
+    delete "/:commentary_id" => "commentaries#destroy"
   end
 
   scope "league/:league_id/fixtures" do

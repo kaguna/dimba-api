@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  scope "user" do
+    post "/sign_up" => "register#signup"
+    post "/login" => "user_token#create"
+  end
+
   scope "teams" do
     get "/" => "teams#index"
     get "/:team_id" => "teams#show"
@@ -22,11 +27,28 @@ Rails.application.routes.draw do
     delete "/:event_id" => "events#destroy"
   end
 
-  scope "fixtures" do
+  scope "league/:league_id/fixtures" do
     get "/" => "fixtures#index"
+    get "/fixture_auto_gen" => "fixtures#generate_fixture"
     post "/" => "fixtures#create"
     get "/:fixture_id" => "fixtures#show"
     put "/:fixture_id" => "fixtures#update"
     delete "/:fixture_id" => "fixtures#destroy"
+  end
+
+  scope "leagues" do
+    get "/" => "leagues#index"
+    post "/" => "leagues#create"
+    get "/:league_id" => "leagues#show"
+    put "/:league_id" => "leagues#update"
+    delete "/:league_id" => "leagues#destroy"
+  end
+
+  scope "transfers" do
+    get "/" => "transfer#index"
+    post "/" => "transfer#create"
+    get "/:player_id" => "transfer#show"
+    put "/:transfer_id" => "transfer#update"
+    delete "/:transfer_id" => "transfer#destroy"
   end
 end

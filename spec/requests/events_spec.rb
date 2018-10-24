@@ -1,8 +1,14 @@
 require "rails_helper"
 require "./spec/support/request_helper"
+require "./spec/support/authentication_helper"
 
 RSpec.describe Event, type: :request do
   include RequestSpecHelper
+  include AuthenticationSpecHelper
+
+  let!(:role) { create(:role, name: "Admin") }
+
+  let!(:user) { create(:user, role_id: role.id) }
 
   let(:team) { create_list(:team, 10) }
 
@@ -41,6 +47,7 @@ RSpec.describe Event, type: :request do
     context "when the request is valid" do
       before do
         post "/fixture/#{fixture_id}/events",
+             headers: authenticated_header(user),
              params: event_params
       end
 
@@ -50,6 +57,25 @@ RSpec.describe Event, type: :request do
 
       it "returns status code 201" do
         expect(response).to have_http_status(201)
+      end
+    end
+
+    context "when the request is not made by referee or admin" do
+      let(:role) { create(:role, name: "User") }
+      let(:user) { create(:user, role_id: role.id) }
+
+      before do
+        post "/fixture/#{fixture_id}/events",
+             headers: authenticated_header(user),
+             params: event_params
+      end
+
+      it "creates a new event" do
+        expect(json["message"]).to eq("Cannot perform the action!")
+      end
+
+      it "returns status code 403" do
+        expect(response).to have_http_status(403)
       end
     end
   end
@@ -83,8 +109,29 @@ RSpec.describe Event, type: :request do
   end
 
   describe "DELETE /events/:event_id" do
-    context "when the request is valid" do
-      before { delete "/fixture/#{fixture_id}/events/#{event_id}" }
+    context "when the request is made by normal user" do
+      let(:role) { create(:role, name: "User") }
+      let(:user) { create(:user, role_id: role.id) }
+
+      before do
+        delete "/fixture/#{fixture_id}/events/#{event_id}",
+               headers: authenticated_header(user)
+      end
+
+      it "returns a success message" do
+        expect(json["message"]).to eq("Cannot perform the action!")
+      end
+
+      it "returns status code 403" do
+        expect(response).to have_http_status(403)
+      end
+    end
+
+    context "when the request is made by an admin" do
+      before do
+        delete "/fixture/#{fixture_id}/events/#{event_id}",
+               headers: authenticated_header(user)
+      end
 
       it "returns a success message" do
         expect(json["message"]).to eq("Event was successfully deleted")
@@ -96,8 +143,12 @@ RSpec.describe Event, type: :request do
     end
 
     context "when the request is invalid" do
-      let(:event_id) { 0 }
-      before { delete "/fixture/#{fixture_id}/events/#{event_id}" }
+      let(:event_id) { 100 }
+
+      before do
+        delete "/fixture/#{fixture_id}/events/#{event_id}",
+               headers: authenticated_header(user)
+      end
 
       it "returns an error message" do
         expect(json["errors"]).to eq("The events does not exist")
@@ -111,7 +162,10 @@ RSpec.describe Event, type: :request do
 
   describe "PUT /events/:event_id" do
     context "when the request is valid" do
-      before { put "/fixture/#{fixture_id}/events/#{event_id}" }
+      before do
+        put "/fixture/#{fixture_id}/events/#{event_id}",
+            headers: authenticated_header(user)
+      end
 
       it "returns a hash with 11 keys" do
         expect(json.size).to eq 9
@@ -124,7 +178,11 @@ RSpec.describe Event, type: :request do
 
     context "when the request is invalid" do
       let(:event_id) { 0 }
-      before { put "/fixture/#{fixture_id}/events/#{event_id}" }
+
+      before do
+        put "/fixture/#{fixture_id}/events/#{event_id}",
+            headers: authenticated_header(user)
+      end
 
       it "returns an error message" do
         expect(json["errors"]).to eq("The events does not exist")

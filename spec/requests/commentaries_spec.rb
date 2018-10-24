@@ -2,7 +2,7 @@ require "rails_helper"
 require "./spec/support/request_helper"
 require "./spec/support/authentication_helper"
 
-RSpec.describe Event, type: :request do
+RSpec.describe Commentary, type: :request do
   include RequestSpecHelper
   include AuthenticationSpecHelper
 
@@ -11,6 +11,8 @@ RSpec.describe Event, type: :request do
   let!(:user) { create(:user, role_id: role.id) }
 
   let(:team) { create_list(:team, 10) }
+
+  let(:event) { create(:event) }
 
   let!(:fixture) do
     create(
@@ -27,31 +29,32 @@ RSpec.describe Event, type: :request do
     )
   end
 
-  let!(:event) do
+  let!(:commentary) do
     create_list(
-      :event, 10,
-      fixtures_id: fixture.id,
-      teams_id: team.last.id,
-      players_id: player.first.id
+        :commentary, 10,
+        events_id: event.id,
+        fixtures_id: fixture.id,
+        teams_id: team.last.id,
+        players_id: player.first.id
     )
   end
 
   let(:team_id) { team.first.id }
   let(:player_id) { player.first.id }
   let(:fixture_id) { fixture.id }
-  let(:event_id) { event.first.id }
+  let(:commentary_id) { commentary.first.id }
 
-  let(:event_params) { attributes_for(:event) }
+  let(:commentary_params) { attributes_for(:commentary) }
 
-  describe "POST event/create" do
+  describe "POST commentary/create" do
     context "when the request is valid" do
       before do
-        post "/fixture/#{fixture_id}/events",
+        post "/fixture/#{fixture_id}/commentaries",
              headers: authenticated_header(user),
-             params: event_params
+             params: commentary_params
       end
 
-      it "creates a new event" do
+      it "creates a new commentary" do
         expect(json.size).to eq 9
       end
 
@@ -65,9 +68,9 @@ RSpec.describe Event, type: :request do
       let(:user) { create(:user, role_id: role.id) }
 
       before do
-        post "/fixture/#{fixture_id}/events",
+        post "/fixture/#{fixture_id}/commentaries",
              headers: authenticated_header(user),
-             params: event_params
+             params: commentary_params
       end
 
       it "creates a new event" do
@@ -80,9 +83,9 @@ RSpec.describe Event, type: :request do
     end
   end
 
-  describe "GET /fixture/:fixture_id/events" do
+  describe "GET /fixture/:fixture_id/commentaries" do
     context "when the request is valid" do
-      before { get "/fixture/#{fixture_id}/events" }
+      before { get "/fixture/#{fixture_id}/commentaries" }
 
       it "returns a list with 10 hashes" do
         expect(json.size).to eq 10
@@ -96,10 +99,10 @@ RSpec.describe Event, type: :request do
     context "when the request is invalid" do
       let!(:fixture_id) { 1 }
 
-      before { get "/fixture/#{fixture_id}/events" }
+      before { get "/fixture/#{fixture_id}/commentaries" }
 
       it "returns an error message" do
-        expect(json["error"]).to eq("No events for this game.")
+        expect(json["error"]).to eq("No commentary for this game.")
       end
 
       it "returns status code 400" do
@@ -108,17 +111,17 @@ RSpec.describe Event, type: :request do
     end
   end
 
-  describe "DELETE /events/:event_id" do
+  describe "DELETE /commentaries/:commentary_id" do
     context "when the request is made by normal user" do
       let(:role) { create(:role, name: "User") }
       let(:user) { create(:user, role_id: role.id) }
 
       before do
-        delete "/fixture/#{fixture_id}/events/#{event_id}",
+        delete "/fixture/#{fixture_id}/commentaries/#{commentary_id}",
                headers: authenticated_header(user)
       end
 
-      it "returns a success message" do
+      it "returns a forbidden action message" do
         expect(json["message"]).to eq("Cannot perform the action!")
       end
 
@@ -129,12 +132,12 @@ RSpec.describe Event, type: :request do
 
     context "when the request is made by an admin" do
       before do
-        delete "/fixture/#{fixture_id}/events/#{event_id}",
+        delete "/fixture/#{fixture_id}/commentaries/#{commentary_id}",
                headers: authenticated_header(user)
       end
 
       it "returns a success message" do
-        expect(json["message"]).to eq("Event was successfully deleted")
+        expect(json["message"]).to eq("Commentary was successfully deleted")
       end
 
       it "returns status code 200" do
@@ -143,15 +146,16 @@ RSpec.describe Event, type: :request do
     end
 
     context "when the request is invalid" do
-      let(:event_id) { 100 }
+
+      let(:commentary_id) { 100 }
 
       before do
-        delete "/fixture/#{fixture_id}/events/#{event_id}",
+        delete "/fixture/#{fixture_id}/commentaries/#{commentary_id}",
                headers: authenticated_header(user)
       end
 
       it "returns an error message" do
-        expect(json["errors"]).to eq("The events does not exist")
+        expect(json["errors"]).to eq("The commentary does not exist")
       end
 
       it "returns status code 400" do
@@ -160,10 +164,10 @@ RSpec.describe Event, type: :request do
     end
   end
 
-  describe "PUT /events/:event_id" do
+  describe "PUT /commentaries/:commentary_id" do
     context "when the request is valid" do
       before do
-        put "/fixture/#{fixture_id}/events/#{event_id}",
+        put "/fixture/#{fixture_id}/commentaries/#{commentary_id}",
             headers: authenticated_header(user)
       end
 
@@ -177,15 +181,15 @@ RSpec.describe Event, type: :request do
     end
 
     context "when the request is invalid" do
-      let(:event_id) { 0 }
+      let(:commentary_id) { 0 }
 
       before do
-        put "/fixture/#{fixture_id}/events/#{event_id}",
+        put "/fixture/#{fixture_id}/commentaries/#{commentary_id}",
             headers: authenticated_header(user)
       end
 
       it "returns an error message" do
-        expect(json["errors"]).to eq("The events does not exist")
+        expect(json["errors"]).to eq("The commentary does not exist")
       end
 
       it "returns status code 400" do

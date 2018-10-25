@@ -51,4 +51,12 @@ Rails.application.routes.draw do
     put "/:transfer_id" => "transfer#update"
     delete "/:transfer_id" => "transfer#destroy"
   end
+
+  scope "sponsors" do
+    get "/" => "sponsor#index"
+    post "/" => "sponsor#create"
+    get "/:sponsor_id" => "sponsor#show"
+    put "/:sponsor_id" => "sponsor#update"
+    delete "/:sponsor_id" => "sponsor#destroy"
+  end
 end

@@ -4,8 +4,6 @@ class CreateSponsors < ActiveRecord::Migration[5.2]
       t.text :name
       t.text :description
       t.text :contacts
-      t.integer :duration
-      t.float :budget_amount
 
       t.timestamps
     end

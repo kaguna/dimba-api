@@ -67,4 +67,12 @@ Rails.application.routes.draw do
     put "/:league_team_id" => "leagues_teams#update"
     delete "/:league_team_id" => "leagues_teams#destroy"
   end
+
+  scope "events" do
+    get "/" => "events#index"
+    post "/" => "events#create"
+    get "/:event_id" => "events#show"
+    put "/:event_id" => "events#update"
+    delete "/:event_id" => "events#destroy"
+  end
 end

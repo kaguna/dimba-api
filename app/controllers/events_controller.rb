@@ -1,46 +1,62 @@
 class EventsController < ApplicationController
+  before_action :authenticate_current_user, except: %i(index show)
   before_action :set_event, only: %i(update destroy)
-  before_action :authenticate_current_user, except: [:index]
-  before_action :set_event, only: %i(update destroy)
-  after_action :verify_authorized, except: [:index]
+  after_action :verify_authorized, except: %i(index show)
 
   def index
-    event = Event.where(fixtures_id: params[:fixture_id])
+    event = Event.all
     if event.empty?
-      render json: { "error": "No events for this game." },
+      render json: { "error": "No event found!" },
              status: :bad_request
+
+    else
+      render json: event, status: :ok
+    end
+  end
+
+  def show
+    event = Event.find_by_id(params[:event_id])
+
+    if event.nil?
+      render json: { "error": "The event is not found!" },
+             status: :bad_request
+
     else
       render json: event, status: :ok
     end
   end
 
   def create
-    create_event = Event.new(event_params)
-    authorize create_event
+    event = Event.new(event_params)
+    authorize event
 
-    if create_event.save
-      render json: create_event, status: :created
+    if event.save
+      render json: event, status: :created
     else
-      render json: create_event.errors, status: :unprocessable_entity
+      render json: event.errors, status: :unprocessable_entity
     end
   end
 
   def update
-    if @event
+    if @event.nil?
+      render json: { errors: "The event does not exist" },
+             status: :bad_request
+
+    else
       @event.update_attributes(event_params)
       render json: @event, status: :ok
-    else
-      render json: { errors: "The events does not exist" },
-             status: :bad_request
     end
   end
 
   def destroy
-    if @event
-      @event.destroy
-      render json: { message: "Event was successfully deleted" }, status: :ok
+    if @event.nil?
+      render json: { errors: "The event does not exist" },
+             status: :bad_request
+
     else
-      render json: { errors: "The events does not exist" }, status: :bad_request
+      @event.destroy
+      render json: { message: "Event was successfully deleted" },
+             status: :ok
     end
   end
 
@@ -54,11 +70,7 @@ class EventsController < ApplicationController
   def event_params
     params.permit(
       :name,
-      :description,
-      :event_time,
-      :teams_id,
-      :players_id,
-      :fixtures_id
+      :description
     )
   end
 end

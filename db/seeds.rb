@@ -5,6 +5,10 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+roles = [:Admin, :Referee, :Official, :Coach, :Sponsor, :Player, :User]
+events = [:Goal, :Yellow, :Red, :Assist, :Corner, :Penalty, :Injury]
+
 20.times do
   Team.create(
     name: Faker::Football.team,
@@ -37,8 +41,6 @@ end
       )
 end
 
-roles = [:Admin, :Referee, :Official, :Coach, :Sponsor, :Player, :User]
-
 
 (roles.length).times do |i|
   Role.create(
@@ -53,4 +55,11 @@ end
     description: Faker::Lorem.paragraph,
     contacts: Faker::Internet.url
   )
-  end
+end
+
+(events.length).times do |i|
+  Event.create(
+      name: events[i],
+      description: Faker::Lorem.paragraph
+  )
+end

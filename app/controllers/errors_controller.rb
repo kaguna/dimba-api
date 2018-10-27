@@ -1,5 +1,6 @@
 class ErrorsController < ActionController::API
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  rescue_from ActiveRecord::RecordInvalid, with: :record_exists
 
   def authenticate_current_user
     if current_user.nil?
@@ -9,6 +10,11 @@ class ErrorsController < ActionController::API
   end
 
   private
+
+  def record_exists
+    render json: { message: "Team(s) exists in the league!" },
+           status: 400
+  end
 
   def user_not_authorized
     render json: { message: "Cannot perform the action!" },

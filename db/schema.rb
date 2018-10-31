@@ -72,6 +72,8 @@ ActiveRecord::Schema.define(version: 2018_10_20_194250) do
   create_table "leagues_sponsors", force: :cascade do |t|
     t.integer "league_id"
     t.integer "sponsor_id"
+    t.integer "duration"
+    t.float "budget_amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -118,8 +120,6 @@ ActiveRecord::Schema.define(version: 2018_10_20_194250) do
     t.text "name"
     t.text "description"
     t.text "contacts"
-    t.integer "duration"
-    t.float "budget_amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

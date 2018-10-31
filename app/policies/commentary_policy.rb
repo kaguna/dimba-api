@@ -1,4 +1,4 @@
-class EventPolicy < ApplicationPolicy
+class CommentaryPolicy < ApplicationPolicy
   def create?
     user.present? && (user.admin? || user.referee?)
   end

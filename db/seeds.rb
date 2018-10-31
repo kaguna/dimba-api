@@ -46,3 +46,11 @@ roles = [:Admin, :Referee, :Official, :Coach, :Sponsor, :Player, :User]
       description: Faker::Lorem.paragraph
   )
 end
+
+10.times do
+  Sponsor.create(
+    name: Faker::Bank.name,
+    description: Faker::Lorem.paragraph,
+    contacts: Faker::Internet.url
+  )
+  end

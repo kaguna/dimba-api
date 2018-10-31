@@ -1,68 +1,58 @@
 require "rails_helper"
 require "./spec/support/request_helper"
-RSpec.describe Fixture, type: :request do
+RSpec.describe LeaguesTeam, type: :request do
   include RequestSpecHelper
   include AuthenticationSpecHelper
 
   let!(:role) { create(:role, name: "Admin") }
 
-  let!(:ref_role) { create(:role, name: "Referee") }
-
   let!(:user) { create(:user, role_id: role.id) }
 
-  let!(:user_ref) do
-    create_list(:user, 3,
-                role_id: ref_role.id)
-  end
-
-  let!(:team) { create_list(:team, 10) }
+  let!(:teams) { create_list(:team, 10) }
 
   let!(:league) { create(:league) }
 
-  let!(:fixtures) do
-    create_list(
-      :fixture, 10,
-      home_team: team.last.id,
-      away_team: team.first.id,
-      league_id: league.id,
-      center_referee: user_ref.first.id,
-      right_side_referee: user_ref.last.id,
-      left_side_referee: user_ref.second.id
-    )
-  end
-
   let(:league_id) { league.id }
 
-  let(:team_id) { team.first.id }
+  let(:league_teams) do
+    teams.each do |team|
+      create(:league_teams,
+             league_id: league.id,
+             team_id: team.id
+      )
+    end
+    LeaguesTeam.all
+  end
 
-  let(:fixture_id) { fixtures.first.id }
+  let(:league_team_id) { league_teams.first.id }
 
-  let(:fixture_params) {
+  let(:league_teams_params) {
     {
-      fixtures: [
+      league_teams: [
         {
-          "home_team": team.last.id,
-          "away_team": team.first.id,
-          "league_id": league.id,
-          "season": "2017/2018",
-          "match_day": "2018-09-09"
+          league_id: league.id,
+          team_id: teams.first.id
+        },
+        {
+          league_id: league.id,
+          team_id: teams.second.id
         }
       ]
     }
   }
 
-  let(:games) { fixture_params.size }
+  let(:num_teams) { league_teams_params[:league_teams].size }
 
-  describe "POST /league/:league_id/fixtures" do
+  describe "POST /league/:league_id/league_teams" do
     context "when the request is valid" do
       before do
-        post "/league/#{league_id}/fixtures",
+        post "/league/#{league_id}/league_teams",
              headers: authenticated_header(user),
-             params: fixture_params
+             params: league_teams_params
       end
 
       it "creates a new fixture" do
-        expect(json["message"]).to eq("#{games} games successfully created")
+        expect(json["message"]).to eq("#{num_teams} team(s) added to the league")
       end
 
       it "returns status code 201" do
@@ -71,13 +61,23 @@ RSpec.describe Fixture, type: :request do
     end
   end
 
-  describe "GET /league/:league_id/fixtures" do
+  describe "GET /league/:league_id/league_teams" do
     context "when the request is valid" do
-      before do
-        get "/league/#{league_id}/fixtures"
+      let!(:league_teams) do
+        teams.each do |team|
+          create(:league_teams,
+                 league_id: league.id,
+                 team_id: team.id
+          )
+        end
+        LeaguesTeam.all
       end
 
-      it "returns a list with 10 hashes" do
+      before do
+        get "/league/#{league_id}/league_teams"
+      end
+
+      it "returns a list with 10 hash" do
         expect(json.size).to eq 10
       end
 
@@ -87,13 +87,13 @@ RSpec.describe Fixture, type: :request do
     end
 
     context "when the request is invalid" do
-      let!(:fixture_id) { 0 }
+      let!(:league_team_id) { 1000 }
       before do
-        get "/league/#{league_id}/fixtures/#{fixture_id}"
+        get "/league/#{league_id}/league_teams/#{league_team_id}"
       end
 
       it "returns an error message" do
-        expect(json["error"]).to eq("The fixture is not available.")
+        expect(json["error"]).to eq("The league team is not available.")
       end
 
       it "returns status code 400" do
@@ -102,15 +102,15 @@ RSpec.describe Fixture, type: :request do
     end
   end
 
-  describe "DELETE /league/:league_id/fixtures/:fixture_id" do
+  describe "DELETE /league/:league_id/league_teams/:league_team_id" do
     context "when the request is valid" do
       before do
-        delete "/league/#{league_id}/fixtures/#{fixture_id}",
+        delete "/league/#{league_id}/league_teams/#{league_team_id}",
                headers: authenticated_header(user)
       end
 
       it "returns a success message" do
-        expect(json["message"]).to eq("Fixture was successfully deleted")
+        expect(json["message"]).to eq("Team was removed from league")
       end
 
       it "returns status code 200" do
@@ -119,15 +119,15 @@ RSpec.describe Fixture, type: :request do
     end
 
     context "when the request is invalid" do
-      let(:fixture_id) { 0 }
+      let(:league_team_id) { 0 }
 
       before do
-        delete "/league/#{league_id}/fixtures/#{fixture_id}",
+        delete "/league/#{league_id}/league_teams/#{league_team_id}",
                headers: authenticated_header(user)
       end
 
       it "returns an error message" do
-        expect(json["errors"]).to eq("The fixture does not exist")
+        expect(json["errors"]).to eq("The team does not exist in the league")
       end
 
       it "returns status code 400" do
@@ -136,15 +136,15 @@ RSpec.describe Fixture, type: :request do
     end
   end
 
-  describe "PUT /league/:league_id/fixtures/:fixture_id" do
+  describe "PUT /league/:league_id/league_teams/:league_team_id" do
     context "when the request is valid" do
       before do
-        put "/league/#{league_id}/fixtures/#{fixture_id}",
+        put "/league/#{league_id}/league_teams/#{league_team_id}",
             headers: authenticated_header(user)
       end
 
-      it "returns a hash with 11 keys" do
-        expect(json.size).to eq 11
+      it "returns a hash with 5 keys" do
+        expect(json.size).to eq 5
       end
 
       it "returns status code 200" do
@@ -153,15 +153,15 @@ RSpec.describe Fixture, type: :request do
     end
 
     context "when the request is invalid" do
-      let(:fixture_id) { 0 }
+      let(:league_team_id) { 0 }
 
       before do
-        put "/league/#{league_id}/fixtures/#{fixture_id}",
+        put "/league/#{league_id}/league_teams/#{league_team_id}",
             headers: authenticated_header(user)
       end
 
       it "returns an error message" do
-        expect(json["errors"]).to eq("The fixture does not exist")
+        expect(json["errors"]).to eq("The team does not exist in the league")
       end
 
       it "returns status code 400" do

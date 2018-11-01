@@ -75,4 +75,12 @@ Rails.application.routes.draw do
     put "/:event_id" => "events#update"
     delete "/:event_id" => "events#destroy"
   end
+
+  scope "league/:leagues_id/fixture/:fixtures_id/team/:teams_id/squad" do
+    get "/" => "fixture_squad#index"
+    post "/" => "fixture_squad#create"
+    get "/:fixture_squad_id" => "fixture_squad#show"
+    put "/:fixture_squad_id" => "fixture_squad#update"
+    delete "/:fixture_squad_id" => "fixture_squad#destroy"
+  end
 end

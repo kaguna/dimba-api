@@ -18,7 +18,7 @@ RSpec.describe Event, type: :request do
   describe "POST /events" do
     context "when the request is valid" do
       before do
-        post "/events",
+        post api_v1_add_event_path,
              headers: authenticated_header(user),
              params: event_params
       end
@@ -41,7 +41,7 @@ RSpec.describe Event, type: :request do
       end
 
       before do
-        post "/events",
+        post api_v1_add_event_path,
              headers: authenticated_header(user),
              params: event_params
       end
@@ -58,7 +58,9 @@ RSpec.describe Event, type: :request do
 
   describe "GET /events" do
     context "when the request is valid" do
-      before { get "/events" }
+      before do
+        get api_v1_events_path
+      end
 
       it "shows an array of 10 events" do
         expect(json.size).to eq 10
@@ -72,7 +74,9 @@ RSpec.describe Event, type: :request do
 
   describe "GET /events/:event_id" do
     context "when the request is valid" do
-      before { get "/events/#{event_id}" }
+      before do
+        get api_v1_event_path(event_id: event_id)
+      end
 
       it "returns one event's details" do
         expect(json.size).to eq 5
@@ -86,7 +90,9 @@ RSpec.describe Event, type: :request do
     context "when the request is invalid" do
       let!(:event_id) { 1000 }
 
-      before { get "/events/#{event_id}" }
+      before do
+        get api_v1_event_path(event_id: event_id)
+      end
 
       it "returns an error message" do
         expect(json["error"]).to eq("The event is not found!")
@@ -101,7 +107,7 @@ RSpec.describe Event, type: :request do
   describe "DELETE /events/:event_id" do
     context "when the request is valid" do
       before do
-        delete "/events/#{event_id}",
+        delete api_v1_delete_event_path(event_id: event_id),
                headers: authenticated_header(user)
       end
 
@@ -118,7 +124,7 @@ RSpec.describe Event, type: :request do
       let(:event_id) { 1000 }
 
       before do
-        delete "/events/#{event_id}",
+        delete api_v1_delete_event_path(event_id: event_id),
                headers: authenticated_header(user)
       end
 
@@ -135,7 +141,7 @@ RSpec.describe Event, type: :request do
   describe "PUT /events/:event_id" do
     context "when the request is valid" do
       before do
-        put "/events/#{event_id}",
+        put api_v1_edit_event_path(event_id: event_id),
             headers: authenticated_header(user)
       end
 
@@ -152,7 +158,7 @@ RSpec.describe Event, type: :request do
       let(:event_id) { 1000 }
 
       before do
-        put "/events/#{event_id}",
+        put api_v1_edit_event_path(event_id: event_id),
             headers: authenticated_header(user)
       end
 

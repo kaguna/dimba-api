@@ -63,9 +63,12 @@ RSpec.describe FixtureSquad, type: :request do
   describe "POST league/:league_id/fixture/:fixture_id/team/team_id/squad" do
     context "when the request is valid" do
       before do
-        post "/league/#{league_id}/fixture/#{fixture_id}/team/#{team_id}/squad",
-             headers: authenticated_header(user),
-             params: fixture_squad_params
+        post api_v1_add_fixture_squad_path(leagues_id: league_id,
+           fixtures_id: fixture_id,
+           teams_id: team_id
+           ),
+            headers: authenticated_header(user),
+            params: fixture_squad_params
       end
 
       it "creates a new fixture squad" do
@@ -82,7 +85,10 @@ RSpec.describe FixtureSquad, type: :request do
     context "when the request is valid" do
 
       before do
-        get "/league/#{league_id}/fixture/#{fixture_id}/team/#{team_id}/squad"
+        get api_v1_fixture_squads_path(leagues_id: league_id,
+          fixtures_id: fixture_id,
+          teams_id: team_id
+          )
       end
 
       it "returns a list with 10 hashes" do
@@ -97,7 +103,11 @@ RSpec.describe FixtureSquad, type: :request do
     context "when the request is invalid" do
       let!(:squad_id) { 1000 }
       let(:url) do
-        "/league/#{league_id}/fixture/#{fixture_id}/team/#{team_id}/squad/#{squad_id}"
+        api_v1_fixture_squad_path(leagues_id: league_id,
+          fixtures_id: fixture_id,
+          teams_id: team_id,
+          fixture_squad_id: squad_id
+          )
       end
 
       before do
@@ -117,7 +127,11 @@ RSpec.describe FixtureSquad, type: :request do
   describe "DELETE fixture/:fixture_id/team/team_id/squad/:squad_id" do
     context "when the request is made by an admin" do
       before do
-        delete "/league/#{league_id}/fixture/#{fixture_id}/team/#{team_id}/squad/#{squad_id}",
+        delete api_v1_delete_fixture_squad_path(leagues_id: league_id,
+          fixtures_id: fixture_id,
+          teams_id: team_id,
+          fixture_squad_id: squad_id
+          ),
                headers: authenticated_header(user)
       end
 
@@ -133,7 +147,11 @@ RSpec.describe FixtureSquad, type: :request do
     context "when the request is invalid" do
       let!(:squad_id) { 1000 }
       let(:url) do
-        "/league/#{league_id}/fixture/#{fixture_id}/team/#{team_id}/squad/#{squad_id}"
+        api_v1_delete_fixture_squad_path(leagues_id: league_id,
+          fixtures_id: fixture_id,
+          teams_id: team_id,
+          fixture_squad_id: squad_id
+        )
       end
 
       before do
@@ -153,7 +171,11 @@ RSpec.describe FixtureSquad, type: :request do
   describe "PUT fixture/:fixture_id/team/team_id/squad/:squad_id" do
     context "when the request is valid" do
       let(:url) do
-        "/league/#{league_id}/fixture/#{fixture_id}/team/#{team_id}/squad/#{squad_id}"
+        api_v1_edit_fixture_squad_path(leagues_id: league_id,
+          fixtures_id: fixture_id,
+          teams_id: team_id,
+          fixture_squad_id: squad_id
+        )
       end
       before do
         put url, headers: authenticated_header(user)
@@ -171,7 +193,11 @@ RSpec.describe FixtureSquad, type: :request do
     context "when the request is invalid" do
       let!(:squad_id) { 1000 }
       let(:url) do
-        "/league/#{league_id}/fixture/#{fixture_id}/team/#{team_id}/squad/#{squad_id}"
+        api_v1_edit_fixture_squad_path(leagues_id: league_id,
+          fixtures_id: fixture_id,
+          teams_id: team_id,
+          fixture_squad_id: squad_id
+        )
       end
 
       before do

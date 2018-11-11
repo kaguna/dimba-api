@@ -35,6 +35,8 @@ class LeaguesTeamsController < ApplicationController
                {
                  message: "#{teams_paramaters.size} team(s) added to the league"
                }, status: :created
+    rescue ActiveRecord::RecordInvalid
+      record_invalid("Team(s) exists in this league")
   end
 
   def update

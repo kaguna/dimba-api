@@ -36,7 +36,7 @@ RSpec.describe Transfer, type: :request do
   describe "POST /transfers" do
     context "when the request is valid" do
       before do
-        post "/transfers",
+        post api_v1_transfer_path,
              headers: authenticated_header(user),
              params: transfer_params
       end
@@ -54,7 +54,7 @@ RSpec.describe Transfer, type: :request do
   describe "GET /transfers" do
     context "when the request is valid" do
       before do
-        get "/transfers"
+        get api_v1_all_transfers_path
       end
 
       it "returns a list with 1 hash of on player transfer" do
@@ -68,7 +68,7 @@ RSpec.describe Transfer, type: :request do
 
     context "when the request for a specific player" do
       before do
-        get "/transfers/#{player_id}"
+        get api_v1_show_transfer_path(player_id: player_id)
       end
 
       it "returns a hash with 9 keys" do
@@ -83,7 +83,7 @@ RSpec.describe Transfer, type: :request do
     context "when player has no transfer history" do
       let!(:player_id) { 10 }
       before do
-        get "/transfers/#{player_id}"
+        get api_v1_show_transfer_path(player_id: player_id)
       end
 
       it "returns an error message" do
@@ -99,7 +99,7 @@ RSpec.describe Transfer, type: :request do
   describe "DELETE /transfers/:transfer_id" do
     context "when the request is valid" do
       before do
-        delete "/transfers/#{transfer_id}",
+        delete api_v1_delete_transfer_path(transfer_id: transfer_id),
                headers: authenticated_header(user)
       end
 
@@ -116,7 +116,7 @@ RSpec.describe Transfer, type: :request do
       let(:transfer_id) { 0 }
 
       before do
-        delete "/transfers/#{transfer_id}",
+        delete api_v1_delete_transfer_path(transfer_id: transfer_id),
                headers: authenticated_header(user)
       end
 
@@ -133,7 +133,7 @@ RSpec.describe Transfer, type: :request do
   describe "PUT /transfers/:transfer_id" do
     context "when the request is valid" do
       before do
-        put "/transfers/#{transfer_id}",
+        put api_v1_edit_transfer_path(transfer_id: transfer_id),
             headers: authenticated_header(user)
       end
 
@@ -150,8 +150,8 @@ RSpec.describe Transfer, type: :request do
       let(:transfer_id) { 0 }
 
       before do
-        put "/transfers/#{transfer_id}",
-            headers: authenticated_header(user)
+        put  api_v1_edit_transfer_path(transfer_id: transfer_id),
+             headers: authenticated_header(user)
       end
 
       it "returns an error message" do

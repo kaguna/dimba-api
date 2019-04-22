@@ -26,7 +26,7 @@ RSpec.describe Player, type: :request do
   describe "POST players/create" do
     context "when the request is valid" do
       before do
-        post "/team/#{team_id}/player",
+        post api_v1_add_player_path(team_id: team_id),
              headers: authenticated_header(user),
              params: player_params
       end
@@ -55,7 +55,7 @@ RSpec.describe Player, type: :request do
       end
 
       before do
-        post "/team/#{team_id}/player",
+        post api_v1_add_player_path(team_id: team_id),
              headers: authenticated_header(user),
              params: player_params
       end
@@ -72,7 +72,9 @@ RSpec.describe Player, type: :request do
 
   describe "GET /team/:team_id/players" do
     context "when the request is valid" do
-      before { get "/team/#{team_id}/players" }
+      before do
+        get api_v1_players_path(team_id: team_id)
+      end
 
       it "returns a list of 10 player hashes" do
         expect(json.size).to eq 10
@@ -85,7 +87,9 @@ RSpec.describe Player, type: :request do
 
     context "when the request is invalid" do
       let!(:team_id) { 1 }
-      before { get "/team/#{team_id}/players" }
+      before do
+        get api_v1_players_path(team_id: team_id)
+      end
 
       it "returns an error message" do
         expect(json["errors"]).to eq("The team does not exist")
@@ -99,10 +103,10 @@ RSpec.describe Player, type: :request do
 
   describe "DELETE /team/:team_id/player/:player_id" do
     context "when the request is valid" do
-      before { delete "/team/#{team_id}/player/#{player_id}" }
 
       before do
-        delete "/team/#{team_id}/player/#{player_id}",
+        delete api_v1_delete_player_path(team_id: team_id,
+                                         player_id: player_id),
                headers: authenticated_header(user)
       end
 
@@ -119,7 +123,8 @@ RSpec.describe Player, type: :request do
       let(:player_id) { 100 }
 
       before do
-        delete "/team/#{team_id}/player/#{player_id}",
+        delete api_v1_delete_player_path(team_id: team_id,
+                                         player_id: player_id),
                headers: authenticated_header(user)
       end
 
@@ -136,7 +141,8 @@ RSpec.describe Player, type: :request do
   describe "PUT /team/:team_id/player/:player_id" do
     context "when the request is valid" do
       before do
-        put "/team/#{team_id}/player/#{player_id}",
+        put api_v1_edit_player_path(team_id: team_id,
+                                      player_id: player_id),
             headers: authenticated_header(user)
       end
 
@@ -153,7 +159,8 @@ RSpec.describe Player, type: :request do
       let(:player_id) { 0 }
 
       before do
-        put "/team/#{team_id}/player/#{player_id}",
+        put api_v1_edit_player_path(team_id: team_id,
+                                      player_id: player_id),
             headers: authenticated_header(user)
       end
 

@@ -1,5 +1,4 @@
-class LeaguesTeamsController < ApplicationController
-
+class Api::V1::LeaguesTeamsController < Api::V1::ApplicationController
   before_action :authenticate_current_user, except: %i(index show)
   before_action :set_league_teams, only: %i(update destroy)
   after_action :verify_authorized, except: %i(index show)
@@ -35,8 +34,6 @@ class LeaguesTeamsController < ApplicationController
                {
                  message: "#{teams_paramaters.size} team(s) added to the league"
                }, status: :created
-    rescue ActiveRecord::RecordInvalid
-      record_invalid("Team(s) exists in this league")
   end
 
   def update

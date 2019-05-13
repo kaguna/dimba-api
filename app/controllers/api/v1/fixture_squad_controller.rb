@@ -1,16 +1,16 @@
-class FixtureSquadController < ApplicationController
+class Api::V1::FixtureSquadController < Api::V1::ApplicationController
   before_action :authenticate_current_user, except: %i(index show)
   before_action :set_fixture_squad, only: %i(update destroy)
   after_action :verify_authorized, except: %i(index show)
 
   def index
     fixture_squad = FixtureSquad.where(fixtures_id: params[:fixtures_id],
-                                       teams_id: params[:teams_id]
+                                      teams_id: params[:teams_id]
     )
 
     if fixture_squad.empty?
       render json: { errors: "No squad for this match." },
-             status: :bad_request
+            status: :bad_request
 
     else
       render json: fixture_squad, status: :ok
@@ -22,7 +22,7 @@ class FixtureSquadController < ApplicationController
 
     if squad_player.empty?
       render json: { error: "The player is not in the squad." },
-             status: :bad_request
+            status: :bad_request
 
     else
       render json: squad_player, status: :ok
@@ -32,9 +32,9 @@ class FixtureSquadController < ApplicationController
   def create
     create_fixture_squad
     render json:
-               {
-                 message: "#{players_paramaters.size} player(s) added to game"
-               }, status: :created
+              {
+                message: "#{players_paramaters.size} player(s) added to game"
+              }, status: :created
   end
 
   def update
@@ -44,7 +44,7 @@ class FixtureSquadController < ApplicationController
 
     else
       render json: { errors: "The player is not in the squad." },
-             status: :bad_request
+            status: :bad_request
     end
   end
 
@@ -52,11 +52,11 @@ class FixtureSquadController < ApplicationController
     if @fixture_squad
       @fixture_squad.destroy
       render json: { message: "Players removed from the squad." },
-             status: :ok
+            status: :ok
 
     else
       render json: { errors: "The player is not in the squad." },
-             status: :bad_request
+            status: :bad_request
     end
   end
 

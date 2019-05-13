@@ -18,7 +18,7 @@ RSpec.describe Sponsor, type: :request do
   describe "POST /sponsors" do
     context "when the request is valid" do
       before do
-        post api_v1_add_sponsor_path,
+        post "/sponsors",
              headers: authenticated_header(user),
              params: sponsor_params
       end
@@ -42,7 +42,7 @@ RSpec.describe Sponsor, type: :request do
       end
 
       before do
-        post api_v1_add_sponsor_path,
+        post "/sponsors",
              headers: authenticated_header(user),
              params: sponsor_params
       end
@@ -59,9 +59,7 @@ RSpec.describe Sponsor, type: :request do
 
   describe "GET /sponsors" do
     context "when the request is valid" do
-      before do
-        get api_v1_sponsors_path
-      end
+      before { get "/sponsors" }
 
       it "shows an array of 10 sponsors" do
         expect(json.size).to eq 10
@@ -75,9 +73,7 @@ RSpec.describe Sponsor, type: :request do
 
   describe "GET /sponsors/:sponsor_id" do
     context "when the request is valid" do
-      before do
-        get api_v1_sponsor_path(sponsor_id: sponsor_id)
-      end
+      before { get "/sponsors/#{sponsor_id}" }
 
       it "returns one sponsor's details" do
         expect(json.size).to eq 6
@@ -90,9 +86,7 @@ RSpec.describe Sponsor, type: :request do
 
     context "when the request is invalid" do
       let!(:sponsor_id) { 1000 }
-      before do
-        get api_v1_sponsor_path(sponsor_id: sponsor_id)
-      end
+      before { get "/sponsors/#{sponsor_id}" }
 
       it "returns an error message" do
         expect(json["errors"]).to eq("The sponsor does not exist")
@@ -108,7 +102,7 @@ RSpec.describe Sponsor, type: :request do
     context "when the request is valid" do
 
       before do
-        delete api_v1_delete_sponsor_path(sponsor_id: sponsor_id),
+        delete "/sponsors/#{sponsor_id}",
                headers: authenticated_header(user)
       end
 
@@ -125,7 +119,7 @@ RSpec.describe Sponsor, type: :request do
       let(:sponsor_id) { 100 }
 
       before do
-        delete api_v1_delete_sponsor_path(sponsor_id: sponsor_id),
+        delete "/sponsors/#{sponsor_id}",
                headers: authenticated_header(user)
       end
 
@@ -142,7 +136,7 @@ RSpec.describe Sponsor, type: :request do
   describe "PUT /sponsors/:sponsor_id" do
     context "when the request is valid" do
       before do
-        put api_v1_edit_sponsor_path(sponsor_id: sponsor_id),
+        put "/sponsors/#{sponsor_id}",
             headers: authenticated_header(user)
       end
 
@@ -159,7 +153,7 @@ RSpec.describe Sponsor, type: :request do
       let(:sponsor_id) { 100 }
 
       before do
-        put api_v1_edit_sponsor_path(sponsor_id: sponsor_id),
+        put "/sponsors/#{sponsor_id}",
             headers: authenticated_header(user)
       end
 

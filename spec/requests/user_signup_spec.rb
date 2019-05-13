@@ -12,7 +12,7 @@ RSpec.describe User, type: :request do
   describe "POST user/signup" do
     context "when the request is valid" do
       before do
-        post api_v1_register_path, params: user_params
+        post "/user/sign_up", params: user_params
       end
 
       it "creates a new user with 7 attributes" do
@@ -34,9 +34,7 @@ RSpec.describe User, type: :request do
         }
       end
 
-      before do
-        post api_v1_register_path, params: user_params
-      end
+      before { post "/user/sign_up", params: user_params }
 
       it "does not create a new user with empty username or email" do
         expect(json["username"]).to eq(["can't be blank"])

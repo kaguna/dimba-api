@@ -46,7 +46,7 @@ RSpec.describe LeaguesTeam, type: :request do
   describe "POST /league/:league_id/league_teams" do
     context "when the request is valid" do
       before do
-        post api_v1_add_team_to_league_path(league_id: league_id),
+        post "/league/#{league_id}/league_teams",
              headers: authenticated_header(user),
              params: league_teams_params
       end
@@ -74,7 +74,7 @@ RSpec.describe LeaguesTeam, type: :request do
       end
 
       before do
-        get api_v1_league_teams_path(league_id: league_id)
+        get "/league/#{league_id}/league_teams"
       end
 
       it "returns a list with 10 hash" do
@@ -89,8 +89,7 @@ RSpec.describe LeaguesTeam, type: :request do
     context "when the request is invalid" do
       let!(:league_team_id) { 1000 }
       before do
-        get api_v1_league_team_path(league_id: league_id,
-                                    league_team_id: league_team_id)
+        get "/league/#{league_id}/league_teams/#{league_team_id}"
       end
 
       it "returns an error message" do
@@ -106,8 +105,7 @@ RSpec.describe LeaguesTeam, type: :request do
   describe "DELETE /league/:league_id/league_teams/:league_team_id" do
     context "when the request is valid" do
       before do
-        delete api_v1_delete_league_team_path(league_id: league_id,
-                                              league_team_id: league_team_id),
+        delete "/league/#{league_id}/league_teams/#{league_team_id}",
                headers: authenticated_header(user)
       end
 
@@ -124,8 +122,7 @@ RSpec.describe LeaguesTeam, type: :request do
       let(:league_team_id) { 0 }
 
       before do
-        delete api_v1_delete_league_team_path(league_id: league_id,
-                                              league_team_id: league_team_id),
+        delete "/league/#{league_id}/league_teams/#{league_team_id}",
                headers: authenticated_header(user)
       end
 
@@ -142,8 +139,7 @@ RSpec.describe LeaguesTeam, type: :request do
   describe "PUT /league/:league_id/league_teams/:league_team_id" do
     context "when the request is valid" do
       before do
-        put api_v1_edit_league_team_path(league_id: league_id,
-                                         league_team_id: league_team_id),
+        put "/league/#{league_id}/league_teams/#{league_team_id}",
             headers: authenticated_header(user)
       end
 
@@ -160,8 +156,7 @@ RSpec.describe LeaguesTeam, type: :request do
       let(:league_team_id) { 0 }
 
       before do
-        put api_v1_edit_league_team_path(league_id: league_id,
-                                         league_team_id: league_team_id),
+        put "/league/#{league_id}/league_teams/#{league_team_id}",
             headers: authenticated_header(user)
       end
 

@@ -56,7 +56,7 @@ RSpec.describe Fixture, type: :request do
   describe "POST /league/:league_id/fixtures" do
     context "when the request is valid" do
       before do
-        post api_v1_add_fixtures_path(league_id: league_id),
+        post "/league/#{league_id}/fixtures",
              headers: authenticated_header(user),
              params: fixture_params
       end
@@ -74,7 +74,7 @@ RSpec.describe Fixture, type: :request do
   describe "GET /league/:league_id/fixtures" do
     context "when the request is valid" do
       before do
-        get api_v1_fixtures_path(league_id: league_id)
+        get "/league/#{league_id}/fixtures"
       end
 
       it "returns a list with 10 hashes" do
@@ -89,8 +89,7 @@ RSpec.describe Fixture, type: :request do
     context "when the request is invalid" do
       let!(:fixture_id) { 0 }
       before do
-        get api_v1_show_fixture_path(league_id: league_id,
-                                fixture_id: fixture_id)
+        get "/league/#{league_id}/fixtures/#{fixture_id}"
       end
 
       it "returns an error message" do
@@ -106,8 +105,7 @@ RSpec.describe Fixture, type: :request do
   describe "DELETE /league/:league_id/fixtures/:fixture_id" do
     context "when the request is valid" do
       before do
-        delete api_v1_delete_fixture_path(league_id: league_id,
-                                          fixture_id: fixture_id),
+        delete "/league/#{league_id}/fixtures/#{fixture_id}",
                headers: authenticated_header(user)
       end
 
@@ -124,8 +122,7 @@ RSpec.describe Fixture, type: :request do
       let(:fixture_id) { 0 }
 
       before do
-        delete api_v1_delete_fixture_path(league_id: league_id,
-                                          fixture_id: fixture_id),
+        delete "/league/#{league_id}/fixtures/#{fixture_id}",
                headers: authenticated_header(user)
       end
 
@@ -142,8 +139,7 @@ RSpec.describe Fixture, type: :request do
   describe "PUT /league/:league_id/fixtures/:fixture_id" do
     context "when the request is valid" do
       before do
-        put api_v1_edit_fixture_path(league_id: league_id,
-                                       fixture_id: fixture_id),
+        put "/league/#{league_id}/fixtures/#{fixture_id}",
             headers: authenticated_header(user)
       end
 
@@ -160,8 +156,7 @@ RSpec.describe Fixture, type: :request do
       let(:fixture_id) { 0 }
 
       before do
-        put api_v1_edit_fixture_path(league_id: league_id,
-                                     fixture_id: fixture_id),
+        put "/league/#{league_id}/fixtures/#{fixture_id}",
             headers: authenticated_header(user)
       end
 

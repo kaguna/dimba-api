@@ -1,4 +1,4 @@
-module FixturesControllerHelper
+module FixturesConcern
   def generate(league_id)
     fixtures = []
     matches = LeaguesTeam.joins(:team).

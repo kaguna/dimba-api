@@ -1,9 +1,10 @@
 class Api::V1::ResultsController < Api::V1::ApplicationController
   before_action :authenticate_current_user, except: %i(index show)
   before_action :specific_result, only: %i(update destroy)
+  after_action :verify_authorized, except: %i(index show)
 
   def index
-    render json: @result, status: :ok
+    render json: Result.all, status: :ok
   end
 
   def show
@@ -15,6 +16,7 @@ class Api::V1::ResultsController < Api::V1::ApplicationController
   end
 
   def update
+    authorize specific_result
     specific_result.update_attributes(result_params)
     render json: specific_result
   end
@@ -29,6 +31,7 @@ class Api::V1::ResultsController < Api::V1::ApplicationController
   def add_fixture_results
     result_data.each do |attributes|
       result = Result.new(fixture_result_params(attributes))
+      authorize result
       result.fixtures_id = params[:fixtures_id]
       result.save
     end

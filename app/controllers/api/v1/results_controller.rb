@@ -12,7 +12,9 @@ class Api::V1::ResultsController < Api::V1::ApplicationController
   end
 
   def create
-    add_fixture_results
+    result = Result.create!(result_params)
+    authorize result
+    render json: result, status: :created
   end
 
   def update
@@ -28,38 +30,15 @@ class Api::V1::ResultsController < Api::V1::ApplicationController
 
   private
 
-  def add_fixture_results
-    result_data.each do |attributes|
-      result = Result.new(fixture_result_params(attributes))
-      authorize result
-      result.fixtures_id = params[:fixtures_id]
-      result.save
-    end
-  end
-
-  def result_data
-    params.require(:fixture_results)
-  end
-
-  def fixture_result_params(attributes)
-    attributes.permit(
-        :teams_id,
-        :total_goals,
-        :points
-    )
-  end
-
   def specific_result
     @result = Result.find(params[:result_id])
   end
 
   def result_params
     params.permit(
-        :fixtures_id,
-        :teams_id,
-        :total_goals,
-        :points,
-        :league_id
+        :fixture_id,
+        :home_goals,
+        :away_goals
     )
   end
 end

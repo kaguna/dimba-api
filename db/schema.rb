@@ -99,14 +99,12 @@ ActiveRecord::Schema.define(version: 2019_04_22_163811) do
   end
 
   create_table "results", force: :cascade do |t|
-    t.bigint "teams_id"
-    t.bigint "fixtures_id"
-    t.integer "total_goals"
-    t.integer "points"
+    t.bigint "fixture_id"
+    t.integer "home_goals"
+    t.integer "away_goals"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["fixtures_id"], name: "index_results_on_fixtures_id"
-    t.index ["teams_id"], name: "index_results_on_teams_id"
+    t.index ["fixture_id"], name: "index_results_on_fixture_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -179,8 +177,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_163811) do
   add_foreign_key "leagues_teams", "leagues"
   add_foreign_key "leagues_teams", "teams"
   add_foreign_key "players", "teams"
-  add_foreign_key "results", "fixtures", column: "fixtures_id"
-  add_foreign_key "results", "teams", column: "teams_id"
+  add_foreign_key "results", "fixtures"
   add_foreign_key "transfers", "players"
   add_foreign_key "transfers", "teams", column: "from_team_id"
   add_foreign_key "transfers", "teams", column: "to_team_id"

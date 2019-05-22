@@ -9,6 +9,10 @@ RSpec.describe Result, type: :request do
 
   let!(:user) { create(:user, role_id: referee_role.id) }
 
+  let!(:admin_role) { create(:role, name: "Admin") }
+
+  let!(:admin) { create(:user, role_id: admin_role.id) }
+
   let!(:teams) { create_list(:team, 2) }
 
   let!(:league) { create(:league) }
@@ -20,7 +24,7 @@ RSpec.describe Result, type: :request do
            league_id: league.id)
   end
 
-  let!(:results) { create(:result, fixture_id: fixture.id) }
+  let(:results) { create(:result, fixture_id: fixture.id) }
 
   let(:results_params) { attributes_for(:result) }
 
@@ -61,6 +65,60 @@ RSpec.describe Result, type: :request do
     end
   end
 
+  describe "PUT /fixture/:fixture_id/results/:result_id" do
+    context "when the request is valid" do
+      before do
+        put api_v1_edit_result_path(fixture_id: fixture.id,
+                                    result_id: results.id),
+            headers: authenticated_header(user)
+      end
 
+      it "returns status code 200" do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context "when the request is invalid" do
+      let(:result_id) { 0 }
+
+      before do
+        put api_v1_edit_result_path(fixture_id: fixture.id,
+                                    result_id: result_id),
+            headers: authenticated_header(user)
+      end
+
+      it "returns status code 400" do
+        expect(response).to have_http_status(404)
+      end
+    end
+  end
+
+  describe "DELETE /fixture/:fixture_id/results/:result_id" do
+    context "when the request is valid" do
+      before do
+        delete api_v1_delete_result_path(fixture_id: fixture.id,
+                                         result_id: results.id),
+               headers: authenticated_header(admin)
+      end
+
+      it "returns status code 200" do
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context "when the request is invalid" do
+      let(:result_id) { 0 }
+
+      before do
+        delete api_v1_delete_result_path(fixture_id: fixture.id,
+                                         result_id: result_id),
+               headers: authenticated_header(admin)
+      end
+
+      it "returns status code 400" do
+        expect(response).to have_http_status(404)
+      end
+    end
+  end
 end
 

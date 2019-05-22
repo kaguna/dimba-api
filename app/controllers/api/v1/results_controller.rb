@@ -26,6 +26,7 @@ class Api::V1::ResultsController < Api::V1::ApplicationController
   def destroy
     authorize specific_result
     specific_result.destroy
+    render json: {}, status: :ok
   end
 
   private

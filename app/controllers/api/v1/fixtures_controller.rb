@@ -85,7 +85,7 @@ class Api::V1::FixturesController < Api::V1::ApplicationController
     attributes.permit(
       :home_team,
       :away_team,
-      :season
+      :season_id
     )
   end
 

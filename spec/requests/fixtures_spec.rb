@@ -19,6 +19,8 @@ RSpec.describe Fixture, type: :request do
 
   let!(:league) { create(:league) }
 
+  let!(:season) { create(:season) }
+
   let!(:fixtures) do
     create_list(
       :fixture, 10,
@@ -26,6 +28,7 @@ RSpec.describe Fixture, type: :request do
       away_team: team.first.id,
       league_id: league.id,
       center_referee: user_ref.first.id,
+      season_id: season.id,
       right_side_referee: user_ref.last.id,
       left_side_referee: user_ref.second.id
     )
@@ -44,7 +47,7 @@ RSpec.describe Fixture, type: :request do
           "home_team": team.last.id,
           "away_team": team.first.id,
           "league_id": league.id,
-          "season": "2017/2018",
+          "season": season.id,
           "match_day": "2018-09-09"
         }
       ]

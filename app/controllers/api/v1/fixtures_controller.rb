@@ -1,5 +1,5 @@
 class Api::V1::FixturesController < Api::V1::ApplicationController
-  include FixturesControllerHelper
+  include FixturesConcern
   before_action :authenticate_current_user, except: %i(index show)
   before_action :set_fixture, only: %i(update destroy)
   after_action :verify_authorized, except: %i(index show)
@@ -17,7 +17,7 @@ class Api::V1::FixturesController < Api::V1::ApplicationController
   end
 
   def generate_fixture
-    authorize self
+    authorize Fixture.new
     render json: generate(params[:league_id]), status: :ok
   end
 

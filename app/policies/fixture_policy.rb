@@ -10,4 +10,8 @@ class FixturePolicy < ApplicationPolicy
   def destroy?
     user.present? && user.admin?
   end
+
+  def generate_fixture?
+    user.present? && user.admin?
+  end
 end

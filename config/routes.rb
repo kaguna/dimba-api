@@ -85,6 +85,14 @@ Rails.application.routes.draw do
         put "/:fixture_squad_id" => "fixture_squad#update", as: "edit_fixture_squad"
         delete "/:fixture_squad_id" => "fixture_squad#destroy", as: "delete_fixture_squad"
       end
+
+      scope "fixture/:fixture_id/results" do
+        get "/" => "results#index", as: "results"
+        post "/" => "results#create", as: "add_results"
+        get "/:result_id" => "results#show", as: "result"
+        put "/:result_id" => "results#update", as: "edit_result"
+        delete "/:result_id" => "results#destroy", as: "delete_result"
+      end
     end
   end
 end

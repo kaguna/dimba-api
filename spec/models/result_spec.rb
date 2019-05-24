@@ -2,7 +2,9 @@ require "rails_helper"
 require "./spec/support/request_helper"
 
 RSpec.describe Result, type: :model do
-  it "is valid with valid attributes" do
-    expect(Result.new).to be_valid
+  describe "Validations" do
+    context "when inputs must be present" do
+      it { should validate_presence_of(:fixture_id) }
+    end
   end
 end

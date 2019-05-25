@@ -17,10 +17,13 @@ RSpec.describe Result, type: :request do
 
   let!(:league) { create(:league) }
 
+  let!(:season) { create(:season) }
+
   let!(:fixture) do
     create(:fixture,
            home_team: teams.last.id,
            away_team: teams.first.id,
+           season_id: season.id,
            league_id: league.id)
   end
 

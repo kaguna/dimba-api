@@ -14,11 +14,14 @@ RSpec.describe Commentary, type: :request do
 
   let(:event) { create(:event) }
 
+  let(:season) { create(:season) }
+
   let!(:fixture) do
     create(
       :fixture,
       home_team: team.last.id,
-      away_team: team.first.id
+      away_team: team.first.id,
+      season_id: season.id
     )
   end
 

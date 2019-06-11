@@ -17,7 +17,7 @@ RSpec.describe League, type: :request do
   describe "POST /leagues" do
     context "when the request is valid" do
       before do
-        post "/leagues",
+        post api_v1_add_league_path,
              headers: authenticated_header(user),
              params: league_params
       end
@@ -34,7 +34,9 @@ RSpec.describe League, type: :request do
 
   describe "GET /leagues" do
     context "when the request is valid" do
-      before { get "/leagues" }
+      before do
+        get api_v1_leagues_path
+      end
 
       it "returns a list with 1 hash of a league" do
         expect(json.size).to eq 1
@@ -47,7 +49,9 @@ RSpec.describe League, type: :request do
 
     context "when the request is invalid" do
       let!(:league_id) { 1 }
-      before { get "/leagues/#{league_id}" }
+      before do
+        get api_v1_league_path(league_id: league_id)
+      end
 
       it "returns an error message" do
         expect(json["error"]).to eq("The league does not exist")
@@ -62,7 +66,7 @@ RSpec.describe League, type: :request do
   describe "DELETE leagues/:league_id" do
     context "when the request is valid" do
       before do
-        delete "/leagues/#{league_id}",
+        delete api_v1_delete_league_path(league_id: league_id),
                headers: authenticated_header(user)
       end
 
@@ -79,7 +83,7 @@ RSpec.describe League, type: :request do
       let(:league_id) { 0 }
 
       before do
-        delete "/leagues/#{league_id}",
+        delete api_v1_delete_league_path(league_id: league_id),
                headers: authenticated_header(user)
       end
 
@@ -96,7 +100,7 @@ RSpec.describe League, type: :request do
   describe "PUT /leagues/:league_id" do
     context "when the request is valid" do
       before do
-        put "/leagues/#{league_id}",
+        put api_v1_edit_league_path(league_id: league_id),
             headers: authenticated_header(user)
       end
 
@@ -113,7 +117,7 @@ RSpec.describe League, type: :request do
       let(:league_id) { 0 }
 
       before do
-        put "/leagues/#{league_id}",
+        put api_v1_edit_league_path(league_id: league_id),
             headers: authenticated_header(user)
       end
 

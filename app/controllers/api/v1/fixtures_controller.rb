@@ -1,5 +1,5 @@
-class FixturesController < ApplicationController
-  include FixturesControllerHelper
+class Api::V1::FixturesController < Api::V1::ApplicationController
+  include FixturesConcern
   before_action :authenticate_current_user, except: %i(index show)
   before_action :set_fixture, only: %i(update destroy)
   after_action :verify_authorized, except: %i(index show)
@@ -7,17 +7,18 @@ class FixturesController < ApplicationController
   def index
     fixtures = Fixture.where(league_id: params[:league_id])
 
-    if fixtures
-      render json: fixtures, status: :ok
-    else
-      render json: { errors: "No fixture available." },
+    if fixtures.empty?
+      render json: { errors: "No fixtures available." },
              status: :bad_request
+
+    else
+      render json: fixtures, status: :ok
     end
   end
 
   def generate_fixture
-    authorize self
-    render json: generate(fixture_params[:league_id]), status: :ok
+    authorize Fixture.new
+    render json: generate(params[:league_id]), status: :ok
   end
 
   def show
@@ -27,27 +28,22 @@ class FixturesController < ApplicationController
     if fixture.empty?
       render json: { error: "The fixture is not available." },
              status: :bad_request
+
     else
       render json: fixture, status: :ok
     end
   end
 
   def create
-    create_fixture = Fixture.new(fixture_params)
-    authorize create_fixture
-
-    if create_fixture.save
-      render json: create_fixture, status: :created
-
-    else
-      render json: create_fixture.errors,
-             status: :unprocessable_entity
-    end
+    create_fixtures
+    render json: {
+      message: "#{fixtures_paramaters.size} games successfully created"
+    }, status: :created
   end
 
   def update
     if @fixture
-      @fixture.update_attributes(fixture_params)
+      @fixture.update_attributes(update_params)
       render json: @fixture, status: :ok
 
     else
@@ -70,19 +66,39 @@ class FixturesController < ApplicationController
 
   private
 
+  def create_fixtures
+    fixtures_paramaters.each do |attributes|
+      fixture = Fixture.new(fixture_params(attributes))
+      authorize fixture
+      fixture.league_id = params[:league_id]
+      fixture.save
+    end
+  end
+
   def set_fixture
     @fixture = Fixture.find_by(id: params[:fixture_id],
                                league_id: params[:league_id])
     authorize @fixture
   end
 
-  def fixture_params
-    params.permit(
+  def fixture_params(attributes)
+    attributes.permit(
       :home_team,
       :away_team,
-      :season,
-      :league_id,
-      :match_day
+      :season_id
+    )
+  end
+
+  def fixtures_paramaters
+    params.require(:fixtures)
+  end
+
+  def update_params
+    params.permit(
+        :center_referee,
+        :right_side_referee,
+        :left_side_referee,
+        :match_day
     )
   end
 end

@@ -1,4 +1,4 @@
-class LeaguesController < ApplicationController
+class Api::V1::LeaguesController < Api::V1::ApplicationController
   before_action :authenticate_current_user, except: %i(index show)
   before_action :set_league, only: %i(update destroy)
   after_action :verify_authorized, except: %i(index show)

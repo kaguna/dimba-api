@@ -1,7 +1,7 @@
 require "rails_helper"
 require "./spec/support/request_helper"
-RSpec.describe Event, type: :request do
 
+RSpec.describe Sponsor, type: :request do
   include RequestSpecHelper
   include AuthenticationSpecHelper
 
@@ -9,22 +9,22 @@ RSpec.describe Event, type: :request do
 
   let!(:user) { create(:user, role_id: role.id) }
 
-  let!(:event) { create_list(:event, 10) }
+  let!(:sponsor) { create_list(:sponsor, 10) }
 
-  let(:event_id) { event.first.id }
+  let(:sponsor_id) { sponsor.first.id }
 
-  let(:event_params) { attributes_for(:event) }
+  let(:sponsor_params) { attributes_for(:sponsor) }
 
-  describe "POST /events" do
+  describe "POST /sponsors" do
     context "when the request is valid" do
       before do
-        post api_v1_add_event_path,
+        post api_v1_add_sponsor_path,
              headers: authenticated_header(user),
-             params: event_params
+             params: sponsor_params
       end
 
-      it "creates a new event with 5 attributes" do
-        expect(json.size).to eq 5
+      it "creates a new sponsor with 6 attributes" do
+        expect(json.size).to eq 6
       end
 
       it "returns status code 201" do
@@ -33,20 +33,21 @@ RSpec.describe Event, type: :request do
     end
 
     context "when the request is invalid" do
-      let(:event_params) do
+      let(:sponsor_params) do
         {
           name: "",
-          description: "An exemplary goal"
+          description: "More money, less stress",
+          contacts: "https//www.example.com",
         }
       end
 
       before do
-        post api_v1_add_event_path,
+        post api_v1_add_sponsor_path,
              headers: authenticated_header(user),
-             params: event_params
+             params: sponsor_params
       end
 
-      it "does not create a new event with empty name" do
+      it "does not create a new sponsor with empty name" do
         expect(json["name"]).to eq(["can't be blank"])
       end
 
@@ -56,13 +57,13 @@ RSpec.describe Event, type: :request do
     end
   end
 
-  describe "GET /events" do
+  describe "GET /sponsors" do
     context "when the request is valid" do
       before do
-        get api_v1_events_path
+        get api_v1_sponsors_path
       end
 
-      it "shows an array of 10 events" do
+      it "shows an array of 10 sponsors" do
         expect(json.size).to eq 10
       end
 
@@ -72,14 +73,14 @@ RSpec.describe Event, type: :request do
     end
   end
 
-  describe "GET /events/:event_id" do
+  describe "GET /sponsors/:sponsor_id" do
     context "when the request is valid" do
       before do
-        get api_v1_event_path(event_id: event_id)
+        get api_v1_sponsor_path(sponsor_id: sponsor_id)
       end
 
-      it "returns one event's details" do
-        expect(json.size).to eq 5
+      it "returns one sponsor's details" do
+        expect(json.size).to eq 6
       end
 
       it "returns status code 200" do
@@ -88,14 +89,13 @@ RSpec.describe Event, type: :request do
     end
 
     context "when the request is invalid" do
-      let!(:event_id) { 1000 }
-
+      let!(:sponsor_id) { 1000 }
       before do
-        get api_v1_event_path(event_id: event_id)
+        get api_v1_sponsor_path(sponsor_id: sponsor_id)
       end
 
       it "returns an error message" do
-        expect(json["error"]).to eq("The event is not found!")
+        expect(json["errors"]).to eq("The sponsor does not exist")
       end
 
       it "returns status code 400" do
@@ -104,15 +104,16 @@ RSpec.describe Event, type: :request do
     end
   end
 
-  describe "DELETE /events/:event_id" do
+  describe "DELETE /sponsors/:sponsor_id" do
     context "when the request is valid" do
+
       before do
-        delete api_v1_delete_event_path(event_id: event_id),
+        delete api_v1_delete_sponsor_path(sponsor_id: sponsor_id),
                headers: authenticated_header(user)
       end
 
       it "returns a success message" do
-        expect(json["message"]).to eq("Event was successfully deleted")
+        expect(json["message"]).to eq("Sponsor was successfully deleted")
       end
 
       it "returns status code 200" do
@@ -121,15 +122,15 @@ RSpec.describe Event, type: :request do
     end
 
     context "when the request is invalid" do
-      let(:event_id) { 1000 }
+      let(:sponsor_id) { 100 }
 
       before do
-        delete api_v1_delete_event_path(event_id: event_id),
+        delete api_v1_delete_sponsor_path(sponsor_id: sponsor_id),
                headers: authenticated_header(user)
       end
 
       it "returns an error message and status code 400" do
-        expect(json["errors"]).to eq("The event does not exist")
+        expect(json["errors"]).to eq("The sponsor does not exist")
       end
 
       it "returns status code 400" do
@@ -138,15 +139,15 @@ RSpec.describe Event, type: :request do
     end
   end
 
-  describe "PUT /events/:event_id" do
+  describe "PUT /sponsors/:sponsor_id" do
     context "when the request is valid" do
       before do
-        put api_v1_edit_event_path(event_id: event_id),
+        put api_v1_edit_sponsor_path(sponsor_id: sponsor_id),
             headers: authenticated_header(user)
       end
 
-      it "returns a hash with 5 keys" do
-        expect(json.size).to eq 5
+      it "returns a hash with 6 keys" do
+        expect(json.size).to eq 6
       end
 
       it "returns status code 200" do
@@ -155,15 +156,15 @@ RSpec.describe Event, type: :request do
     end
 
     context "when the request is invalid" do
-      let(:event_id) { 1000 }
+      let(:sponsor_id) { 100 }
 
       before do
-        put api_v1_edit_event_path(event_id: event_id),
+        put api_v1_edit_sponsor_path(sponsor_id: sponsor_id),
             headers: authenticated_header(user)
       end
 
       it "returns an error message" do
-        expect(json["errors"]).to eq("The event does not exist")
+        expect(json["errors"]).to eq("The sponsor does not exist")
       end
 
       it "returns status code 400" do

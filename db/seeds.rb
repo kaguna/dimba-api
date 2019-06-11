@@ -5,6 +5,19 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+roles = [:Admin, :Referee, :Official, :Coach, :Sponsor, :Player, :User]
+events = [:Goal, :Yellow, :Red, :Assist, :Corner, :Penalty, :Injury]
+
+def create_season(from, to)
+  seasons = []
+  (from..to).each do |any_year|
+    season = "#{ any_year }/#{any_year + 1}"
+    seasons.push(season)
+  end
+  seasons
+end
+
 20.times do
   Team.create(
     name: Faker::Football.team,
@@ -37,12 +50,33 @@ end
       )
 end
 
-roles = [:Admin, :Referee, :Official, :Coach, :Sponsor, :Player, :User]
-
 
 (roles.length).times do |i|
   Role.create(
       name: roles[i],
       description: Faker::Lorem.paragraph
+  )
+end
+
+10.times do
+  Sponsor.create(
+    name: Faker::Bank.name,
+    description: Faker::Lorem.paragraph,
+    contacts: Faker::Internet.url
+  )
+end
+
+(events.length).times do |i|
+  Event.create(
+      name: events[i],
+      description: Faker::Lorem.paragraph
+  )
+end
+
+create_season(2015, 2018).each do |season|
+  Season.create(
+      name: season,
+      description: Faker::Lorem.paragraph,
+      duration: 1
   )
 end

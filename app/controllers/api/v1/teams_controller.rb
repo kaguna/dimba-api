@@ -1,4 +1,4 @@
-class TeamsController < ApplicationController
+class Api::V1::TeamsController < Api::V1::ApplicationController
   before_action :authenticate_current_user, except: %i(index show)
   before_action :set_team, only: %i(update destroy)
   after_action :verify_authorized, except: %i(index show)
@@ -14,8 +14,7 @@ class TeamsController < ApplicationController
       render json: show_team, status: :ok
 
     else
-      render json: {
-        errors: "The team does not exist"
+      render json: { errors: "The team does not exist"
       }, status: :bad_request
     end
   end
@@ -39,8 +38,7 @@ class TeamsController < ApplicationController
       render json: @team, status: :ok
 
     else
-      render json: {
-        errors: "The team does not exist"
+      render json: { errors: "The team does not exist"
       }, status: :bad_request
     end
   end
@@ -48,10 +46,12 @@ class TeamsController < ApplicationController
   def destroy
     if @team
       @team.destroy
-      render json: { message: "Team was successfully deleted" }, status: :ok
+      render json: { message: "Team was successfully deleted" },
+             status: :ok
 
     else
-      render json: { errors: "The team does not exist" }, status: :bad_request
+      render json: { errors: "The team does not exist" },
+             status: :bad_request
     end
   end
 
@@ -64,10 +64,10 @@ class TeamsController < ApplicationController
 
   def team_params
     params.permit(
-      :name,
-      :description,
-      :location,
-      :nickname
+        :name,
+        :description,
+        :location,
+        :nickname
     )
   end
 end

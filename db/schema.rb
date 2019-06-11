@@ -10,23 +10,43 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_27_170652) do
+ActiveRecord::Schema.define(version: 2019_05_23_135124) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "events", force: :cascade do |t|
-    t.string "name"
+  create_table "commentaries", force: :cascade do |t|
+    t.bigint "events_id"
     t.text "description"
-    t.text "event_time"
+    t.text "commentary_time"
     t.bigint "teams_id"
     t.bigint "players_id"
     t.bigint "fixtures_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["fixtures_id"], name: "index_events_on_fixtures_id"
-    t.index ["players_id"], name: "index_events_on_players_id"
-    t.index ["teams_id"], name: "index_events_on_teams_id"
+    t.index ["events_id"], name: "index_commentaries_on_events_id"
+    t.index ["fixtures_id"], name: "index_commentaries_on_fixtures_id"
+    t.index ["players_id"], name: "index_commentaries_on_players_id"
+    t.index ["teams_id"], name: "index_commentaries_on_teams_id"
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "fixture_squads", force: :cascade do |t|
+    t.bigint "players_id"
+    t.boolean "playing", default: true
+    t.bigint "fixtures_id"
+    t.bigint "teams_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["fixtures_id"], name: "index_fixture_squads_on_fixtures_id"
+    t.index ["players_id"], name: "index_fixture_squads_on_players_id"
+    t.index ["teams_id"], name: "index_fixture_squads_on_teams_id"
   end
 
   create_table "fixtures", force: :cascade do |t|
@@ -36,7 +56,7 @@ ActiveRecord::Schema.define(version: 2018_09_27_170652) do
     t.integer "center_referee"
     t.integer "right_side_referee"
     t.integer "left_side_referee"
-    t.text "season"
+    t.integer "season_id"
     t.date "match_day"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -52,6 +72,8 @@ ActiveRecord::Schema.define(version: 2018_09_27_170652) do
   create_table "leagues_sponsors", force: :cascade do |t|
     t.integer "league_id"
     t.integer "sponsor_id"
+    t.integer "duration"
+    t.float "budget_amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -77,14 +99,12 @@ ActiveRecord::Schema.define(version: 2018_09_27_170652) do
   end
 
   create_table "results", force: :cascade do |t|
-    t.bigint "teams_id"
-    t.bigint "fixtures_id"
-    t.integer "total_goals"
-    t.integer "points"
+    t.bigint "fixture_id"
+    t.integer "home_goals"
+    t.integer "away_goals"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["fixtures_id"], name: "index_results_on_fixtures_id"
-    t.index ["teams_id"], name: "index_results_on_teams_id"
+    t.index ["fixture_id"], name: "index_results_on_fixture_id"
   end
 
   create_table "roles", force: :cascade do |t|
@@ -94,12 +114,18 @@ ActiveRecord::Schema.define(version: 2018_09_27_170652) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "seasons", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.integer "duration"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "sponsors", force: :cascade do |t|
     t.text "name"
     t.text "description"
     t.text "contacts"
-    t.integer "duration"
-    t.float "budget_amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -133,10 +159,15 @@ ActiveRecord::Schema.define(version: 2018_09_27_170652) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "events", "fixtures", column: "fixtures_id"
-  add_foreign_key "events", "players", column: "players_id"
-  add_foreign_key "events", "teams", column: "teams_id"
+  add_foreign_key "commentaries", "events", column: "events_id"
+  add_foreign_key "commentaries", "fixtures", column: "fixtures_id"
+  add_foreign_key "commentaries", "players", column: "players_id"
+  add_foreign_key "commentaries", "teams", column: "teams_id"
+  add_foreign_key "fixture_squads", "fixtures", column: "fixtures_id"
+  add_foreign_key "fixture_squads", "players", column: "players_id"
+  add_foreign_key "fixture_squads", "teams", column: "teams_id"
   add_foreign_key "fixtures", "leagues"
+  add_foreign_key "fixtures", "seasons"
   add_foreign_key "fixtures", "teams", column: "away_team"
   add_foreign_key "fixtures", "teams", column: "home_team"
   add_foreign_key "fixtures", "users", column: "center_referee"
@@ -147,8 +178,7 @@ ActiveRecord::Schema.define(version: 2018_09_27_170652) do
   add_foreign_key "leagues_teams", "leagues"
   add_foreign_key "leagues_teams", "teams"
   add_foreign_key "players", "teams"
-  add_foreign_key "results", "fixtures", column: "fixtures_id"
-  add_foreign_key "results", "teams", column: "teams_id"
+  add_foreign_key "results", "fixtures"
   add_foreign_key "transfers", "players"
   add_foreign_key "transfers", "teams", column: "from_team_id"
   add_foreign_key "transfers", "teams", column: "to_team_id"

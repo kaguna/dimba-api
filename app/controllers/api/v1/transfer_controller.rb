@@ -1,5 +1,4 @@
-class TransferController < ApplicationController
-  include FixturesControllerHelper
+class Api::V1::TransferController < Api::V1::ApplicationController
   before_action :authenticate_current_user, except: %i(index show)
   before_action :set_transfer, only: %i(update destroy)
   after_action :verify_authorized, except: %i(index show)

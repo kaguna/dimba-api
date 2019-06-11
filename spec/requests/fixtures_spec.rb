@@ -19,6 +19,8 @@ RSpec.describe Fixture, type: :request do
 
   let!(:league) { create(:league) }
 
+  let!(:season) { create(:season) }
+
   let!(:fixtures) do
     create_list(
       :fixture, 10,
@@ -26,34 +28,44 @@ RSpec.describe Fixture, type: :request do
       away_team: team.first.id,
       league_id: league.id,
       center_referee: user_ref.first.id,
+      season_id: season.id,
       right_side_referee: user_ref.last.id,
       left_side_referee: user_ref.second.id
     )
   end
 
   let(:league_id) { league.id }
+
   let(:team_id) { team.first.id }
+
   let(:fixture_id) { fixtures.first.id }
-  let(:fixture_params) do
+
+  let(:fixture_params) {
     {
-      "home_team": team.last.id,
-      "away_team": team.first.id,
-      "league_id": league.id,
-      "season": "2017/2018",
-      "match_day": "2018-09-09",
+      fixtures: [
+        {
+          "home_team": team.last.id,
+          "away_team": team.first.id,
+          "league_id": league.id,
+          "season": season.id,
+          "match_day": "2018-09-09"
+        }
+      ]
     }
-  end
+  }
+
+  let(:games) { fixture_params.size }
 
   describe "POST /league/:league_id/fixtures" do
     context "when the request is valid" do
       before do
-        post "/league/#{league_id}/fixtures",
+        post api_v1_add_fixtures_path(league_id: league_id),
              headers: authenticated_header(user),
              params: fixture_params
       end
 
       it "creates a new fixture" do
-        expect(json.size).to eq 11
+        expect(json["message"]).to eq("#{games} games successfully created")
       end
 
       it "returns status code 201" do
@@ -65,7 +77,7 @@ RSpec.describe Fixture, type: :request do
   describe "GET /league/:league_id/fixtures" do
     context "when the request is valid" do
       before do
-        get "/league/#{league_id}/fixtures"
+        get api_v1_fixtures_path(league_id: league_id)
       end
 
       it "returns a list with 10 hashes" do
@@ -80,7 +92,8 @@ RSpec.describe Fixture, type: :request do
     context "when the request is invalid" do
       let!(:fixture_id) { 0 }
       before do
-        get "/league/#{league_id}/fixtures/#{fixture_id}"
+        get api_v1_show_fixture_path(league_id: league_id,
+                                fixture_id: fixture_id)
       end
 
       it "returns an error message" do
@@ -96,7 +109,8 @@ RSpec.describe Fixture, type: :request do
   describe "DELETE /league/:league_id/fixtures/:fixture_id" do
     context "when the request is valid" do
       before do
-        delete "/league/#{league_id}/fixtures/#{fixture_id}",
+        delete api_v1_delete_fixture_path(league_id: league_id,
+                                          fixture_id: fixture_id),
                headers: authenticated_header(user)
       end
 
@@ -113,7 +127,8 @@ RSpec.describe Fixture, type: :request do
       let(:fixture_id) { 0 }
 
       before do
-        delete "/league/#{league_id}/fixtures/#{fixture_id}",
+        delete api_v1_delete_fixture_path(league_id: league_id,
+                                          fixture_id: fixture_id),
                headers: authenticated_header(user)
       end
 
@@ -130,7 +145,8 @@ RSpec.describe Fixture, type: :request do
   describe "PUT /league/:league_id/fixtures/:fixture_id" do
     context "when the request is valid" do
       before do
-        put "/league/#{league_id}/fixtures/#{fixture_id}",
+        put api_v1_edit_fixture_path(league_id: league_id,
+                                       fixture_id: fixture_id),
             headers: authenticated_header(user)
       end
 
@@ -147,7 +163,8 @@ RSpec.describe Fixture, type: :request do
       let(:fixture_id) { 0 }
 
       before do
-        put "/league/#{league_id}/fixtures/#{fixture_id}",
+        put api_v1_edit_fixture_path(league_id: league_id,
+                                     fixture_id: fixture_id),
             headers: authenticated_header(user)
       end
 

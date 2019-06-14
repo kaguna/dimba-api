@@ -10,24 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_23_135124) do
+ActiveRecord::Schema.define(version: 2019_06_11_120449) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "commentaries", force: :cascade do |t|
-    t.bigint "events_id"
+    t.bigint "event_id"
     t.text "description"
     t.text "commentary_time"
-    t.bigint "teams_id"
-    t.bigint "players_id"
-    t.bigint "fixtures_id"
+    t.bigint "team_id"
+    t.bigint "player_id"
+    t.bigint "fixture_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["events_id"], name: "index_commentaries_on_events_id"
-    t.index ["fixtures_id"], name: "index_commentaries_on_fixtures_id"
-    t.index ["players_id"], name: "index_commentaries_on_players_id"
-    t.index ["teams_id"], name: "index_commentaries_on_teams_id"
+    t.index ["event_id"], name: "index_commentaries_on_event_id"
+    t.index ["fixture_id"], name: "index_commentaries_on_fixture_id"
+    t.index ["player_id"], name: "index_commentaries_on_player_id"
+    t.index ["team_id"], name: "index_commentaries_on_team_id"
   end
 
   create_table "events", force: :cascade do |t|
@@ -38,15 +38,15 @@ ActiveRecord::Schema.define(version: 2019_05_23_135124) do
   end
 
   create_table "fixture_squads", force: :cascade do |t|
-    t.bigint "players_id"
+    t.bigint "player_id"
     t.boolean "playing", default: true
-    t.bigint "fixtures_id"
-    t.bigint "teams_id"
+    t.bigint "fixture_id"
+    t.bigint "team_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["fixtures_id"], name: "index_fixture_squads_on_fixtures_id"
-    t.index ["players_id"], name: "index_fixture_squads_on_players_id"
-    t.index ["teams_id"], name: "index_fixture_squads_on_teams_id"
+    t.index ["fixture_id"], name: "index_fixture_squads_on_fixture_id"
+    t.index ["player_id"], name: "index_fixture_squads_on_player_id"
+    t.index ["team_id"], name: "index_fixture_squads_on_team_id"
   end
 
   create_table "fixtures", force: :cascade do |t|
@@ -159,13 +159,13 @@ ActiveRecord::Schema.define(version: 2019_05_23_135124) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "commentaries", "events", column: "events_id"
-  add_foreign_key "commentaries", "fixtures", column: "fixtures_id"
-  add_foreign_key "commentaries", "players", column: "players_id"
-  add_foreign_key "commentaries", "teams", column: "teams_id"
-  add_foreign_key "fixture_squads", "fixtures", column: "fixtures_id"
-  add_foreign_key "fixture_squads", "players", column: "players_id"
-  add_foreign_key "fixture_squads", "teams", column: "teams_id"
+  add_foreign_key "commentaries", "events"
+  add_foreign_key "commentaries", "fixtures"
+  add_foreign_key "commentaries", "players"
+  add_foreign_key "commentaries", "teams"
+  add_foreign_key "fixture_squads", "fixtures"
+  add_foreign_key "fixture_squads", "players"
+  add_foreign_key "fixture_squads", "teams"
   add_foreign_key "fixtures", "leagues"
   add_foreign_key "fixtures", "seasons"
   add_foreign_key "fixtures", "teams", column: "away_team"

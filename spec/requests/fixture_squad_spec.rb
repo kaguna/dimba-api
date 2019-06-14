@@ -36,9 +36,9 @@ RSpec.describe FixtureSquad, type: :request do
   let!(:fixture_squad) do
     players.each do |player|
       create(:fixture_squad,
-             fixtures_id: fixture.id,
-             teams_id: teams.first.id,
-             players_id: player.id
+             fixture_id: fixture.id,
+             team_id: teams.first.id,
+             player_id: player.id
       )
     end
     FixtureSquad.all
@@ -48,10 +48,10 @@ RSpec.describe FixtureSquad, type: :request do
     {
       fixture_squad: [
         {
-          players_id: players.first.id
+          player_id: players.first.id
         },
         {
-          players_id: players.second.id
+          player_id: players.second.id
         }
       ]
     }
@@ -67,11 +67,10 @@ RSpec.describe FixtureSquad, type: :request do
     context "when the request is valid" do
       before do
         post api_v1_add_fixture_squad_path(leagues_id: league_id,
-           fixtures_id: fixture_id,
-           teams_id: team_id
-           ),
-            headers: authenticated_header(user),
-            params: fixture_squad_params
+                                           fixtures_id: fixture_id,
+                                           teams_id: team_id),
+             headers: authenticated_header(user),
+             params: fixture_squad_params
       end
 
       it "creates a new fixture squad" do

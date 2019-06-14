@@ -1,5 +1,5 @@
 class FixtureSquad < ApplicationRecord
-  validates_presence_of :fixtures_id,
-                        :players_id,
-                        :teams_id
+  validates_presence_of :fixture_id,
+                        :player_id,
+                        :team_id
 end

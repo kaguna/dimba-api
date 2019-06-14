@@ -4,7 +4,7 @@ class Api::V1::CommentariesController < Api::V1::ApplicationController
   after_action :verify_authorized, except: [:index]
 
   def index
-    commentary = Commentary.where(fixtures_id: params[:fixture_id])
+    commentary = Commentary.where(fixture_id: params[:fixture_id])
 
     if commentary.empty?
       render json: { "error": "No commentary for this game." },

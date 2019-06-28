@@ -1,4 +1,4 @@
-class Api::V1::CommentariesController < Api::V1::ApplicationController
+class Api::V1::CommentariesController < ApplicationController
   before_action :authenticate_current_user, except: [:index]
   before_action :set_commentary, only: %i(update destroy)
   after_action :verify_authorized, except: [:index]

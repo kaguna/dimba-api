@@ -1,4 +1,4 @@
-class Api::V1::RegisterController < Api::V1::ApplicationController
+class Api::V1::RegisterController < ApplicationController
   def signup
     user = User.new(user_params)
 

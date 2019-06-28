@@ -1,4 +1,4 @@
-class Api::V1::FixturesController < Api::V1::ApplicationController
+class Api::V1::FixturesController < ApplicationController
   include FixturesConcern
   before_action :authenticate_current_user, except: %i(index show)
   before_action :set_fixture, only: %i(update destroy)

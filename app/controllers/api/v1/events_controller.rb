@@ -1,4 +1,4 @@
-class Api::V1::EventsController < Api::V1::ApplicationController
+class Api::V1::EventsController < ApplicationController
   before_action :authenticate_current_user, except: %i(index show)
   before_action :set_event, only: %i(update destroy)
   after_action :verify_authorized, except: %i(index show)

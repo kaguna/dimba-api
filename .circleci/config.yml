@@ -4,7 +4,7 @@ jobs:
   build:
     working_directory: ~/dimba-api
     docker:
-      - image: circleci/ruby:2.5.3-node
+      - image: circleci/ruby:2.5.0-node
         environment:
           CC_TEST_REPORTER_ID: 3b1eb72982e5d07c429f5e28389be86acc4f108999e3a8e6248d99b78c9236a4
           PGHOST: localhost

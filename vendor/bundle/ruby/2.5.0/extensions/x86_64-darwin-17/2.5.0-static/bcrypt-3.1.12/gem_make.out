@@ -1,0 +1,19 @@
+current directory: /Users/jameskariuki/dimba-api/vendor/bundle/ruby/2.5.0/gems/bcrypt-3.1.12/ext/mri
+/Users/jameskariuki/.rbenv/versions/2.5.0/bin/ruby -r ./siteconf20190628-69321-1nfwfpw.rb extconf.rb
+creating Makefile
+
+current directory: /Users/jameskariuki/dimba-api/vendor/bundle/ruby/2.5.0/gems/bcrypt-3.1.12/ext/mri
+make "DESTDIR=" clean
+
+current directory: /Users/jameskariuki/dimba-api/vendor/bundle/ruby/2.5.0/gems/bcrypt-3.1.12/ext/mri
+make "DESTDIR="
+compiling bcrypt_ext.c
+compiling crypt.c
+compiling crypt_blowfish.c
+compiling crypt_gensalt.c
+compiling wrapper.c
+linking shared-object bcrypt_ext.bundle
+
+current directory: /Users/jameskariuki/dimba-api/vendor/bundle/ruby/2.5.0/gems/bcrypt-3.1.12/ext/mri
+make "DESTDIR=" install
+/usr/local/bin/ginstall -c -m 0755 bcrypt_ext.bundle ./.gem.20190628-69321-152bi2a

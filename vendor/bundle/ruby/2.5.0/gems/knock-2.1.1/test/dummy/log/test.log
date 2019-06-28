@@ -1,0 +1,462 @@
+  [1m[35m (6.0ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (7.3ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to CreateUsers (20150713101607)
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar NOT NULL, "password_digest" varchar NOT NULL, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20150713101607"]]
+  [1m[35m (1.9ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateAdmins (20160519075733)
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "admins" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar, "password_digest" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160519075733"]]
+  [1m[35m (2.5ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateVendors (20160522051816)
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "vendors" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar, "password_digest" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160522051816"]]
+  [1m[35m (2.0ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateCompositeNameEntities (20160522181712)
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "composite_name_entities" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar, "password_digest" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160522181712"]]
+  [1m[35m (2.7ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", :environment], ["LIMIT", 1]]
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["key", "environment"], ["value", "test"], ["created_at", 2017-02-11 01:43:35 UTC], ["updated_at", 2017-02-11 01:43:35 UTC]]
+  [1m[35m (3.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mFixture Delete (0.2ms)[0m  [1m[31mDELETE FROM "admins"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "admins" ("email", "password_digest", "created_at", "updated_at", "id") VALUES ('admin.one@example.net', '$2a$04$Nor8ivXEVNclpP5BNzprY.cyr/.soQk41N.9EX1z7nxTw4IqCK4aS', '2017-02-11 01:43:38.576086', '2017-02-11 01:43:38.576086', 980190962)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "composite_name_entities"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "composite_name_entities" ("email", "password_digest", "created_at", "updated_at", "id") VALUES ('composite_name_entity.one@example.net', '$2a$04$bKDuvz4vfQV08qZvnaFZzeoWpjq8gbI0gTlInF.wgZkQMTg7NHqpm', '2017-02-11 01:43:38.580323', '2017-02-11 01:43:38.580323', 980190962)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "users"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("email", "password_digest", "created_at", "updated_at", "id") VALUES ('one@example.net', '$2a$04$mlvt9hqVLvETsjjb8x3cPOww72bh9MPvsvS.ST3BNdqxTzIxz8QE.', '2017-02-11 01:43:38.582199', '2017-02-11 01:43:38.582199', 980190962)[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "users" ("email", "password_digest", "created_at", "updated_at", "id") VALUES ('two@example.net', '$2a$04$WqkWvVjZgddSv.hUWVZoo.6W1zKPoA0iAS3kACxjReu1OVIx4rkfq', '2017-02-11 01:43:38.582199', '2017-02-11 01:43:38.582199', 298486374)[0m
+  [1m[36mFixture Delete (0.1ms)[0m  [1m[31mDELETE FROM "vendors"[0m
+  [1m[36mFixture Insert (0.1ms)[0m  [1m[32mINSERT INTO "vendors" ("email", "password_digest", "created_at", "updated_at", "id") VALUES ('vendor.one@example.net', '$2a$04$y51Z3Dfd60qGMg5YQyTPmOGhYcP5aBFtyO2lsPnXh5AJrbXqS7PuK', '2017-02-11 01:43:38.584398', '2017-02-11 01:43:38.584398', 980190962)[0m
+  [1m[35m (2.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+------------------------------------------------------------------------
+VendorTokenControllerTest: test_responds_with_404_if_user_does_not_exist
+------------------------------------------------------------------------
+  [1m[36mVendor Load (0.4ms)[0m  [1m[34mSELECT  "vendors".* FROM "vendors" WHERE "vendors"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by VendorTokenController#create as HTML
+  Parameters: {"auth"=>{"email"=>"wrong@example.net", "password"=>"[FILTERED]"}}
+  [1m[36mVendor Load (0.3ms)[0m  [1m[34mSELECT  "vendors".* FROM "vendors" WHERE "vendors"."email" = ? LIMIT ?[0m  [["email", "wrong@example.net"], ["LIMIT", 1]]
+Completed 404 Not Found in 4ms (ActiveRecord: 0.3ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+-------------------------------------------------
+VendorTokenControllerTest: test_responds_with_201
+-------------------------------------------------
+  [1m[36mVendor Load (0.1ms)[0m  [1m[34mSELECT  "vendors".* FROM "vendors" WHERE "vendors"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by VendorTokenController#create as HTML
+  Parameters: {"auth"=>{"email"=>"vendor.one@example.net", "password"=>"[FILTERED]"}}
+  [1m[36mVendor Load (0.1ms)[0m  [1m[34mSELECT  "vendors".* FROM "vendors" WHERE "vendors"."email" = ? LIMIT ?[0m  [["email", "vendor.one@example.net"], ["LIMIT", 1]]
+Completed 201 Created in 6ms (Views: 0.4ms | ActiveRecord: 0.1ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+------------------------------------------------------------------------
+VendorTokenControllerTest: test_responds_with_404_if_password_is_invalid
+------------------------------------------------------------------------
+  [1m[36mVendor Load (0.1ms)[0m  [1m[34mSELECT  "vendors".* FROM "vendors" WHERE "vendors"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by VendorTokenController#create as HTML
+  Parameters: {"auth"=>{"email"=>"vendor.one@example.net", "password"=>"[FILTERED]"}}
+  [1m[36mVendor Load (0.2ms)[0m  [1m[34mSELECT  "vendors".* FROM "vendors" WHERE "vendors"."email" = ? LIMIT ?[0m  [["email", "vendor.one@example.net"], ["LIMIT", 1]]
+Completed 404 Not Found in 3ms (ActiveRecord: 0.2ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+--------------------------------------------------------------------
+CustomUnauthorizedEntityControllerTest: test_responds_with_not_found
+--------------------------------------------------------------------
+Processing by CustomUnauthorizedEntityController#index as HTML
+Filter chain halted as :authenticate_user rendered or redirected
+Completed 404 Not Found in 1ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+-------------------------------------------------------------------------------------
+CustomUnauthorizedEntityControllerTest: test_responds_with_not_found_to_invalid_token
+-------------------------------------------------------------------------------------
+Processing by CustomUnauthorizedEntityController#index as HTML
+Filter chain halted as :authenticate_user rendered or redirected
+Completed 404 Not Found in 1ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+--------------------------------------------------------------------------------------
+CustomUnauthorizedEntityControllerTest: test_responds_with_not_found_to_invalid_entity
+--------------------------------------------------------------------------------------
+Processing by CustomUnauthorizedEntityController#index as HTML
+  [1m[36mUser Load (0.3ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 0], ["LIMIT", 1]]
+Filter chain halted as :authenticate_user rendered or redirected
+Completed 404 Not Found in 3ms (ActiveRecord: 0.3ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+-----------------------------------------------------------------------------------
+CustomUnauthorizedEntityControllerTest: test_responds_with_success_if_authenticated
+-----------------------------------------------------------------------------------
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by CustomUnauthorizedEntityController#index as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Completed 200 OK in 1ms (ActiveRecord: 0.1ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+-----------------------------------------------------------------------------
+VendorProtectedControllerTest: test_raises_method_missing_error_appropriately
+-----------------------------------------------------------------------------
+Processing by VendorProtectedController#show as HTML
+  Parameters: {"id"=>"1"}
+Completed 500 Internal Server Error in 11ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+--------------------------------------------------------------------------------
+VendorProtectedControllerTest: test_responds_with_unauthorized_to_invalid_entity
+--------------------------------------------------------------------------------
+Processing by VendorProtectedController#index as HTML
+  [1m[36mVendor Load (0.1ms)[0m  [1m[34mSELECT  "vendors".* FROM "vendors" WHERE "vendors"."id" = ? LIMIT ?[0m  [["id", 0], ["LIMIT", 1]]
+Filter chain halted as :authenticate_vendor rendered or redirected
+Completed 401 Unauthorized in 8ms (ActiveRecord: 0.1ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+-------------------------------------------------------------------------------
+VendorProtectedControllerTest: test_responds_with_unauthorized_to_invalid_token
+-------------------------------------------------------------------------------
+Processing by VendorProtectedController#index as HTML
+Filter chain halted as :authenticate_vendor rendered or redirected
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+-----------------------------------------------------------------------------
+VendorProtectedControllerTest: test_has_a_current_vendor_after_authentication
+-----------------------------------------------------------------------------
+  [1m[36mVendor Load (0.1ms)[0m  [1m[34mSELECT  "vendors".* FROM "vendors" WHERE "vendors"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by VendorProtectedController#index as HTML
+  [1m[36mVendor Load (0.0ms)[0m  [1m[34mSELECT  "vendors".* FROM "vendors" WHERE "vendors"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Completed 200 OK in 1ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+--------------------------------------------------------------------------
+VendorProtectedControllerTest: test_responds_with_success_if_authenticated
+--------------------------------------------------------------------------
+  [1m[36mVendor Load (0.1ms)[0m  [1m[34mSELECT  "vendors".* FROM "vendors" WHERE "vendors"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by VendorProtectedController#index as HTML
+  [1m[36mVendor Load (0.0ms)[0m  [1m[34mSELECT  "vendors".* FROM "vendors" WHERE "vendors"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Completed 200 OK in 1ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+--------------------------------------------------------------
+VendorProtectedControllerTest: test_responds_with_unauthorized
+--------------------------------------------------------------
+Processing by VendorProtectedController#index as HTML
+Filter chain halted as :authenticate_vendor rendered or redirected
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+-------------------------------------------------------------
+AdminProtectedControllerTest: test_responds_with_unauthorized
+-------------------------------------------------------------
+Processing by AdminProtectedController#index as HTML
+Filter chain halted as :authenticate_admin rendered or redirected
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+-------------------------------------------------------------------------------
+AdminProtectedControllerTest: test_responds_with_unauthorized_to_invalid_entity
+-------------------------------------------------------------------------------
+Processing by AdminProtectedController#index as HTML
+  [1m[36mAdmin Load (0.2ms)[0m  [1m[34mSELECT  "admins".* FROM "admins" WHERE "admins"."id" = ? LIMIT ?[0m  [["id", 0], ["LIMIT", 1]]
+Filter chain halted as :authenticate_admin rendered or redirected
+Completed 401 Unauthorized in 2ms (ActiveRecord: 0.2ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+------------------------------------------------------------------------------
+AdminProtectedControllerTest: test_responds_with_unauthorized_to_invalid_token
+------------------------------------------------------------------------------
+Processing by AdminProtectedController#index as HTML
+Filter chain halted as :authenticate_admin rendered or redirected
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+---------------------------------------------------------------------------
+AdminProtectedControllerTest: test_has_a_current_admin_after_authentication
+---------------------------------------------------------------------------
+  [1m[36mAdmin Load (0.1ms)[0m  [1m[34mSELECT  "admins".* FROM "admins" WHERE "admins"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by AdminProtectedController#index as HTML
+  [1m[36mAdmin Load (0.1ms)[0m  [1m[34mSELECT  "admins".* FROM "admins" WHERE "admins"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Completed 200 OK in 1ms (ActiveRecord: 0.1ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+-------------------------------------------------------------------------
+AdminProtectedControllerTest: test_responds_with_success_if_authenticated
+-------------------------------------------------------------------------
+  [1m[36mAdmin Load (0.1ms)[0m  [1m[34mSELECT  "admins".* FROM "admins" WHERE "admins"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by AdminProtectedController#index as HTML
+  [1m[36mAdmin Load (0.0ms)[0m  [1m[34mSELECT  "admins".* FROM "admins" WHERE "admins"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Completed 200 OK in 1ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+------------------------------------------------------------------------------
+ProtectedResourcesControllerTest: test_responds_with_success_with_token_in_url
+------------------------------------------------------------------------------
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by ProtectedResourcesController#index as HTML
+  Parameters: {"token"=>"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0ODY4NjM4MTgsInN1YiI6OTgwMTkwOTYyfQ.fD4eDhHzI9v5ED7-7ASNDYGEZ4XXKTKS7IxKwf1SyV4"}
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Completed 200 OK in 1ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+------------------------------------------------------------------------------
+ProtectedResourcesControllerTest: test_has_a_current_user_after_authentication
+------------------------------------------------------------------------------
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by ProtectedResourcesController#index as HTML
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Completed 200 OK in 1ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+---------------------------------------------------------------------------------------
+ProtectedResourcesControllerTest: test_responds_with_success_with_valid_token_in_header
+---------------------------------------------------------------------------------------
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by ProtectedResourcesController#index as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Completed 200 OK in 1ms (ActiveRecord: 0.1ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+-------------------------------------------------------------------------------------
+ProtectedResourcesControllerTest: test_accepts_any_prefix_in_the_authorization_header
+-------------------------------------------------------------------------------------
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by ProtectedResourcesController#index as HTML
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Completed 200 OK in 1ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+-----------------------------------------------------------------
+ProtectedResourcesControllerTest: test_responds_with_unauthorized
+-----------------------------------------------------------------
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by ProtectedResourcesController#index as HTML
+Filter chain halted as :authenticate_user rendered or redirected
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+----------------------------------------------------------------------------------------------
+ProtectedResourcesControllerTest: test_responds_with_unauthorized_with_invalid_token_in_header
+----------------------------------------------------------------------------------------------
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by ProtectedResourcesController#index as HTML
+Filter chain halted as :authenticate_user rendered or redirected
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+----------------------------------------------------------------------------------
+ProtectedResourcesControllerTest: test_accepts_authorization_header_without_prefix
+----------------------------------------------------------------------------------
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by ProtectedResourcesController#index as HTML
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Completed 200 OK in 1ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+-------------------------------------------------------------------------------------------
+ProtectedResourcesControllerTest: test_responds_with_unauthorized_with_invalid_token_in_url
+-------------------------------------------------------------------------------------------
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by ProtectedResourcesController#index as HTML
+  Parameters: {"token"=>"invalid"}
+Filter chain halted as :authenticate_user rendered or redirected
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+------------------------------------------------------------------------
+TokenControllerGeneratorTest: test_assert_all_files_are_properly_created
+------------------------------------------------------------------------
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+------------------------------------------------
+AdminTokenControllerTest: test_responds_with_201
+------------------------------------------------
+  [1m[36mAdmin Load (0.2ms)[0m  [1m[34mSELECT  "admins".* FROM "admins" WHERE "admins"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by AdminTokenController#create as HTML
+  Parameters: {"auth"=>{"email"=>"admin.one@example.net", "password"=>"[FILTERED]"}}
+  [1m[36mAdmin Load (0.1ms)[0m  [1m[34mSELECT  "admins".* FROM "admins" WHERE "admins"."email" = ? LIMIT ?[0m  [["email", "admin.one@example.net"], ["LIMIT", 1]]
+Completed 201 Created in 3ms (Views: 0.2ms | ActiveRecord: 0.1ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+-----------------------------------------------------------------------
+AdminTokenControllerTest: test_responds_with_404_if_password_is_invalid
+-----------------------------------------------------------------------
+  [1m[36mAdmin Load (0.1ms)[0m  [1m[34mSELECT  "admins".* FROM "admins" WHERE "admins"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by AdminTokenController#create as HTML
+  Parameters: {"auth"=>{"email"=>"admin.one@example.net", "password"=>"[FILTERED]"}}
+  [1m[36mAdmin Load (0.1ms)[0m  [1m[34mSELECT  "admins".* FROM "admins" WHERE "admins"."email" = ? LIMIT ?[0m  [["email", "admin.one@example.net"], ["LIMIT", 1]]
+Completed 404 Not Found in 2ms (ActiveRecord: 0.1ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+-----------------------------------------------------------------------
+AdminTokenControllerTest: test_responds_with_404_if_user_does_not_exist
+-----------------------------------------------------------------------
+  [1m[36mAdmin Load (0.1ms)[0m  [1m[34mSELECT  "admins".* FROM "admins" WHERE "admins"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by AdminTokenController#create as HTML
+  Parameters: {"auth"=>{"email"=>"wrong@example.net", "password"=>"[FILTERED]"}}
+  [1m[36mAdmin Load (0.0ms)[0m  [1m[34mSELECT  "admins".* FROM "admins" WHERE "admins"."email" = ? LIMIT ?[0m  [["email", "wrong@example.net"], ["LIMIT", 1]]
+Completed 404 Not Found in 0ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+---------------------------------------------------------------------------------------
+CompositeNameEntityProtectedControllerTest: test_responds_with_success_if_authenticated
+---------------------------------------------------------------------------------------
+  [1m[36mCompositeNameEntity Load (0.2ms)[0m  [1m[34mSELECT  "composite_name_entities".* FROM "composite_name_entities" WHERE "composite_name_entities"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by CompositeNameEntityProtectedController#index as HTML
+  [1m[36mCompositeNameEntity Load (0.1ms)[0m  [1m[34mSELECT  "composite_name_entities".* FROM "composite_name_entities" WHERE "composite_name_entities"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Completed 200 OK in 1ms (ActiveRecord: 0.1ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+---------------------------------------------------------------------------------------------
+CompositeNameEntityProtectedControllerTest: test_responds_with_unauthorized_to_invalid_entity
+---------------------------------------------------------------------------------------------
+Processing by CompositeNameEntityProtectedController#index as HTML
+  [1m[36mCompositeNameEntity Load (0.1ms)[0m  [1m[34mSELECT  "composite_name_entities".* FROM "composite_name_entities" WHERE "composite_name_entities"."id" = ? LIMIT ?[0m  [["id", 0], ["LIMIT", 1]]
+Filter chain halted as :authenticate_composite_name_entity rendered or redirected
+Completed 401 Unauthorized in 1ms (ActiveRecord: 0.1ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+--------------------------------------------------------------------------------------------
+CompositeNameEntityProtectedControllerTest: test_responds_with_unauthorized_to_invalid_token
+--------------------------------------------------------------------------------------------
+Processing by CompositeNameEntityProtectedController#index as HTML
+Filter chain halted as :authenticate_composite_name_entity rendered or redirected
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+---------------------------------------------------------------------------------------------------------
+CompositeNameEntityProtectedControllerTest: test_has_a_current_composite_name_entity_after_authentication
+---------------------------------------------------------------------------------------------------------
+  [1m[36mCompositeNameEntity Load (0.1ms)[0m  [1m[34mSELECT  "composite_name_entities".* FROM "composite_name_entities" WHERE "composite_name_entities"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by CompositeNameEntityProtectedController#index as HTML
+  [1m[36mCompositeNameEntity Load (0.0ms)[0m  [1m[34mSELECT  "composite_name_entities".* FROM "composite_name_entities" WHERE "composite_name_entities"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Completed 200 OK in 1ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+---------------------------------------------------------------------------
+CompositeNameEntityProtectedControllerTest: test_responds_with_unauthorized
+---------------------------------------------------------------------------
+Processing by CompositeNameEntityProtectedController#index as HTML
+Filter chain halted as :authenticate_composite_name_entity rendered or redirected
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+----------------------------------------------------
+Knock::AuthTokenTest: test_decode_RSA_encoded_tokens
+----------------------------------------------------
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+------------------------------------------------------------------------------------------
+Knock::AuthTokenTest: test_does_not_validate_aud_when_verify_options[:verify_aud]_is_false
+------------------------------------------------------------------------------------------
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+---------------------------------------------------------------
+Knock::AuthTokenTest: test_validate_expiration_claim_by_default
+---------------------------------------------------------------
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+--------------------------------------------------------------------------------------------------------
+Knock::AuthTokenTest: test_does_not_validate_expiration_when_verify_options[:verify_expiration]_is_false
+--------------------------------------------------------------------------------------------------------
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+--------------------------------------------------------------------------------
+Knock::AuthTokenTest: test_validate_aud_when_verify_options[:verify_aud]_is_true
+--------------------------------------------------------------------------------
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+----------------------------------------------------------------------------------------------
+Knock::AuthTokenTest: test_validate_expiration_when_verify_options[:verify_expiration]_is_true
+----------------------------------------------------------------------------------------------
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+-------------------------------------------
+Knock::AuthTokenTest: test_verify_algorithm
+-------------------------------------------
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+-------------------------------------------------------------------------
+Knock::AuthTokenTest: test_verify_audience_when_token_audience_is_present
+-------------------------------------------------------------------------
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+---------------------------------------------------------------------------------------
+Knock::AuthTokenTest: test_does_not_validate_expiration_claim_with_a_nil_token_lifetime
+---------------------------------------------------------------------------------------
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+------------------------------------------------------------
+Knock::AuthTokenTest: test_Knock::AuthToken_has_all_payloads
+------------------------------------------------------------
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+-------------------------------------------------
+Knock::AuthTokenTest: test_encode_tokens_with_RSA
+-------------------------------------------------
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+------------------------------------------
+Knock::AuthTokenTest: test_is_serializable
+------------------------------------------
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+---------------------------------------
+KnockTest: test_setup_block_yields_self
+---------------------------------------
+  [1m[35m (0.0ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+-----------------------------------------------------
+CurrentUsersControllerTest: test_responds_with_200_#2
+-----------------------------------------------------
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by CurrentUsersController#show as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Completed 200 OK in 1ms (ActiveRecord: 0.1ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+---------------------------------------------------------------------------
+CurrentUsersControllerTest: test_responds_with_404_if_user_is_not_logged_in
+---------------------------------------------------------------------------
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by CurrentUsersController#show as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", nil], ["LIMIT", 1]]
+Completed 404 Not Found in 1ms (ActiveRecord: 0.1ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+--------------------------------------------------
+CurrentUsersControllerTest: test_responds_with_200
+--------------------------------------------------
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Processing by CurrentUsersController#show as HTML
+  [1m[36mUser Load (0.0ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT ?[0m  [["id", 980190962], ["LIMIT", 1]]
+Completed 200 OK in 1ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+----------------------------------------------------------------
+InstallGeneratorTest: test_Assert_all_files_are_properly_created
+----------------------------------------------------------------
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+---------------------------------------------------------------------------------------
+GuestProtectedControllerTest: test_responds_with_unauthorized_when_no_token_is_provided
+---------------------------------------------------------------------------------------
+Processing by GuestProtectedController#index as HTML
+Filter chain halted as :authenticate_guest rendered or redirected
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+-----------------------------------------------------------------------------------------
+GuestProtectedControllerTest: test_responds_with_success_with_a_valid_token_in_the_header
+-----------------------------------------------------------------------------------------
+Processing by GuestProtectedController#index as HTML
+Completed 200 OK in 1ms (ActiveRecord: 0.0ms)
+  [1m[35m (0.1ms)[0m  [1m[31mrollback transaction[0m

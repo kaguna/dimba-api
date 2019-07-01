@@ -1,4 +1,4 @@
 class LeaguesSponsor < ApplicationRecord
-    belongs_to :leagues
-    belongs_to :sponsors
+    belongs_to :league
+    belongs_to :sponsor
 end

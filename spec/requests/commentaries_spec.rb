@@ -10,6 +10,8 @@ RSpec.describe Commentary, type: :request do
 
   let!(:user) { create(:user, role_id: role.id) }
 
+  let(:league) { create(:league) }
+
   let(:team) { create_list(:team, 10) }
 
   let(:event) { create(:event) }
@@ -21,7 +23,8 @@ RSpec.describe Commentary, type: :request do
       :fixture,
       home_team: team.last.id,
       away_team: team.first.id,
-      season_id: season.id
+      season_id: season.id,
+      league_id: league.id
     )
   end
 

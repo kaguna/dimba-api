@@ -35,10 +35,10 @@ RSpec.describe Commentary, type: :request do
   let!(:commentary) do
     create_list(
         :commentary, 10,
-        events_id: event.id,
-        fixtures_id: fixture.id,
-        teams_id: team.last.id,
-        players_id: player.first.id
+        event_id: event.id,
+        fixture_id: fixture.id,
+        team_id: team.last.id,
+        player_id: player.first.id
     )
   end
 

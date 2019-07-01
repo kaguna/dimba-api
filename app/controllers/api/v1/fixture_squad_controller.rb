@@ -1,11 +1,11 @@
-class Api::V1::FixtureSquadController < Api::V1::ApplicationController
+class Api::V1::FixtureSquadController < ApplicationController
   before_action :authenticate_current_user, except: %i(index show)
   before_action :set_fixture_squad, only: %i(update destroy)
   after_action :verify_authorized, except: %i(index show)
 
   def index
-    fixture_squad = FixtureSquad.where(fixtures_id: params[:fixtures_id],
-                                      teams_id: params[:teams_id]
+    fixture_squad = FixtureSquad.where(fixture_id: params[:fixtures_id],
+                                      team_id: params[:teams_id]
     )
 
     if fixture_squad.empty?
@@ -76,9 +76,9 @@ class Api::V1::FixtureSquadController < Api::V1::ApplicationController
   end
 
   def players_params(attributes)
-    attributes.permit(:players_id).to_h.merge!(
-      fixtures_id: params[:fixtures_id],
-      teams_id: params[:teams_id]
+    attributes.permit(:player_id).to_h.merge!(
+      fixture_id: params[:fixtures_id],
+      team_id: params[:teams_id]
     )
   end
 
@@ -87,6 +87,6 @@ class Api::V1::FixtureSquadController < Api::V1::ApplicationController
   end
 
   def update_params
-    params.permit(:teams_id, :fixtures_id, :players_id)
+    params.permit(:team_id, :fixture_id, :player_id)
   end
 end

@@ -1,4 +1,4 @@
-class Api::V1::PlayersController < Api::V1::ApplicationController
+class Api::V1::PlayersController < ApplicationController
   before_action :authenticate_current_user, except: %i(index show)
   before_action :set_player, only: %i(show update destroy)
   after_action :verify_authorized, except: %i(index show)

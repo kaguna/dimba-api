@@ -54,12 +54,12 @@ class Api::V1::CommentariesController < ApplicationController
 
   def commentary_params
     params.permit(
-      :name,
+      :event_id,
       :description,
       :commentary_time,
-      :teams_id,
-      :players_id,
-      :fixtures_id
+      :team_id,
+      :player_id,
+      :fixture_id
     )
   end
 end

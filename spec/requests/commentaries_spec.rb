@@ -21,8 +21,8 @@ RSpec.describe Commentary, type: :request do
   let!(:fixture) do
     create(
       :fixture,
-      home_team: team.last.id,
-      away_team: team.first.id,
+      home_team_id: team.last.id,
+      away_team_id: team.first.id,
       season_id: season.id,
       league_id: league.id
     )
@@ -61,6 +61,7 @@ RSpec.describe Commentary, type: :request do
       end
 
       it "creates a new commentary" do
+        p json
         expect(json.size).to eq 9
       end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_11_120449) do
+ActiveRecord::Schema.define(version: 2019_08_07_125619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,8 +50,8 @@ ActiveRecord::Schema.define(version: 2019_06_11_120449) do
   end
 
   create_table "fixtures", force: :cascade do |t|
-    t.integer "home_team"
-    t.integer "away_team"
+    t.integer "home_team_id"
+    t.integer "away_team_id"
     t.integer "league_id"
     t.integer "center_referee"
     t.integer "right_side_referee"
@@ -168,8 +168,8 @@ ActiveRecord::Schema.define(version: 2019_06_11_120449) do
   add_foreign_key "fixture_squads", "teams"
   add_foreign_key "fixtures", "leagues"
   add_foreign_key "fixtures", "seasons"
-  add_foreign_key "fixtures", "teams", column: "away_team"
-  add_foreign_key "fixtures", "teams", column: "home_team"
+  add_foreign_key "fixtures", "teams", column: "away_team_id"
+  add_foreign_key "fixtures", "teams", column: "home_team_id"
   add_foreign_key "fixtures", "users", column: "center_referee"
   add_foreign_key "fixtures", "users", column: "left_side_referee"
   add_foreign_key "fixtures", "users", column: "right_side_referee"

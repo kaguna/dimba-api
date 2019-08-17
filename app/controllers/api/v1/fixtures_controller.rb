@@ -83,8 +83,8 @@ class Api::V1::FixturesController < ApplicationController
 
   def fixture_params(attributes)
     attributes.permit(
-      :home_team,
-      :away_team,
+      :home_team_id,
+      :away_team_id,
       :season_id
     )
   end

@@ -21,8 +21,8 @@ RSpec.describe Commentary, type: :request do
   let!(:fixture) do
     create(
       :fixture,
-      home_team: team.last.id,
-      away_team: team.first.id,
+      home_team_id: team.last.id,
+      away_team_id: team.first.id,
       season_id: season.id,
       league_id: league.id
     )
@@ -56,8 +56,8 @@ RSpec.describe Commentary, type: :request do
     context "when the request is valid" do
       before do
         post api_v1_add_commentary_path(fixture_id: fixture_id),
-             headers: authenticated_header(user),
-             params: commentary_params
+            headers: authenticated_header(user),
+            params: commentary_params
       end
 
       it "creates a new commentary" do
@@ -128,8 +128,8 @@ RSpec.describe Commentary, type: :request do
 
       before do
         delete api_v1_delete_commentary_path(fixture_id: fixture_id,
-                                             commentary_id: commentary_id),
-               headers: authenticated_header(user)
+                                            commentary_id: commentary_id),
+              headers: authenticated_header(user)
       end
 
       it "returns a forbidden action message" do
@@ -163,8 +163,8 @@ RSpec.describe Commentary, type: :request do
 
       before do
         delete api_v1_delete_commentary_path(fixture_id: fixture_id,
-                                             commentary_id: commentary_id),
-               headers: authenticated_header(user)
+                                            commentary_id: commentary_id),
+              headers: authenticated_header(user)
       end
 
       it "returns an error message" do

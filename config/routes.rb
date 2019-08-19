@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
+      scope "league/:league_id/season/:season_id" do
+        get "/table" => "league_standings#show", as: "standings"
+      end
+
       scope "user" do
         post "/sign_up" => "register#signup", as: "register"
         post "/login" => "user_token#create", as: "login"

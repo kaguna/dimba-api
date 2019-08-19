@@ -20,7 +20,7 @@ end
 
 20.times do
   Team.create(
-    name: Faker::Football.team,
+    name: Faker::Football.unique.team,
     description: Faker::Lorem.sentence,
     location: Faker::Address.city,
     nickname: Faker::Hobbit.character

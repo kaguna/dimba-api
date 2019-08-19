@@ -99,15 +99,14 @@ If you want data sample data in your database, do:
 |    DELETE league/:league_id/fixtures/<fixture_id>  | DELETE        | Delete a fixture                           |
 
 
-## Test the API
-Test the API online [here](https://dimba-api.herokuapp.com).
-
-
 #### Tests
 
 To run tests
 
     rspec spec
+
+## Test the API
+Test the API online [here](https://staging-dimba-api.herokuapp.com/api/v1/leagues).
 
 #### Contribution
 This repository is a safe place for contribution.

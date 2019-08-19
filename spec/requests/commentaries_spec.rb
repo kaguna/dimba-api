@@ -56,12 +56,11 @@ RSpec.describe Commentary, type: :request do
     context "when the request is valid" do
       before do
         post api_v1_add_commentary_path(fixture_id: fixture_id),
-             headers: authenticated_header(user),
-             params: commentary_params
+            headers: authenticated_header(user),
+            params: commentary_params
       end
 
       it "creates a new commentary" do
-        p json
         expect(json.size).to eq 9
       end
 
@@ -129,8 +128,8 @@ RSpec.describe Commentary, type: :request do
 
       before do
         delete api_v1_delete_commentary_path(fixture_id: fixture_id,
-                                             commentary_id: commentary_id),
-               headers: authenticated_header(user)
+                                            commentary_id: commentary_id),
+              headers: authenticated_header(user)
       end
 
       it "returns a forbidden action message" do
@@ -164,8 +163,8 @@ RSpec.describe Commentary, type: :request do
 
       before do
         delete api_v1_delete_commentary_path(fixture_id: fixture_id,
-                                             commentary_id: commentary_id),
-               headers: authenticated_header(user)
+                                            commentary_id: commentary_id),
+              headers: authenticated_header(user)
       end
 
       it "returns an error message" do

@@ -22,9 +22,9 @@ module Standings
       away_team = fixture.away_team
 
       home_team_goals = fixture_team_goals(fixture_commentaries: commentaries,
-                                           team: home_team)
+                                          team: home_team)
       away_team_goals = fixture_team_goals(fixture_commentaries: commentaries,
-                                           team: away_team)
+                                          team: away_team)
       {
         fixture_id: fixture.id,
         home_team: team_stats(team: home_team,
@@ -43,7 +43,7 @@ module Standings
         goals_for: goals_for,
         goals_against: goals_against,
         points: calculate_fixture_points(goals_for: goals_for,
-                                         goals_against: goals_against)
+                                        goals_against: goals_against)
       }
     end
 
@@ -53,7 +53,7 @@ module Standings
       @league_commentaries ||= Fixture.includes(:commentaries,
                                                 :home_team, :away_team)
                                       .where(league_id: @league_id,
-                                             season_id: @season_id)
+                                            season_id: @season_id)
     end
 
     def fixture_team_goals(fixture_commentaries:, team:)

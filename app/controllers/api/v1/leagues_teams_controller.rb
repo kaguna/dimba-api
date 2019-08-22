@@ -1,62 +1,35 @@
 class Api::V1::LeaguesTeamsController < ApplicationController
-  before_action :authenticate_current_user, except: %i(index show)
-  before_action :set_league_teams, only: %i(update destroy)
-  after_action :verify_authorized, except: %i(index show)
+  before_action :authenticate_current_user, except: %i[index show]
+  before_action :set_league_teams, only: %i[show update destroy]
+  after_action :verify_authorized, except: %i[index show]
 
   def index
-    league_teams = LeaguesTeam.where(league_id: params[:league_id])
-
-    if league_teams.empty?
-      render json: { errors: "No teams for this league." },
-             status: :bad_request
-
-    else
-      render json: league_teams, status: :ok
-    end
+    render json: show_league_teams(params[:league_id])
   end
 
   def show
-    league_team = LeaguesTeam.where(id: params[:league_team_id],
-                                    league_id: params[:league_id])
-
-    if league_team.empty?
-      render json: { error: "The league team is not available." },
-             status: :bad_request
-
-    else
-      render json: league_team, status: :ok
-    end
+    render json: @league_team
   end
 
   def create
-    create_league_teams
-    render json:
-               {
-                 message: "#{teams_paramaters.size} team(s) added to the league"
-               }, status: :created
+    render json: create_league_teams
   end
 
   def update
-    if @league_team
-      @league_team.update_attributes(update_params)
-      render json: @league_team, status: :ok
-
+    authorize @league_team
+    if @league_team.nil?
+      render json: { message: 'Team not found' }, status: :not_found
     else
-      render json: { errors: "The team does not exist in the league" },
-             status: :bad_request
+      @league_team.update_attributes(update_params)
+      render json: @league_team
     end
   end
 
   def destroy
-    if @league_team
-      @league_team.destroy
-      render json: { message: "Team was removed from league" },
-             status: :ok
-
-    else
-      render json: { errors: "The team does not exist in the league" },
-             status: :bad_request
-    end
+    authorize @league_team
+    @league_team.nil? ?
+    (render json: { message: 'Team not found' }, status: :not_found) :
+    @league_team.destroy
   end
 
   private
@@ -71,9 +44,8 @@ class Api::V1::LeaguesTeamsController < ApplicationController
   end
 
   def set_league_teams
-    @league_team = LeaguesTeam.find_by(id: params[:league_team_id],
-                                       league_id: params[:league_id])
-    authorize @league_team
+    @league_team = LeaguesTeam.find_by(league_id: params[:league_id],
+                                      id: params[:id])
   end
 
   def teams_params(attributes)
@@ -86,5 +58,9 @@ class Api::V1::LeaguesTeamsController < ApplicationController
 
   def update_params
     params.permit(:team_id)
+  end
+
+  def show_league_teams(league_id)
+    league_teams ||= League.find(league_id).teams
   end
 end

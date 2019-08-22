@@ -59,18 +59,18 @@ RSpec.describe FixtureSquad, type: :request do
 
   let(:fixture_id) { fixture.id }
   let(:league_id) { league.id }
-  let(:team_id) { teams.first.id }
+  let(:team_id) { teams.first.id } 
   let(:squad_id) { fixture_squad.first.id }
   let(:num_players) { fixture_squad_params[:fixture_squad].size }
 
   describe "POST league/:league_id/fixture/:fixture_id/team/team_id/squad" do
     context "when the request is valid" do
       before do
-        post api_v1_add_fixture_squad_path(leagues_id: league_id,
-                                           fixtures_id: fixture_id,
-                                           teams_id: team_id),
-             headers: authenticated_header(user),
-             params: fixture_squad_params
+        post api_v1_league_fixture_team_fixture_squad_index_path(league_id: league_id,
+                                          fixture_id: fixture_id,
+                                          team_id: team_id),
+            headers: authenticated_header(user),
+            params: fixture_squad_params
       end
 
       it "creates a new fixture squad" do
@@ -87,9 +87,9 @@ RSpec.describe FixtureSquad, type: :request do
     context "when the request is valid" do
 
       before do
-        get api_v1_fixture_squads_path(leagues_id: league_id,
-          fixtures_id: fixture_id,
-          teams_id: team_id
+        get api_v1_league_fixture_team_fixture_squad_index_path(league_id: league_id,
+          fixture_id: fixture_id,
+          team_id: team_id
           )
       end
 
@@ -103,25 +103,21 @@ RSpec.describe FixtureSquad, type: :request do
     end
 
     context "when the request is invalid" do
-      let!(:squad_id) { 1000 }
+      let!(:fixture_squad_id) { 100 }
       let(:url) do
-        api_v1_fixture_squad_path(leagues_id: league_id,
-          fixtures_id: fixture_id,
-          teams_id: team_id,
-          fixture_squad_id: squad_id
+        api_v1_league_fixture_team_fixture_squad_path(league_id: league_id,
+          fixture_id: fixture_id,
+          team_id: team_id,
+          id: fixture_squad_id
           )
       end
 
-      before do
+      before do 
         get url
       end
 
-      it "returns an error message" do
-        expect(json["error"]).to eq("The player is not in the squad.")
-      end
-
-      it "returns status code 400" do
-        expect(response).to have_http_status(400)
+      it "returns status code 404" do
+        expect(response).to have_http_status(404)
       end
     end
   end
@@ -129,30 +125,26 @@ RSpec.describe FixtureSquad, type: :request do
   describe "DELETE fixture/:fixture_id/team/team_id/squad/:squad_id" do
     context "when the request is made by an admin" do
       before do
-        delete api_v1_delete_fixture_squad_path(leagues_id: league_id,
-          fixtures_id: fixture_id,
-          teams_id: team_id,
-          fixture_squad_id: squad_id
+        delete api_v1_league_fixture_team_fixture_squad_path(league_id: league_id,
+          fixture_id: fixture_id,
+          team_id: team_id,
+          id: squad_id
           ),
-               headers: authenticated_header(user)
+              headers: authenticated_header(user)
       end
 
-      it "returns a success message" do
-        expect(json["message"]).to eq("Players removed from the squad.")
-      end
-
-      it "returns status code 200" do
-        expect(response).to have_http_status(200)
+      it "returns status code 204" do
+        expect(response).to have_http_status(204)
       end
     end
 
     context "when the request is invalid" do
       let!(:squad_id) { 1000 }
       let(:url) do
-        api_v1_delete_fixture_squad_path(leagues_id: league_id,
-          fixtures_id: fixture_id,
-          teams_id: team_id,
-          fixture_squad_id: squad_id
+        api_v1_league_fixture_team_fixture_squad_path(league_id: league_id,
+          fixture_id: fixture_id,
+          team_id: team_id,
+          id: squad_id
         )
       end
 
@@ -160,12 +152,8 @@ RSpec.describe FixtureSquad, type: :request do
         delete url, headers: authenticated_header(user)
       end
 
-      it "returns an error message" do
-        expect(json["errors"]).to eq("The player is not in the squad.")
-      end
-
-      it "returns status code 400" do
-        expect(response).to have_http_status(400)
+      it "returns status code 404" do
+        expect(response).to have_http_status(404)
       end
     end
   end
@@ -173,10 +161,10 @@ RSpec.describe FixtureSquad, type: :request do
   describe "PUT fixture/:fixture_id/team/team_id/squad/:squad_id" do
     context "when the request is valid" do
       let(:url) do
-        api_v1_edit_fixture_squad_path(leagues_id: league_id,
-          fixtures_id: fixture_id,
-          teams_id: team_id,
-          fixture_squad_id: squad_id
+        api_v1_league_fixture_team_fixture_squad_path(league_id: league_id,
+          fixture_id: fixture_id,
+          team_id: team_id,
+          id: squad_id
         )
       end
       before do
@@ -195,10 +183,10 @@ RSpec.describe FixtureSquad, type: :request do
     context "when the request is invalid" do
       let!(:squad_id) { 1000 }
       let(:url) do
-        api_v1_edit_fixture_squad_path(leagues_id: league_id,
-          fixtures_id: fixture_id,
-          teams_id: team_id,
-          fixture_squad_id: squad_id
+        api_v1_league_fixture_team_fixture_squad_path(league_id: league_id,
+          fixture_id: fixture_id,
+          team_id: team_id,
+          id: squad_id
         )
       end
 
@@ -206,12 +194,8 @@ RSpec.describe FixtureSquad, type: :request do
         put url, headers: authenticated_header(user)
       end
 
-      it "returns an error message" do
-        expect(json["errors"]).to eq("The player is not in the squad.")
-      end
-
-      it "returns status code 400" do
-        expect(response).to have_http_status(400)
+      it "returns status code 404" do
+        expect(response).to have_http_status(404)
       end
     end
   end

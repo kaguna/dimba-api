@@ -1,10 +1,11 @@
-require "rails_helper"
-require "./spec/support/request_helper"
+require 'rails_helper'
+require './spec/support/request_helper'
+
 RSpec.describe LeaguesTeam, type: :request do
   include RequestSpecHelper
   include AuthenticationSpecHelper
 
-  let!(:role) { create(:role, name: "Admin") }
+  let!(:role) { create(:role, name: 'Admin') }
 
   let!(:user) { create(:user, role_id: role.id) }
 
@@ -14,19 +15,18 @@ RSpec.describe LeaguesTeam, type: :request do
 
   let(:league_id) { league.id }
 
-  let(:league_teams) do
+  let!(:league_teams) do
     teams.each do |team|
       create(:league_teams,
-             league_id: league.id,
-             team_id: team.id
-      )
+            league_id: league.id,
+            team_id: team.id)
     end
     LeaguesTeam.all
   end
 
   let(:league_team_id) { league_teams.first.id }
 
-  let(:league_teams_params) {
+  let(:league_teams_params) do
     {
       league_teams: [
         {
@@ -39,138 +39,117 @@ RSpec.describe LeaguesTeam, type: :request do
         }
       ]
     }
-  }
+  end
 
   let(:num_teams) { league_teams_params[:league_teams].size }
 
-  describe "POST /league/:league_id/league_teams" do
-    context "when the request is valid" do
+  describe 'POST /league/:league_id/league_teams' do
+    context 'when the request is valid' do
       before do
-        post api_v1_add_team_to_league_path(league_id: league_id),
-             headers: authenticated_header(user),
-             params: league_teams_params
+        post api_v1_league_leagues_teams_path(league_id: league_id),
+            headers: authenticated_header(user),
+            params: league_teams_params
       end
 
-      it "creates a new fixture" do
-        expect(json["message"]).to eq("#{num_teams} team(s) added to the league")
-      end
-
-      it "returns status code 201" do
-        expect(response).to have_http_status(201)
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
       end
     end
   end
 
-  describe "GET /league/:league_id/league_teams" do
-    context "when the request is valid" do
-      let!(:league_teams) do
-        teams.each do |team|
-          create(:league_teams,
-                 league_id: league.id,
-                 team_id: team.id
-          )
-        end
-        LeaguesTeam.all
-      end
+  describe 'GET /league/:league_id/league_teams' do
+    context 'when the request is valid' do
 
       before do
-        get api_v1_league_teams_path(league_id: league_id)
+        get api_v1_league_leagues_teams_path(league_id: league_id)
       end
 
-      it "returns a list with 10 hash" do
+      it 'returns a list with 10 hash' do
         expect(json.size).to eq 10
       end
 
-      it "returns status code 200" do
+      it 'returns status code 200' do
         expect(response).to have_http_status(200)
       end
     end
 
-    context "when the request is invalid" do
-      let!(:league_team_id) { 1000 }
+    context 'when the request is invalid' do
+      let!(:league_team_id) { 1 }
       before do
-        get api_v1_league_team_path(league_id: league_id,
-                                    league_team_id: league_team_id)
+        get api_v1_league_leagues_team_path(league_id: league_id,
+                                            id: league_team_id)
       end
 
-      it "returns an error message" do
-        expect(json["error"]).to eq("The league team is not available.")
-      end
-
-      it "returns status code 400" do
-        expect(response).to have_http_status(400)
+      it 'returns status code 200' do
+        expect(response).to have_http_status(200)
       end
     end
   end
 
-  describe "DELETE /league/:league_id/league_teams/:league_team_id" do
-    context "when the request is valid" do
+  describe 'DELETE /league/:league_id/league_teams/:league_team_id' do
+    context 'when the request is valid' do
       before do
-        delete api_v1_delete_league_team_path(league_id: league_id,
-                                              league_team_id: league_team_id),
-               headers: authenticated_header(user)
+        delete api_v1_league_leagues_team_path(league_id: league_id,
+                                              id: league_team_id),
+              headers: authenticated_header(user)
       end
 
-      it "returns a success message" do
-        expect(json["message"]).to eq("Team was removed from league")
-      end
-
-      it "returns status code 200" do
-        expect(response).to have_http_status(200)
+      it 'returns status code 204' do
+        expect(response).to have_http_status(204)
       end
     end
 
-    context "when the request is invalid" do
+    context 'when the request is invalid' do
       let(:league_team_id) { 0 }
 
       before do
-        delete api_v1_delete_league_team_path(league_id: league_id,
-                                              league_team_id: league_team_id),
-               headers: authenticated_header(user)
+        delete api_v1_league_leagues_team_path(league_id: league_id,
+                                              id: league_team_id),
+              headers: authenticated_header(user)
       end
 
-      it "returns an error message" do
-        expect(json["errors"]).to eq("The team does not exist in the league")
+      it 'returns status code 404' do
+        expect(json['message']).to eq('Team not found')
       end
 
-      it "returns status code 400" do
-        expect(response).to have_http_status(400)
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
       end
     end
   end
 
-  describe "PUT /league/:league_id/league_teams/:league_team_id" do
-    context "when the request is valid" do
+  describe 'PUT /league/:league_id/league_teams/:league_team_id' do
+    context 'when the request is valid' do
       before do
-        put api_v1_edit_league_team_path(league_id: league_id,
-                                         league_team_id: league_team_id),
+        put api_v1_league_leagues_team_path(league_id: league_id,
+                                            id: league_team_id),
             headers: authenticated_header(user)
       end
 
-      it "returns a hash with 5 keys" do
+      it 'returns a hash with 5 keys' do
         expect(json.size).to eq 5
       end
 
-      it "returns status code 200" do
+      it 'returns status code 200' do
         expect(response).to have_http_status(200)
       end
     end
 
-    context "when the request is invalid" do
+    context 'when the request is invalid' do
       let(:league_team_id) { 0 }
 
       before do
-        put api_v1_edit_league_team_path(league_id: league_id,
-                                         league_team_id: league_team_id),
+        put api_v1_league_leagues_team_path(league_id: league_id,
+                                            id: league_team_id),
             headers: authenticated_header(user)
       end
 
-      it "returns an error message" do
-        expect(json["errors"]).to eq("The team does not exist in the league")
+      it 'returns an error message' do
+        expect(json['message']).to eq('Team not found')
       end
 
-      it "returns status code 400" do
-        expect(response).to have_http_status(400)
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
       end
     end
   end

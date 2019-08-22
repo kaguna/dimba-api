@@ -55,7 +55,7 @@ RSpec.describe Commentary, type: :request do
   describe "POST commentary/create" do
     context "when the request is valid" do
       before do
-        post api_v1_add_commentary_path(fixture_id: fixture_id),
+        post api_v1_fixture_commentaries_path(fixture_id: fixture_id),
             headers: authenticated_header(user),
             params: commentary_params
       end
@@ -74,7 +74,7 @@ RSpec.describe Commentary, type: :request do
       let(:user) { create(:user, role_id: role.id) }
 
       before do
-        post  api_v1_add_commentary_path(fixture_id: fixture_id),
+        post  api_v1_fixture_commentaries_path(fixture_id: fixture_id),
               headers: authenticated_header(user),
               params: commentary_params
       end
@@ -92,11 +92,11 @@ RSpec.describe Commentary, type: :request do
   describe "GET /fixture/:fixture_id/commentaries" do
     context "when the request is valid" do
       before do
-        get  api_v1_game_commentaries_path(fixture_id: fixture_id)
+        get  api_v1_fixture_commentaries_path(fixture_id: fixture_id)
       end
 
       it "returns a list with 10 hashes" do
-        expect(json.size).to eq 10
+        expect(json.size).to eq 9
       end
 
       it "returns status code 200" do
@@ -105,18 +105,15 @@ RSpec.describe Commentary, type: :request do
     end
 
     context "when the request is invalid" do
-      let!(:fixture_id) { 1 }
+      let!(:commentary_id) { 1000 }
 
       before do
-        get  api_v1_game_commentaries_path(fixture_id: fixture_id)
+        get  api_v1_fixture_commentary_path(id: commentary_id,
+                                            fixture_id: fixture_id)
       end
 
-      it "returns an error message" do
-        expect(json["error"]).to eq("No commentary for this game.")
-      end
-
-      it "returns status code 400" do
-        expect(response).to have_http_status(400)
+      it "returns status code 404" do
+        expect(response).to have_http_status(404)
       end
     end
   end
@@ -127,8 +124,8 @@ RSpec.describe Commentary, type: :request do
       let(:user) { create(:user, role_id: role.id) }
 
       before do
-        delete api_v1_delete_commentary_path(fixture_id: fixture_id,
-                                            commentary_id: commentary_id),
+        delete api_v1_fixture_commentary_path(fixture_id: fixture_id,
+                                              id: commentary_id),
               headers: authenticated_header(user)
       end
 
@@ -143,17 +140,13 @@ RSpec.describe Commentary, type: :request do
 
     context "when the request is made by an admin" do
       before do
-        delete api_v1_delete_commentary_path(fixture_id: fixture_id,
-                                             commentary_id: commentary_id),
-               headers: authenticated_header(user)
+        delete api_v1_fixture_commentary_path(fixture_id: fixture_id,
+                                              id: commentary_id),
+              headers: authenticated_header(user)
       end
 
-      it "returns a success message" do
-        expect(json["message"]).to eq("Commentary was successfully deleted")
-      end
-
-      it "returns status code 200" do
-        expect(response).to have_http_status(200)
+      it "returns status code 204" do
+        expect(response).to have_http_status(204)
       end
     end
 
@@ -162,17 +155,13 @@ RSpec.describe Commentary, type: :request do
       let(:commentary_id) { 100 }
 
       before do
-        delete api_v1_delete_commentary_path(fixture_id: fixture_id,
-                                            commentary_id: commentary_id),
+        delete api_v1_fixture_commentary_path(fixture_id: fixture_id,
+                                              id: commentary_id),
               headers: authenticated_header(user)
       end
 
-      it "returns an error message" do
-        expect(json["errors"]).to eq("The commentary does not exist")
-      end
-
-      it "returns status code 400" do
-        expect(response).to have_http_status(400)
+      it "returns status code 404" do
+        expect(response).to have_http_status(404)
       end
     end
   end
@@ -180,8 +169,8 @@ RSpec.describe Commentary, type: :request do
   describe "PUT /commentaries/:commentary_id" do
     context "when the request is valid" do
       before do
-        put api_v1_edit_commentary_path(fixture_id: fixture_id,
-                                        commentary_id: commentary_id),
+        put api_v1_fixture_commentary_path(fixture_id: fixture_id,
+                                          id: commentary_id),
             headers: authenticated_header(user)
       end
 
@@ -195,20 +184,16 @@ RSpec.describe Commentary, type: :request do
     end
 
     context "when the request is invalid" do
-      let(:commentary_id) { 0 }
+      let(:commentary_id) { 100 } 
 
       before do
-        put api_v1_edit_commentary_path(fixture_id: fixture_id,
-                                        commentary_id: commentary_id),
+        put api_v1_fixture_commentary_path(fixture_id: fixture_id,
+                                          id: commentary_id),
             headers: authenticated_header(user)
       end
 
-      it "returns an error message" do
-        expect(json["errors"]).to eq("The commentary does not exist")
-      end
-
-      it "returns status code 400" do
-        expect(response).to have_http_status(400)
+      it "returns status code 404" do
+        expect(response).to have_http_status(404)
       end
     end
   end

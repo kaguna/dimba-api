@@ -82,8 +82,8 @@ module Standings
     def sort_standings(game_stats:)
       calculate_team_standing(game_stats: game_stats)
       .sort { |a, b| 
-        [b[:points], b[:goal_difference], a[:team_name]] <=> 
-        [a[:points], a[:goal_difference], b[:team_name]] 
+        [b[:points], b[:goal_difference], b[:goals_for], a[:team_name]] <=> 
+        [a[:points], a[:goal_difference],a[:goals_for], b[:team_name]] 
       }
     end
 

@@ -29,6 +29,10 @@ Rails.application.routes.draw do
 
       resources :transfer, :events, :sponsor
 
+      scope 'league/:league_id/fixtures' do
+        get '/fixture_auto_gen' => 'fixtures#generate_fixture', as: 'gen_fixture'
+      end
+
       # Temporary here
       scope 'fixture/:fixture_id/results' do
         get '/' => 'results#index', as: 'results'

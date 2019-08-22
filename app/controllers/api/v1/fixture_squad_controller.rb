@@ -1,11 +1,11 @@
 class Api::V1::FixtureSquadController < ApplicationController
   before_action :authenticate_current_user, except: %i(index show)
-  before_action :set_fixture_squad, only: %i(update destroy)
+  before_action :set_fixture_squad, only: %i(show update destroy)
   after_action :verify_authorized, except: %i(index show)
 
   def index
-    fixture_squad = FixtureSquad.where(fixture_id: params[:fixtures_id],
-                                      team_id: params[:teams_id]
+    fixture_squad = FixtureSquad.where(fixture_id: params[:fixture_id],
+                                      team_id: params[:team_id]
     )
 
     if fixture_squad.empty?
@@ -18,15 +18,8 @@ class Api::V1::FixtureSquadController < ApplicationController
   end
 
   def show
-    squad_player = FixtureSquad.where(id: params[:fixture_squad_id])
-
-    if squad_player.empty?
-      render json: { error: "The player is not in the squad." },
-            status: :bad_request
-
-    else
-      render json: squad_player, status: :ok
-    end
+    p @fixture_squad
+    render json: @fixture_squad
   end
 
   def create
@@ -38,26 +31,14 @@ class Api::V1::FixtureSquadController < ApplicationController
   end
 
   def update
-    if @fixture_squad
-      @fixture_squad.update_attributes(update_params)
-      render json: @fixture_squad, status: :ok
-
-    else
-      render json: { errors: "The player is not in the squad." },
-            status: :bad_request
-    end
+    authorize @fixture_squad
+    @fixture_squad.update_attributes(update_params)
+    render json: @fixture_squad
   end
 
   def destroy
-    if @fixture_squad
-      @fixture_squad.destroy
-      render json: { message: "Players removed from the squad." },
-            status: :ok
-
-    else
-      render json: { errors: "The player is not in the squad." },
-            status: :bad_request
-    end
+    authorize @fixture_squad
+    @fixture_squad.destroy
   end
 
   private
@@ -71,14 +52,13 @@ class Api::V1::FixtureSquadController < ApplicationController
   end
 
   def set_fixture_squad
-    @fixture_squad = FixtureSquad.find_by(id: params[:fixture_squad_id])
-    authorize @fixture_squad
+    @fixture_squad = FixtureSquad.find(params[:id])
   end
 
   def players_params(attributes)
     attributes.permit(:player_id).to_h.merge!(
-      fixture_id: params[:fixtures_id],
-      team_id: params[:teams_id]
+      fixture_id: params[:fixture_id],
+      team_id: params[:team_id]
     )
   end
 

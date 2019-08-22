@@ -18,9 +18,9 @@ RSpec.describe Team, type: :request do
   describe "POST teams/create" do
     context "when the request is valid" do
       before do
-        post api_v1_add_team_path,
-             headers: authenticated_header(user),
-             params: team_params
+        post api_v1_teams_path,
+            headers: authenticated_header(user),
+            params: team_params
       end
 
       it "creates a new team with 7 attributes" do
@@ -43,9 +43,9 @@ RSpec.describe Team, type: :request do
       end
 
       before do
-        post api_v1_add_team_path,
-             headers: authenticated_header(user),
-             params: team_params
+        post api_v1_teams_path,
+            headers: authenticated_header(user),
+            params: team_params
       end
 
       it "does not create a new team with empty team name" do
@@ -75,8 +75,8 @@ RSpec.describe Team, type: :request do
   describe "DELETE /team/:team_id" do
     context "when the request is valid" do
       before do
-        delete api_v1_delete_team_path(team_id: team_id),
-               headers: authenticated_header(user)
+        delete api_v1_team_path(id: team_id),
+              headers: authenticated_header(user)
       end
 
       it "returns a success message and status code 200" do
@@ -89,8 +89,8 @@ RSpec.describe Team, type: :request do
       let(:team_id) { 0 }
 
       before do
-        delete api_v1_delete_team_path(team_id: team_id),
-               headers: authenticated_header(user)
+        delete api_v1_team_path(id: team_id),
+              headers: authenticated_header(user)
       end
 
       it "returns an error message and status code 400" do
@@ -103,7 +103,7 @@ RSpec.describe Team, type: :request do
   describe "GET /team/:id" do
     context "when the request is valid" do
       before do
-        get api_v1_team_path(team_id: team_id)
+        get api_v1_team_path(id: team_id)
       end
 
       it "returns a hash with 7 keys" do
@@ -118,7 +118,7 @@ RSpec.describe Team, type: :request do
     context "when the request is invalid" do
       let(:team_id) { 100 }
       before do
-        get api_v1_team_path(team_id: team_id)
+        get api_v1_team_path(id: team_id)
       end
 
       it "returns an error message and status code 400" do
@@ -132,7 +132,7 @@ RSpec.describe Team, type: :request do
     context "when the request is valid" do
 
       before do
-        put api_v1_edit_team_path(team_id: team_id),
+        put api_v1_team_path(id: team_id),
             headers: authenticated_header(user)
       end
 
@@ -149,7 +149,7 @@ RSpec.describe Team, type: :request do
       let(:team_id) { 100 }
 
       before do
-        put api_v1_edit_team_path(team_id: team_id),
+        put api_v1_team_path(id: team_id),
             headers: authenticated_header(user)
       end
 

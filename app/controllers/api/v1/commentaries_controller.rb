@@ -1,17 +1,21 @@
 class Api::V1::CommentariesController < ApplicationController
-  before_action :authenticate_current_user, except: [:index]
-  before_action :set_commentary, only: %i(update destroy)
-  after_action :verify_authorized, except: [:index]
+  before_action :authenticate_current_user, except: %i(index show)
+  before_action :set_commentary, only: %i(show update destroy)
+  after_action :verify_authorized, except: %i(show index show)
 
   def index
-    commentary = Commentary.where(fixture_id: params[:fixture_id])
+    commentary = Commentary.find_by(fixture_id: params[:fixture_id])
 
-    if commentary.empty?
+    if commentary.nil?
       render json: { "error": "No commentary for this game." },
-             status: :bad_request
+            status: :bad_request
     else
       render json: commentary, status: :ok
     end
+  end
+
+  def show
+    render json: @commentary
   end
 
   def create
@@ -26,30 +30,20 @@ class Api::V1::CommentariesController < ApplicationController
   end
 
   def update
-    if @commentary
-      @commentary.update_attributes(commentary_params)
-      render json: @commentary, status: :ok
-    else
-      render json: { errors: "The commentary does not exist" },
-             status: :bad_request
-    end
+    authorize @commentary
+    @commentary.update_attributes(commentary_params)
+    render json: @commentary
   end
 
   def destroy
-    if @commentary
-      render json: { message: "Commentary was successfully deleted" },
-             status: :ok
-    else
-      render json: { errors: "The commentary does not exist" },
-             status: :bad_request
-    end
+    authorize @commentary
+    @commentary.destroy
   end
 
   private
 
   def set_commentary
-    @commentary = Commentary.find_by(id: params[:commentary_id])
-    authorize @commentary
+    @commentary = Commentary.find(params[:id])
   end
 
   def commentary_params

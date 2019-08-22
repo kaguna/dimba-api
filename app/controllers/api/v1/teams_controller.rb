@@ -8,7 +8,7 @@ class Api::V1::TeamsController < ApplicationController
   end
 
   def show
-    show_team = Team.find_by(id: params[:team_id])
+    show_team = Team.find_by(id: params[:id])
 
     if show_team
       render json: show_team, status: :ok
@@ -47,18 +47,18 @@ class Api::V1::TeamsController < ApplicationController
     if @team
       @team.destroy
       render json: { message: "Team was successfully deleted" },
-             status: :ok
+            status: :ok
 
     else
       render json: { errors: "The team does not exist" },
-             status: :bad_request
+            status: :bad_request
     end
   end
 
   private
 
   def set_team
-    @team = Team.find_by(id: params[:team_id])
+    @team = Team.find_by(id: params[:id])
     authorize @team
   end
 

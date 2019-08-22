@@ -1,28 +1,14 @@
 class Api::V1::PlayersController < ApplicationController
-  before_action :authenticate_current_user, except: %i(index show)
-  before_action :set_player, only: %i(show update destroy)
-  after_action :verify_authorized, except: %i(index show)
+  before_action :authenticate_current_user, except: %i[index show]
+  before_action :set_player, only: %i[show update destroy]
+  after_action :verify_authorized, except: %i[index show]
 
   def index
-    players = Player.where(team_id: params[:team_id])
-
-    if players.empty?
-      render json: { errors: "The team does not exist" },
-             status: :bad_request
-
-    else
-      render json: players, status: :ok
-    end
+    render json: show_team_players(params[:team_id])
   end
 
   def show
-    if @player
-      render json: @player, status: :ok
-
-    else
-      render json: { errors: "The player does not exist" },
-             status: :bad_request
-    end
+    render json: @player
   end
 
   def create
@@ -38,31 +24,32 @@ class Api::V1::PlayersController < ApplicationController
   end
 
   def update
+    authorize @player
     if @player
       @player.update_attributes(player_params)
       render json: @player, status: :ok
 
     else
-      render json: { errors: "The player does not exist" },
-             status: :bad_request
+      render json: { errors: 'The player does not exist' },
+            status: :bad_request
     end
   end
 
   def destroy
+    authorize @player
     if @player
       @player.destroy
-      render json: { message: "Player was successfully deleted" }, status: :ok
+      render json: { message: 'Player was successfully deleted' }, status: :ok
 
     else
-      render json: { errors: "The player does not exist" }, status: :bad_request
+      render json: { errors: 'The player does not exist' }, status: :bad_request
     end
   end
 
   private
 
   def set_player
-    @player = Player.find_by(id: params[:player_id], team_id: params[:team_id])
-    authorize @player
+    @player = Player.find_by(team_id: params[:team_id], id: params[:id])
   end
 
   def player_params
@@ -76,5 +63,9 @@ class Api::V1::PlayersController < ApplicationController
       :phone_number,
       :team_id
     )
+  end
+
+  def show_team_players(team_id)
+    team_players ||= Team.find(team_id).players
   end
 end

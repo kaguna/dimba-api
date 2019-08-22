@@ -1,19 +1,11 @@
 class Api::V1::FixturesController < ApplicationController
   include FixturesConcern
   before_action :authenticate_current_user, except: %i(index show)
-  before_action :set_fixture, only: %i(update destroy)
+  before_action :set_fixture, only: %i(show update destroy)
   after_action :verify_authorized, except: %i(index show)
 
   def index
-    fixtures = Fixture.where(league_id: params[:league_id])
-
-    if fixtures.empty?
-      render json: { errors: "No fixtures available." },
-             status: :bad_request
-
-    else
-      render json: fixtures, status: :ok
-    end
+    render json: show_league_fixtures(params[:league_id])
   end
 
   def generate_fixture
@@ -22,15 +14,12 @@ class Api::V1::FixturesController < ApplicationController
   end
 
   def show
-    fixture = Fixture.where(id: params[:fixture_id],
-                            league_id: params[:league_id])
-
-    if fixture.empty?
+    if @fixture.nil?
       render json: { error: "The fixture is not available." },
-             status: :bad_request
+            status: :bad_request
 
     else
-      render json: fixture, status: :ok
+      render json: @fixture, status: :ok
     end
   end
 
@@ -42,25 +31,27 @@ class Api::V1::FixturesController < ApplicationController
   end
 
   def update
+    authorize @fixture
     if @fixture
       @fixture.update_attributes(update_params)
       render json: @fixture, status: :ok
 
     else
       render json: { errors: "The fixture does not exist" },
-             status: :bad_request
+            status: :bad_request
     end
   end
 
   def destroy
+    authorize @fixture
     if @fixture
       @fixture.destroy
       render json: { message: "Fixture was successfully deleted" },
-             status: :ok
+            status: :ok
 
     else
       render json: { errors: "The fixture does not exist" },
-             status: :bad_request
+            status: :bad_request
     end
   end
 
@@ -76,9 +67,8 @@ class Api::V1::FixturesController < ApplicationController
   end
 
   def set_fixture
-    @fixture = Fixture.find_by(id: params[:fixture_id],
-                               league_id: params[:league_id])
-    authorize @fixture
+    @fixture = Fixture.find_by(id: params[:id],
+                              league_id: params[:league_id])
   end
 
   def fixture_params(attributes)
@@ -100,5 +90,9 @@ class Api::V1::FixturesController < ApplicationController
         :left_side_referee,
         :match_day
     )
+  end
+
+  def show_league_fixtures(league_id)
+    team_players ||= League.find(league_id).fixtures
   end
 end

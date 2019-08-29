@@ -9,4 +9,9 @@ class Fixture < ApplicationRecord
   has_one :result, dependent: :destroy
   has_many :fixture_squad, dependent: :destroy
   has_many :commentaries, dependent: :destroy
+
+  def self.results
+    Standings::Statistics.new(league_id: league,
+      season_id: season).league_stats
+  end
 end

@@ -4,4 +4,5 @@ class Player < ApplicationRecord
   validates :second_name, presence: true
   belongs_to :team
   has_many :fixture_squad
+  has_many :commentaries
 end

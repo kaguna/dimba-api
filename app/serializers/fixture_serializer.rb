@@ -1,7 +1,9 @@
 class FixtureSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
 
-  attributes :match, :results
+  attributes :match
+
+  belongs_to :user
   has_many :commentaries
 
   def match
@@ -12,11 +14,27 @@ class FixtureSerializer < ActiveModel::Serializer
       match_day: self.object.match_day,
       center_referee: self.object.center_referee,
       right_side_referee: self.object.right_side_referee,
-      left_side_referee: self.object.left_side_referee
+      left_side_referee: self.object.left_side_referee,
+      commentaries: self.commentaries,
+      results: self.results
     }
   end
 
+  def commentaries
+    object.commentaries.map do |commentaries| 
+      CommentarySerializer.new(commentaries).commentary
+    end
+  end
+
+  def get_results
+    Standings::Statistics.new(league_id: self.object.league_id,
+      season_id: self.object.season_id).league_stats[:results]
+        
+  end
+
   def results
-    {"link": api_v1_standings_path(league_id: self.object.league_id, season_id: self.object.season_id)}
+    self.get_results.find do |result|
+      result[:fixture_id] == self.object.id
+    end
   end
 end

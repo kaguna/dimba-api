@@ -95,7 +95,7 @@ module Api
       end
 
       def show_league_fixtures(league_id)
-        team_players ||= League.find(league_id).fixtures
+        league_fixtures ||= League.find(league_id).fixtures
       end
     end
   end

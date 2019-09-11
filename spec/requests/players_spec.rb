@@ -31,8 +31,8 @@ RSpec.describe Player, type: :request do
             params: player_params
       end
 
-      it 'creates a new player with 11 attributes' do
-        expect(json.size).to eq 11
+      it 'creates a new player with 10 attributes' do
+        expect(json.size).to eq 10
       end
 
       it 'returns status code 201' do
@@ -138,8 +138,8 @@ RSpec.describe Player, type: :request do
             headers: authenticated_header(user)
       end
 
-      it 'returns a hash with 11 keys' do
-        expect(json.size).to eq 11
+      it 'returns a hash with 10 keys' do
+        expect(json.size).to eq 10
       end
 
       it 'returns status code 200' do

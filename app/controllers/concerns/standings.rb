@@ -9,7 +9,7 @@ module Standings
       game_stats = league_commentaries.map do |fixture|
         fixture_stats fixture
       end.compact
-      [game_stats, sort_standings(game_stats: game_stats)]
+      {results: game_stats, standings: sort_standings(game_stats: game_stats)}
     end
 
     def fixture_stats(fixture)

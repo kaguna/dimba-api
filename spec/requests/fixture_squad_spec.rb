@@ -20,10 +20,10 @@ RSpec.describe FixtureSquad, type: :request do
 
   let!(:fixture) do
     create(:fixture,
-           home_team_id: teams.last.id,
-           away_team_id: teams.first.id,
-           season_id: season.id,
-           league_id: league.id
+          home_team_id: teams.last.id,
+          away_team_id: teams.first.id,
+          season_id: season.id,
+          league_id: league.id
     )
   end
 
@@ -36,9 +36,9 @@ RSpec.describe FixtureSquad, type: :request do
   let!(:fixture_squad) do
     players.each do |player|
       create(:fixture_squad,
-             fixture_id: fixture.id,
-             team_id: teams.first.id,
-             player_id: player.id
+            fixture_id: fixture.id,
+            team_id: teams.first.id,
+            player_id: player.id
       )
     end
     FixtureSquad.all
@@ -51,7 +51,7 @@ RSpec.describe FixtureSquad, type: :request do
           player_id: players.first.id
         },
         {
-          player_id: players.second.id
+          player_id: players.last.id
         }
       ]
     }
@@ -171,8 +171,8 @@ RSpec.describe FixtureSquad, type: :request do
         put url, headers: authenticated_header(user)
       end
 
-      it "returns a hash with 7 keys" do
-        expect(json.size).to eq 7
+      it "returns a hash with 4 keys" do
+        expect(json['squad'].size).to eq 4
       end
 
       it "returns status code 200" do

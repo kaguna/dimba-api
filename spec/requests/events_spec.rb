@@ -19,8 +19,8 @@ RSpec.describe Event, type: :request do
     context 'when the request is valid' do
       before do
         post api_v1_events_path,
-             headers: authenticated_header(user),
-             params: event_params
+            headers: authenticated_header(user),
+            params: event_params
       end
 
       it 'returns status code 201' do
@@ -69,7 +69,7 @@ RSpec.describe Event, type: :request do
     context 'when the request is valid' do
       before do
         delete api_v1_event_path(id: event_id),
-               headers: authenticated_header(user)
+              headers: authenticated_header(user)
       end
 
       it 'returns status code 204' do
@@ -82,7 +82,7 @@ RSpec.describe Event, type: :request do
 
       before do
         delete api_v1_event_path(id: event_id),
-               headers: authenticated_header(user)
+              headers: authenticated_header(user)
       end
 
       it 'returns status code 404' do

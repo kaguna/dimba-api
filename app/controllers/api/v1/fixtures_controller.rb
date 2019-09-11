@@ -77,7 +77,8 @@ module Api
         attributes.permit(
           :home_team_id,
           :away_team_id,
-          :season_id
+          :season_id,
+          :match_day
         )
       end
 
@@ -87,15 +88,15 @@ module Api
 
       def update_params
         params.permit(
-            :center_referee,
-            :right_side_referee,
-            :left_side_referee,
-            :match_day
+          :center_referee,
+          :right_side_referee,
+          :left_side_referee,
+          :match_day
         )
       end
 
       def show_league_fixtures(league_id)
-        team_players ||= League.find(league_id).fixtures
+        league_fixtures ||= League.find(league_id).fixtures
       end
     end
   end

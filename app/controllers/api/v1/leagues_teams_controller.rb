@@ -41,7 +41,7 @@ module Api
           league_team = LeaguesTeam.new(teams_params(attributes))
           authorize league_team
           league_team.league_id = params[:league_id]
-          league_team.save!
+          league_team.save
         end
       end
 

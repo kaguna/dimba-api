@@ -19,12 +19,12 @@ RSpec.describe Team, type: :request do
     context "when the request is valid" do
       before do
         post api_v1_teams_path,
-            headers: authenticated_header(user),
+            headers: authenticated_header(user), 
             params: team_params
       end
 
-      it "creates a new team with 7 attributes" do
-        expect(json.size).to eq 7
+      it "creates a new team with 10 attributes" do
+        expect(json.size).to eq 10 
       end
 
       it "returns status code 201" do
@@ -106,8 +106,8 @@ RSpec.describe Team, type: :request do
         get api_v1_team_path(id: team_id)
       end
 
-      it "returns a hash with 7 keys" do
-        expect(json.size).to eq 7
+      it "returns a hash with 10 keys" do
+        expect(json.size).to eq 10
       end
 
       it "returns status code 200" do
@@ -121,9 +121,8 @@ RSpec.describe Team, type: :request do
         get api_v1_team_path(id: team_id)
       end
 
-      it "returns an error message and status code 400" do
-        expect(response).to have_http_status(400)
-        expect(json["errors"]).to eq("The team does not exist")
+      it "returns an error message and status code 404" do
+        expect(response).to have_http_status(404)
       end
     end
   end
@@ -136,8 +135,8 @@ RSpec.describe Team, type: :request do
             headers: authenticated_header(user)
       end
 
-      it "returns a hash with 7 keys" do
-        expect(json.size).to eq 7
+      it "returns a hash with 10 keys" do
+        expect(json.size).to eq 10
       end
 
       it "returns status code 200" do

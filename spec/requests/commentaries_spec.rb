@@ -10,11 +10,18 @@ RSpec.describe Commentary, type: :request do
 
   let!(:user) { create(:user, role_id: role.id) }
 
+  let!(:ref_role) { create(:role, name: "Referee") }
+
+  let!(:user_ref) do
+    create_list(:user, 3,
+                role_id: ref_role.id)
+  end
+
   let(:league) { create(:league) }
 
   let(:team) { create_list(:team, 10) }
 
-  let(:event) { create(:event) }
+  let!(:event) { create(:event) }
 
   let(:season) { create(:season) }
 
@@ -35,8 +42,8 @@ RSpec.describe Commentary, type: :request do
     )
   end
 
-  let!(:commentary) do
-    create_list(
+  let!(:commentaries) do
+    create_list( 
         :commentary, 10,
         event_id: event.id,
         fixture_id: fixture.id,
@@ -48,9 +55,17 @@ RSpec.describe Commentary, type: :request do
   let(:team_id) { team.first.id }
   let(:player_id) { player.first.id }
   let(:fixture_id) { fixture.id }
-  let(:commentary_id) { commentary.first.id }
+  let(:commentary_id) { commentaries.first.id }
 
-  let(:commentary_params) { attributes_for(:commentary) }
+  let(:commentary_params) do 
+    { 
+      event_id: event.id,
+      fixture_id: fixture.id,
+      team_id: team.last.id,
+      commentary_time: 71,
+      player_id: player.first.id
+    }
+  end
 
   describe "POST commentary/create" do
     context "when the request is valid" do
@@ -60,8 +75,8 @@ RSpec.describe Commentary, type: :request do
             params: commentary_params
       end
 
-      it "creates a new commentary" do
-        expect(json.size).to eq 9
+      it "creates a new commentary with 6 attributes" do
+        expect(json['commentary'].size).to eq 6
       end
 
       it "returns status code 201" do
@@ -95,8 +110,8 @@ RSpec.describe Commentary, type: :request do
         get  api_v1_fixture_commentaries_path(fixture_id: fixture_id)
       end
 
-      it "returns a list with 10 hashes" do
-        expect(json.size).to eq 9
+      it "returns a list with 6 hashes" do
+        expect(json['commentary'].size).to eq 6
       end
 
       it "returns status code 200" do
@@ -174,8 +189,8 @@ RSpec.describe Commentary, type: :request do
             headers: authenticated_header(user)
       end
 
-      it "returns a hash with 11 keys" do
-        expect(json.size).to eq 9
+      it "returns a hash with 6 keys" do
+        expect(json['commentary'].size).to eq 6
       end
 
       it "returns status code 200" do

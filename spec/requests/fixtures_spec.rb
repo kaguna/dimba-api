@@ -27,12 +27,10 @@ RSpec.describe Fixture, type: :request do
       home_team_id: team.last.id,
       away_team_id: team.first.id,
       league_id: league.id,
-      center_referee: user_ref.first.id,
       season_id: season.id,
-      right_side_referee: user_ref.last.id,
-      left_side_referee: user_ref.second.id
     )
   end
+
 
   let(:league_id) { league.id }
 
@@ -47,8 +45,11 @@ RSpec.describe Fixture, type: :request do
           "home_team_id": team.last.id,
           "away_team_id": team.first.id,
           "league_id": league.id,
-          "season": season.id,
-          "match_day": "2018-09-09"
+          "season_id": season.id,
+          "match_day": "2018-09-09",
+          "center_referee_id": user_ref.first.id,
+          "right_side_referee_id": user_ref.last.id,
+          "left_side_referee_id": user_ref.second.id
         }
       ]
     }
@@ -59,7 +60,7 @@ RSpec.describe Fixture, type: :request do
   describe "POST /league/:league_id/fixtures" do
     context "when the request is valid" do
       before do
-        post api_v1_league_fixtures_path(league_id: league_id),
+        post api_v1_league_fixtures_path(league_id: league_id), 
             headers: authenticated_header(user),
             params: fixture_params 
       end
@@ -123,7 +124,7 @@ RSpec.describe Fixture, type: :request do
       end
     end
 
-    context "when the request is invalid" do
+    context "when the request is invalid" do 
       let(:fixture_id) { 0 }
 
       before do
@@ -145,13 +146,13 @@ RSpec.describe Fixture, type: :request do
   describe "PUT /league/:league_id/fixtures/:fixture_id" do
     context "when the request is valid" do
       before do
-        put api_v1_league_fixture_path(league_id: league_id,
+        put api_v1_league_fixture_path(league_id: league_id, 
                                     id: fixture_id),
             headers: authenticated_header(user)
       end
 
-      it "returns a hash with 11 keys" do
-        expect(json.size).to eq 11
+      it "returns a hash with 8 keys" do
+        expect(json['match'].size).to eq 8
       end
 
       it "returns status code 200" do

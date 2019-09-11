@@ -10,26 +10,18 @@ module Api
       end
 
       def show
-        show_team = Team.find_by(id: params[:id])
-
-        if show_team
-          render json: show_team, status: :ok
-
-        else
-          render json: { errors: "The team does not exist"
-          }, status: :bad_request
-        end
+        render json: Team.find(params[:id])
       end
 
       def create
-        @create_team = Team.new(team_params)
-        authorize @create_team
+        create_team = Team.new(team_params)
+        authorize create_team
 
-        if @create_team.save
-          render json: @create_team, status: :created
+        if create_team.save
+          render json: create_team, status: :created
 
         else
-          render json: @create_team.errors, status: :unprocessable_entity
+          render json: create_team.errors, status: :unprocessable_entity
         end
       end
 

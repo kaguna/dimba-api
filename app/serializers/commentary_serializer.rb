@@ -1,10 +1,5 @@
 class CommentarySerializer < ActiveModel::Serializer
   attributes :commentary
-  
-  belongs_to :fixture
-  belongs_to :event
-  belongs_to :player
-  belongs_to :team
 
   def commentary
     {

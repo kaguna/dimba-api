@@ -3,6 +3,7 @@ class Team < ApplicationRecord
   has_many :players
   has_many :leagues_teams, dependent: :destroy
   has_many :leagues, through: :leagues_teams
+  has_many :teams, through: :leagues_teams
   has_many :fixture_squads
   has_many :commentaries
   has_many :home_team_fixtures, class_name: "Fixture", foreign_key: "home_team_id"

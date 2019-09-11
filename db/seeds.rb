@@ -35,7 +35,7 @@ teams.each do |id|
       first_name: Faker::Name.first_name, 
       second_name: Faker::Name.middle_name,
       last_name: Faker::Name.last_name,
-      nick_name: Faker::Football.player,
+      nick_name: Faker::Football.unique.player,
       id_number: Faker::IDNumber.spanish_citizen_number,
       dob: Faker::Date.birthday(19, 38),
       phone_number: Faker::PhoneNumber.cell_phone,

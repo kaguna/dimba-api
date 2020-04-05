@@ -6,7 +6,8 @@ module Api
       after_action :verify_authorized, except: %i(index show)
 
       def index
-        render json: Team.all, status: :ok
+        all_teams ||= Team.all
+        render json: all_teams, status: :ok
       end
 
       def show

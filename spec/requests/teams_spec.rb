@@ -23,8 +23,8 @@ RSpec.describe Team, type: :request do
             params: team_params
       end
 
-      it "creates a new team with 10 attributes" do
-        expect(json.size).to eq 10 
+      it "creates a new team with 5 attributes" do
+        expect(json.size).to eq 5 
       end
 
       it "returns status code 201" do
@@ -106,8 +106,8 @@ RSpec.describe Team, type: :request do
         get api_v1_team_path(id: team_id)
       end
 
-      it "returns a hash with 10 keys" do
-        expect(json.size).to eq 10
+      it "returns a hash with 5 keys" do
+        expect(json.size).to eq 5
       end
 
       it "returns status code 200" do
@@ -135,8 +135,8 @@ RSpec.describe Team, type: :request do
             headers: authenticated_header(user)
       end
 
-      it "returns a hash with 10 keys" do
-        expect(json.size).to eq 10
+      it "returns a hash with 5 keys" do
+        expect(json.size).to eq 5
       end
 
       it "returns status code 200" do

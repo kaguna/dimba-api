@@ -1,7 +1,34 @@
 ---
-version: 2
+version: 2.0
 jobs:
   build:
+    working_directory: ~/dimba-api
+    docker:
+      - image: circleci/ruby:2.5.0-node
+      - image: postgres:9.5
+    steps:
+      - checkout
+      - save_cache:
+          key: dimba-api-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+  bundle_dependencies:
+    docker:
+      - image: circleci/ruby:2.5.0-node
+      - image: postgres:9.5
+    working_directory: ~/dimba-api
+    steps:
+      - checkout
+      - restore_cache:
+          key: dimba-api-{{ checksum "Gemfile.lock" }}
+      - run: bundle install --path vendor/bundle
+      - save_cache:
+          key: dimba-api-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+  rake_test:
     working_directory: ~/dimba-api
     docker:
       - image: circleci/ruby:2.5.0-node
@@ -15,47 +42,68 @@ jobs:
         environment:
           POSTGRES_USER: dimba-api
           POSTGRES_DB: dimba-api
-          POSTGRES_PASSWORD: ""
+          POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - checkout
-
-      # Restore Cached Dependencies
-      - type: cache-restore
-        name: Restore bundle cache
-        key: dimba-api-{{ checksum "Gemfile.lock" }}
-
-      # Bundle install dependencies
-      - run: bundle install --path vendor/bundle
-
-      # Cache Dependencies
-      - type: cache-save
-        name: Store bundle cache
-        key: dimba-api-{{ checksum "Gemfile.lock" }}
-        paths:
-          - vendor/bundle
-
-      # Wait for DB
-      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
-
-      # Setup the database
+      - restore_cache:
+          key: dimba-api-{{ checksum "Gemfile.lock" }}
+      - run: bundle --path vendor/bundle
       - run:
-          name: Set up DB
-          command: |
-            bundle exec rake db:create db:schema:load --trace
-            bundle exec rake db:migrate
-            bundle exec rake assets:precompile
-          environment:
-            DATABASE_URL: "postgres://dimba-api@localhost:5432/dimba-api"
-
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run: bundle exec rake db:create db:schema:load
       - run:
           name: Setup Code Climate test-reporter
           command: |
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
-      
       - run:
           name: Run tests
           command: |
             bundle exec rspec
             ./cc-test-reporter before-build
             ./cc-test-reporter after-build --exit-code $?
+
+  precompile_assets:
+    docker:
+      - image: circleci/ruby:2.5.0-node
+      - image: postgres:9.5
+    working_directory: ~/dimba-api
+    steps:
+      - checkout
+      - restore_cache:
+          key: dimba-api-{{ checksum "Gemfile.lock" }}
+      - run: bundle --path vendor/bundle
+      - run:
+          name: Precompile assets
+          command: bundle exec rake assets:precompile
+
+  # deploy:
+  #   machine:
+  #       enabled: true
+  #   working_directory: ~/dimba-api
+  #   environment:
+  #     HEROKU_APP: dimba-api
+  #   steps:
+  #     - restore_cache:
+  #         key: dimba-api-{{ checksum "Gemfile.lock" }}
+  #     - run: bundle --path vendor/bundle
+  #     - run:
+  #         name: Deploy Master to Heroku(fake)
+  #         command: bundle exec rake
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - bundle_dependencies:
+          requires:
+            - build
+      - rake_test:
+          requires:
+            - bundle_dependencies
+      - precompile_assets:
+          requires:
+            - bundle_dependencies
+            - rake_test

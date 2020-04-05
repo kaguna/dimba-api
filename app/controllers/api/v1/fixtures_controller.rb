@@ -4,11 +4,7 @@ module Api
       include FixturesConcern
       before_action :authenticate_current_user, except: %i(index show)
       before_action :set_fixture, only: %i(show update destroy)
-      after_action :verify_authorized, except: %i(index show)
-
-      def index
-        render json: show_league_fixtures(params[:league_id])
-      end
+      after_action :verify_authorized, except: %i(show)
 
       def generate_fixture
         authorize Fixture.new
@@ -19,17 +15,24 @@ module Api
         if @fixture.nil?
           render json: { error: "The fixture is not available." },
                 status: :bad_request
-
         else
           render json: @fixture, status: :ok
         end
       end
 
       def create
-        create_fixtures
-        render json: {
-          message: "#{fixtures_paramaters.size} games successfully created"
-        }, status: :created
+        authorize Fixture
+        league = League.find(params[:league_id])
+        league.fixtures.new(fixture_params)
+
+        if league.valid?
+          league.save
+          render json:  { message: "Created" },
+                        status: :created
+        else
+          render json:  { errors: "Invalid fixture" },
+                  status: :bad_request
+        end
       end
 
       def update
@@ -59,31 +62,14 @@ module Api
 
       private
 
-      def create_fixtures
-        fixtures_paramaters.each do |attributes|
-          fixture = Fixture.new(fixture_params(attributes))
-          authorize fixture
-          fixture.league_id = params[:league_id]
-          fixture.save
-        end
-      end
-
       def set_fixture
-        @fixture = Fixture.find_by(id: params[:id],
-                                  league_id: params[:league_id])
+        @fixture = Fixture.find_by(id: params[:id])
       end
 
-      def fixture_params(attributes)
-        attributes.permit(
-          :home_team_id,
-          :away_team_id,
-          :season_id,
-          :match_day
-        )
-      end
-
-      def fixtures_paramaters
-        params.require(:fixtures)
+      def fixture_params
+        params.require(:fixtures).map do |p|
+          p.permit(:home_team_id, :away_team_id, :season_id, :match_day)
+        end
       end
 
       def update_params
@@ -93,10 +79,6 @@ module Api
           :left_side_referee,
           :match_day
         )
-      end
-
-      def show_league_fixtures(league_id)
-        league_fixtures ||= League.find(league_id).fixtures
       end
     end
   end

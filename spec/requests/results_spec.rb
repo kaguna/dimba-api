@@ -21,8 +21,8 @@ RSpec.describe Result, type: :request do
 
   let!(:fixture) do
     create(:fixture,
-           home_team: teams.last.id,
-           away_team: teams.first.id,
+           home_team_id: teams.last.id,
+           away_team_id: teams.first.id,
            season_id: season.id,
            league_id: league.id)
   end

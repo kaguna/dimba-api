@@ -18,9 +18,10 @@ def create_season(from, to)
   seasons
 end
 
+
 20.times do
   Team.create(
-    name: Faker::Football.team,
+    name: Faker::Football.unique.team,
     description: Faker::Lorem.sentence,
     location: Faker::Address.city,
     nickname: Faker::Hobbit.character
@@ -34,7 +35,7 @@ teams.each do |id|
       first_name: Faker::Name.first_name, 
       second_name: Faker::Name.middle_name,
       last_name: Faker::Name.last_name,
-      nick_name: Faker::Football.player,
+      nick_name: Faker::Football.unique.player,
       id_number: Faker::IDNumber.spanish_citizen_number,
       dob: Faker::Date.birthday(19, 38),
       phone_number: Faker::PhoneNumber.cell_phone,
@@ -80,3 +81,5 @@ create_season(2015, 2018).each do |season|
       duration: 1
   )
 end
+
+User.create(username: "admin", role_id: 1, email: "admin@gmail.com", password: "admin123")

@@ -1,4 +1,4 @@
 class Result < ApplicationRecord
-  has_one :fixture
+  belongs_to :fixture
   validates :fixture_id, presence: true, uniqueness: true
 end

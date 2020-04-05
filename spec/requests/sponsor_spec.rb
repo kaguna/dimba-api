@@ -18,13 +18,9 @@ RSpec.describe Sponsor, type: :request do
   describe "POST /sponsors" do
     context "when the request is valid" do
       before do
-        post api_v1_add_sponsor_path,
+        post api_v1_sponsor_index_path,
              headers: authenticated_header(user),
              params: sponsor_params
-      end
-
-      it "creates a new sponsor with 6 attributes" do
-        expect(json.size).to eq 6
       end
 
       it "returns status code 201" do
@@ -42,7 +38,7 @@ RSpec.describe Sponsor, type: :request do
       end
 
       before do
-        post api_v1_add_sponsor_path,
+        post api_v1_sponsor_index_path,
              headers: authenticated_header(user),
              params: sponsor_params
       end
@@ -60,11 +56,7 @@ RSpec.describe Sponsor, type: :request do
   describe "GET /sponsors" do
     context "when the request is valid" do
       before do
-        get api_v1_sponsors_path
-      end
-
-      it "shows an array of 10 sponsors" do
-        expect(json.size).to eq 10
+        get api_v1_sponsor_index_path
       end
 
       it "returns status code 200" do
@@ -76,11 +68,7 @@ RSpec.describe Sponsor, type: :request do
   describe "GET /sponsors/:sponsor_id" do
     context "when the request is valid" do
       before do
-        get api_v1_sponsor_path(sponsor_id: sponsor_id)
-      end
-
-      it "returns one sponsor's details" do
-        expect(json.size).to eq 6
+        get api_v1_sponsor_path(id: sponsor_id)
       end
 
       it "returns status code 200" do
@@ -91,15 +79,11 @@ RSpec.describe Sponsor, type: :request do
     context "when the request is invalid" do
       let!(:sponsor_id) { 1000 }
       before do
-        get api_v1_sponsor_path(sponsor_id: sponsor_id)
+        get api_v1_sponsor_path(id: sponsor_id)
       end
 
-      it "returns an error message" do
-        expect(json["errors"]).to eq("The sponsor does not exist")
-      end
-
-      it "returns status code 400" do
-        expect(response).to have_http_status(400)
+      it "returns status code 404" do
+        expect(response).to have_http_status(404)
       end
     end
   end
@@ -108,16 +92,12 @@ RSpec.describe Sponsor, type: :request do
     context "when the request is valid" do
 
       before do
-        delete api_v1_delete_sponsor_path(sponsor_id: sponsor_id),
+        delete api_v1_sponsor_path(id: sponsor_id),
                headers: authenticated_header(user)
       end
 
-      it "returns a success message" do
-        expect(json["message"]).to eq("Sponsor was successfully deleted")
-      end
-
-      it "returns status code 200" do
-        expect(response).to have_http_status(200)
+      it "returns status code 204" do
+        expect(response).to have_http_status(204)
       end
     end
 
@@ -125,16 +105,12 @@ RSpec.describe Sponsor, type: :request do
       let(:sponsor_id) { 100 }
 
       before do
-        delete api_v1_delete_sponsor_path(sponsor_id: sponsor_id),
+        delete api_v1_sponsor_path(id: sponsor_id),
                headers: authenticated_header(user)
       end
 
-      it "returns an error message and status code 400" do
-        expect(json["errors"]).to eq("The sponsor does not exist")
-      end
-
-      it "returns status code 400" do
-        expect(response).to have_http_status(400)
+      it "returns status code 404" do
+        expect(response).to have_http_status(404)
       end
     end
   end
@@ -142,12 +118,8 @@ RSpec.describe Sponsor, type: :request do
   describe "PUT /sponsors/:sponsor_id" do
     context "when the request is valid" do
       before do
-        put api_v1_edit_sponsor_path(sponsor_id: sponsor_id),
+        put api_v1_sponsor_path(id: sponsor_id),
             headers: authenticated_header(user)
-      end
-
-      it "returns a hash with 6 keys" do
-        expect(json.size).to eq 6
       end
 
       it "returns status code 200" do
@@ -156,19 +128,15 @@ RSpec.describe Sponsor, type: :request do
     end
 
     context "when the request is invalid" do
-      let(:sponsor_id) { 100 }
+      let(:sponsor_id) { 1000 }
 
       before do
-        put api_v1_edit_sponsor_path(sponsor_id: sponsor_id),
+        put api_v1_sponsor_path(id: sponsor_id),
             headers: authenticated_header(user)
       end
 
-      it "returns an error message" do
-        expect(json["errors"]).to eq("The sponsor does not exist")
-      end
-
-      it "returns status code 400" do
-        expect(response).to have_http_status(400)
+      it "returns status code 404" do
+        expect(response).to have_http_status(404)
       end
     end
   end

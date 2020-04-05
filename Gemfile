@@ -26,18 +26,20 @@ gem 'coffee-rails', '~> 4.2'
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
+gem "active_model_serializers"
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'figaro', '~> 1.1', '>= 1.1.1'
 gem 'faker', '~> 1.9', '>= 1.9.1'
+gem 'rack-cors'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'guard-rspec', require: false
+  gem 'pry-rails'
   gem 'rspec-rails', ">= 2.0.0.beta"
   gem 'rspec', '~> 3.7'
-  gem 'guard-rspec'
   gem 'faker', '~> 1.9', '>= 1.9.1'
   gem 'simplecov', '~> 0.16.1'
 end
@@ -46,9 +48,11 @@ group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '>= 3.3.0'
   gem 'listen', '>= 3.0.5', '< 3.2'
+  gem 'pry-rails'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'rails-erd'
   gem 'rubocop', '~> 0.50.0', require: false
 end
 

@@ -5,39 +5,32 @@ RSpec.describe LeaguesTeam, type: :request do
   include RequestSpecHelper
   include AuthenticationSpecHelper
 
-  let!(:role) { create(:role, name: 'Admin') }
+  let(:role) { create(:role, name: 'Admin') }
 
-  let!(:user) { create(:user, role_id: role.id) }
-
-  let!(:teams) { create_list(:team, 10) }
+  let(:user) { create(:user, role_id: role.id) }
 
   let!(:league) { create(:league) }
 
+  let(:teams) { create_list(:team, 5) }
+
   let(:league_id) { league.id }
 
-  let!(:league_teams) do
-    teams.each do |team|
-      create(:league_teams,
-            league_id: league.id,
-            team_id: team.id)
-    end
-    LeaguesTeam.all
-  end
+  let!(:league_teams) { create_list(:league_teams, 5, league_id: league_id) }
 
-  let(:league_team_id) { league_teams.first.id }
+  let(:league_team_id) { league_teams.first.id } 
 
   let(:league_teams_params) do
     {
-      league_teams: [
-        {
-          league_id: league.id,
-          team_id: teams.first.id
-        },
-        {
-          league_id: league.id,
-          team_id: teams.second.id
-        }
-      ]
+      leagues_team: {
+        attributes: [
+          {
+            team_id: teams.first.id
+          },
+          {
+            team_id: teams.second.id
+          }
+        ]
+      }
     }
   end
 
@@ -64,8 +57,12 @@ RSpec.describe LeaguesTeam, type: :request do
         get api_v1_league_leagues_teams_path(league_id: league_id)
       end
 
-      it 'returns a list with 10 hash' do
-        expect(json.size).to eq 10
+      it 'returns hashes with keys' do
+        expect(json[0].keys).to match %w[id name description location nickname]
+      end
+
+      it 'returns a list with 5 hashes' do
+        expect(json.size).to eq 5
       end
 
       it 'returns status code 200' do
@@ -80,8 +77,8 @@ RSpec.describe LeaguesTeam, type: :request do
                                             id: league_team_id)
       end
 
-      it 'returns status code 200' do
-        expect(response).to have_http_status(200)
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
       end
     end
   end
@@ -109,10 +106,6 @@ RSpec.describe LeaguesTeam, type: :request do
       end
 
       it 'returns status code 404' do
-        expect(json['message']).to eq('Team not found')
-      end
-
-      it 'returns status code 404' do
         expect(response).to have_http_status(404)
       end
     end
@@ -127,7 +120,7 @@ RSpec.describe LeaguesTeam, type: :request do
       end
 
       it 'returns a hash with 5 keys' do
-        expect(json.size).to eq 5
+        expect(json.keys).to match %w[id team_id league_id created_at updated_at]
       end
 
       it 'returns status code 200' do
@@ -142,10 +135,6 @@ RSpec.describe LeaguesTeam, type: :request do
         put api_v1_league_leagues_team_path(league_id: league_id,
                                             id: league_team_id),
             headers: authenticated_header(user)
-      end
-
-      it 'returns an error message' do
-        expect(json['message']).to eq('Team not found')
       end
 
       it 'returns status code 404' do

@@ -5,16 +5,16 @@ jobs:
     working_directory: ~/dimba-api
     docker:
       - image: circleci/ruby:2.5.0-node
-        environment:
-          CC_TEST_REPORTER_ID: 3b1eb72982e5d07c429f5e28389be86acc4f108999e3a8e6248d99b78c9236a4
-          PGHOST: localhost
-          PGUSER: dimba-api
-          RAILS_ENV: test
-          DATABASE_URL: postgresql://dimba-api@localhost/dimba-api
+          environment:	
+          CC_TEST_REPORTER_ID: 3b1eb72982e5d07c429f5e28389be86acc4f108999e3a8e6248d99b78c9236a4	
+          PGHOST: localhost	
+          PGUSER: dimba-api	
+          RAILS_ENV: test	
+          DATABASE_URL: postgresql://dimba-api@localhost/dimba-api	
       - image: postgres:9.5
-        environment:
-          POSTGRES_USER: dimba-api
-          POSTGRES_DB: dimba-api
+        environment:	
+          POSTGRES_USER: dimba-api	
+          POSTGRES_DB: dimba-api	
           POSTGRES_PASSWORD: ""
     steps:
       - checkout
@@ -44,18 +44,36 @@ jobs:
             bundle exec rake db:create db:schema:load --trace
             bundle exec rake db:migrate
             bundle exec rake assets:precompile
-          environment:
+
+          environment:	
             DATABASE_URL: "postgres://dimba-api@localhost:5432/dimba-api"
 
+  test:
+    docker:
+      - image: circleci/ruby:2.5.0-node
+      - image: postgres:9.5
+    steps:
+      - checkout
       - run:
-          name: Setup Code Climate test-reporter
-          command: |
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-            chmod +x ./cc-test-reporter
-      
+        name: Setup Code Climate test-reporter
+        command: |
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
       - run:
-          name: Run tests
-          command: |
-            bundle exec rspec
-            ./cc-test-reporter before-build
-            ./cc-test-reporter after-build --exit-code $?
+        name: Run tests
+        command: |
+          bundle exec rspec
+          ./cc-test-reporter before-build
+          ./cc-test-reporter after-build --exit-code $?
+
+workflows:
+  version: 2
+  build-test-and-deploy:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - test

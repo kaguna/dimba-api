@@ -47,9 +47,9 @@ class FixtureSerializer < ActiveModel::Serializer
 
   def referees
     {
-      center: self.object.center_referee,
-      right: self.object.right_side_referee,
-      left: self.object.left_side_referee
+      center: object.center_referee ? UserSerializer.new(object.center_referee) : {},
+      right: object.right_side_referee ? UserSerializer.new(object.right_side_referee) : {},
+      left: object.left_side_referee ? UserSerializer.new(object.left_side_referee) : {}
     }
   end
 

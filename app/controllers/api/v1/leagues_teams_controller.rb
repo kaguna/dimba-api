@@ -14,48 +14,33 @@ module Api
       end
 
       def create
-        render json: create_league_teams
+        league = League.find(params[:league_id])
+
+        authorize league
+
+        league.leagues_teams.create!(leagues_teams_params[:attributes])
+        render json: league.leagues_teams
       end
 
       def update
         authorize @league_team
-        if @league_team.nil?
-          render json: { message: 'Team not found' }, status: :not_found
-        else
-          @league_team.update_attributes(update_params)
-          render json: @league_team
-        end
+        @league_team.update_attributes(update_params)
+        render json: @league_team
       end
 
       def destroy
         authorize @league_team
-        @league_team.nil? ?
-        (render json: { message: 'Team not found' }, status: :not_found) :
         @league_team.destroy
       end
 
       private
 
-      def create_league_teams
-        teams_paramaters.each do |attributes|
-          league_team = LeaguesTeam.new(teams_params(attributes))
-          authorize league_team
-          league_team.league_id = params[:league_id]
-          league_team.save
-        end
-      end
-
       def set_league_teams
-        @league_team = LeaguesTeam.find_by(league_id: params[:league_id],
-                                          id: params[:id])
+        @league_team = LeaguesTeam.find(params[:id])
       end
 
-      def teams_params(attributes)
-        attributes.permit(:team_id)
-      end
-
-      def teams_paramaters
-        params.require(:league_teams)
+      def leagues_teams_params
+        params.require(:leagues_team).permit(attributes: [:team_id])
       end
 
       def update_params

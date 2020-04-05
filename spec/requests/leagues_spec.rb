@@ -22,8 +22,12 @@ RSpec.describe League, type: :request do
             params: league_params
       end
 
-      it 'creates a new league' do
-        expect(json.size).to eq 5
+      it 'creates a new league with 2 keys' do
+        expect(json.size).to eq 2
+      end
+
+      it 'returns hash with keys' do
+        expect(json.keys).to match %w[id title]
       end
 
       it 'returns status code 201' do
@@ -93,7 +97,7 @@ RSpec.describe League, type: :request do
       end
 
       it 'returns a hash with 5 keys' do
-        expect(json.size).to eq 5
+        expect(json.size).to eq 2
       end
 
       it 'returns status code 200' do

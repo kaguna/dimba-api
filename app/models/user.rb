@@ -1,6 +1,12 @@
 class User < ApplicationRecord
   has_secure_password
 
+  has_many :center_referee, class_name: "Fixture", foreign_key: "center_referee_id"
+  has_many :right_side_referee, class_name: "Fixture", foreign_key: "right_side_referee_id"
+  has_many :left_side_referee, class_name: "Fixture", foreign_key: "left_side_referee_id"
+
+  belongs_to :role, optional: true
+
   validates_length_of       :password,
                             maximum: 72, minimum: 8,
                             allow_nil: true, allow_blank: false
@@ -16,11 +22,14 @@ class User < ApplicationRecord
             uniqueness: { case_sensitive: false },
             presence: true, allow_blank: false
 
-  belongs_to :role, optional: true
-
-  has_many :center_referee, class_name: "Fixture", foreign_key: "center_referee_id"
-  has_many :right_side_referee, class_name: "Fixture", foreign_key: "right_side_referee_id"
-  has_many :left_side_referee, class_name: "Fixture", foreign_key: "left_side_referee_id"
+  def to_token_payload
+    {
+      sub: id,
+      email: email,
+      username: username,
+      role: self.role.name
+    }
+  end
 
   def admin?
     role.name == "Admin"

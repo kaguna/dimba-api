@@ -38,24 +38,43 @@ RSpec.describe Fixture, type: :request do
 
   let(:fixture_id) { fixtures.first.id }
 
-  let(:fixture_params) {
+  let(:fixture_params) do
     {
       fixtures: [
-        {
-          "home_team_id": team.last.id,
-          "away_team_id": team.first.id,
-          "league_id": league.id,
-          "season_id": season.id,
-          "match_day": "2018-09-09",
-          "center_referee_id": user_ref.first.id,
-          "right_side_referee_id": user_ref.last.id,
-          "left_side_referee_id": user_ref.second.id
-        }
+          {
+            home_team_id: team.last.id,
+            away_team_id: team.first.id,
+            season_id: season.id,
+            match_day: "2018-09-09"
+          },
+          {
+            home_team_id: team.second.id,
+            away_team_id: team.first.id,
+            season_id: season.id,
+            match_day: "2018-09-10"
+          }
       ]
     }
-  }
+  end
 
-  let(:games) { fixture_params.size }
+  let(:invalid_fixture_params) do
+    {
+      fixtures: [
+          {
+            home_team_id: 0,
+            away_team_id: team.first.id,
+            season_id: season.id,
+            match_day: "2018-09-09"
+          },
+          {
+            home_team_id: team.second.id,
+            away_team_id: team.first.id,
+            season_id: season.id,
+            match_day: "2018-09-10"
+          }
+      ]
+    }
+  end
 
   describe "POST /league/:league_id/fixtures" do
     context "when the request is valid" do
@@ -65,12 +84,28 @@ RSpec.describe Fixture, type: :request do
             params: fixture_params 
       end
 
-      it "creates a new fixture" do
-        expect(json["message"]).to eq("#{games} games successfully created")
+      it "returns a created message" do
+        expect(json["message"]).to eq("Created")
       end
 
       it "returns status code 201" do
         expect(response).to have_http_status(201)
+      end
+    end
+
+    context "when the request is invalid" do
+      before do
+        post api_v1_league_fixtures_path(league_id: league_id), 
+            headers: authenticated_header(user),
+            params: invalid_fixture_params 
+      end
+
+      it "returns a invalid fixture message" do
+        expect(json["errors"]).to eq("Invalid fixture")
+      end
+
+      it "returns status code 400" do
+        expect(response).to have_http_status(400)
       end
     end
   end
@@ -78,11 +113,11 @@ RSpec.describe Fixture, type: :request do
   describe "GET /league/:league_id/fixtures" do
     context "when the request is valid" do
       before do
-        get api_v1_league_fixtures_path(league_id: league_id)
+        get api_v1_league_fixture_path(league_id: league_id, id: fixture_id)
       end
 
       it "returns a list with 10 hashes" do
-        expect(json.size).to eq 10
+        expect(json["match"].size).to eq 8
       end
 
       it "returns status code 200" do
@@ -93,8 +128,7 @@ RSpec.describe Fixture, type: :request do
     context "when the request is invalid" do
       let!(:fixture_id) { 0 }
       before do
-        get api_v1_league_fixture_path(league_id: league_id,
-                                id: fixture_id)
+        get api_v1_league_fixture_path(league_id: league_id, id: fixture_id)
       end
 
       it "returns an error message" do

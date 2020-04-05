@@ -10,7 +10,7 @@ module Api
 
         if leagues.empty?
           render json: { "error": 'No leagues!' },
-                status: :bad_request
+                status: :not_found
 
         else
           render json: leagues, status: :ok

@@ -1,10 +1,6 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      scope 'league/:league_id/season/:season_id' do
-        get '/table' => 'league_standings#show', as: 'standings'
-      end
-
       scope 'user' do
         post '/sign_up' => 'register#signup', as: 'register'
         post '/login' => 'user_token#create', as: 'login'
@@ -15,17 +11,22 @@ Rails.application.routes.draw do
       end
 
       resources :leagues do
-        resources :fixtures do
-          resources :teams do
-            resources :fixture_squad
+        resources :seasons do
+          get '/matches' => 'results#matches_results', as: 'season_results'
+          get '/standing' => 'results#league_season_standing', as: 'standing'
+          get '/stats' => 'results#player_stats', as: 'top_scorer'
+          resources :fixtures do
+            resources :teams do
+              resources :fixture_squad
+            end
           end
         end
         resources :leagues_teams
       end
 
-      resources :fixtures do
-        resources :commentaries
-      end
+      # resources :fixtures do
+      #   resources :commentaries
+      # end
 
       resources :transfer, :events, :sponsor
 
@@ -34,12 +35,13 @@ Rails.application.routes.draw do
       end
 
       # Temporary here
-      scope 'fixture/:fixture_id/results' do
-        get '/' => 'results#index', as: 'results'
-        post '/' => 'results#create', as: 'add_results'
-        get '/:result_id' => 'results#show', as: 'result'
-        put '/:result_id' => 'results#update', as: 'edit_result'
-        delete '/:result_id' => 'results#destroy', as: 'delete_result'
+      scope 'match/:fixture_id' do
+        get '/results' => 'results#match_result', as: 'results'
+        get '/commentaries' => 'commentaries#index', as: 'commentaries'
+        get '/commentaries/:id' => 'commentaries#show', as: 'commentary'
+        put '/commentaries/:id' => 'commentaries#update', as: 'edit_commentary'
+        post '/commentaries' => 'commentaries#create', as: 'add_commentaries'
+        delete '/commentaries/:id' => 'commentaries#destroy', as: 'delete_commentary'
       end
     end
   end

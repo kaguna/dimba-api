@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_10_131527) do
+ActiveRecord::Schema.define(version: 2020_04_27_222900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -120,6 +120,9 @@ ActiveRecord::Schema.define(version: 2019_09_10_131527) do
     t.integer "duration"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "league_id"
+    t.integer "start_date"
+    t.integer "end_date"
   end
 
   create_table "sponsors", force: :cascade do |t|
@@ -171,7 +174,10 @@ ActiveRecord::Schema.define(version: 2019_09_10_131527) do
   add_foreign_key "fixtures", "teams", column: "away_team_id"
   add_foreign_key "fixtures", "teams", column: "home_team_id"
   add_foreign_key "fixtures", "users", column: "center_referee_id"
+  add_foreign_key "fixtures", "users", column: "center_referee_id"
   add_foreign_key "fixtures", "users", column: "left_side_referee_id"
+  add_foreign_key "fixtures", "users", column: "left_side_referee_id"
+  add_foreign_key "fixtures", "users", column: "right_side_referee_id"
   add_foreign_key "fixtures", "users", column: "right_side_referee_id"
   add_foreign_key "leagues_sponsors", "leagues"
   add_foreign_key "leagues_sponsors", "sponsors"
@@ -179,6 +185,7 @@ ActiveRecord::Schema.define(version: 2019_09_10_131527) do
   add_foreign_key "leagues_teams", "teams"
   add_foreign_key "players", "teams"
   add_foreign_key "results", "fixtures"
+  add_foreign_key "seasons", "leagues"
   add_foreign_key "transfers", "players"
   add_foreign_key "transfers", "teams", column: "from_team_id"
   add_foreign_key "transfers", "teams", column: "to_team_id"

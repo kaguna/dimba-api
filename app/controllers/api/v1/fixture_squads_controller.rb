@@ -1,26 +1,16 @@
 module Api
   module V1
-    class FixtureSquadController < ApplicationController
-      before_action :authenticate_current_user, except: %i(index show)
+    class FixtureSquadsController < ApplicationController
+      before_action :authenticate_current_user!, except: %i(index show)
       before_action :set_fixture_squad, only: %i(show update destroy)
       after_action :verify_authorized, except: %i(index show)
 
       def index
-        fixture_squad = FixtureSquad.where(fixture_id: params[:fixture_id],
-                                          team_id: params[:team_id]
-        )
-
-        if fixture_squad.empty?
-          render json: { errors: "No squad for this match." },
-                status: :bad_request
-
-        else
-          render json: fixture_squad, status: :ok
-        end
+        fixture_squad = FixtureSquad.match_squad(match_id: params[:match_id])
+        render json: fixture_squad, status: :ok
       end
 
       def show
-        p @fixture_squad
         render json: @fixture_squad
       end
 

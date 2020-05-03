@@ -1,7 +1,7 @@
 module Api
   module V1
     class TeamsController < ApplicationController
-      before_action :authenticate_current_user, except: %i(index show)
+      before_action :authenticate_current_user!, except: %i(index show)
       before_action :set_team, only: %i(update destroy)
       after_action :verify_authorized, except: %i(index show)
 

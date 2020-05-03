@@ -3,15 +3,18 @@ module Api
     class ErrorsController < ActionController::API
       rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
       rescue_from ActiveRecord::RecordNotFound, with: :not_found
+      rescue_from ActiveRecord::RecordNotUnique, with: :already_exists
 
-      def authenticate_current_user
+      def authenticate_current_user!
         if current_user.nil?
           render json: { message: "Please login to access the resource" },
                 status: 401
         end
       end
 
-      private
+      def already_exists
+        render json: { message: "Duplicate not allowed" }, status: 302
+      end
 
       def not_found
         render json: {}, status: 404

@@ -2,13 +2,18 @@ module Api
   module V1   
     class FixturesController < ApplicationController
       include FixturesConcern
-      before_action :authenticate_current_user, except: %i(index show)
+      before_action :authenticate_current_user!, except: %i(index show)
       before_action :set_fixture, only: %i(show update destroy)
-      after_action :verify_authorized, except: %i(show)
+      after_action :verify_authorized, except: %i(index show)
 
       def generate_fixture
         authorize Fixture.new
         render json: generate(params[:league_id]), status: :ok
+      end
+
+      def index
+        fixtures = Fixture.league_fixtures(league_id: params[:league_id], season_id: params[:season_id]).not_played
+        render json:  fixtures
       end
 
       def show

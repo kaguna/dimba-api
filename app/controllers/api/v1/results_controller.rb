@@ -1,48 +1,22 @@
 module Api
-  module V1    
+  module V1
     class ResultsController < ApplicationController
-      before_action :authenticate_current_user, except: %i(index show)
-      before_action :specific_result, only: %i(update destroy)
-      after_action :verify_authorized, except: %i(index show)
+      before_action :authenticate_current_user!, except: [:matches_results, :match_result, :league_season_standing]
 
-      def index
-        render json: Result.all, status: :ok
+      def matches_results
+        render json: Result.league_season_matches_results(params[:league_id], params[:season_id])
       end
 
-      def show
-        render json: specific_result, status: :ok
+      def match_result
+        render json: Result.full_match_results(params[:match_id])
       end
 
-      def create
-        result = Result.create!(result_params)
-        authorize result
-        render json: result, status: :created
+      def league_season_standing
+        render json: Result.standing(params[:league_id], params[:season_id])
       end
 
-      def update
-        authorize specific_result
-        specific_result.update_attributes(result_params)
-        render json: specific_result
-      end
-
-      def destroy
-        authorize specific_result
-        specific_result.destroy
-        render json: {}, status: :ok
-      end
-
-      private
-
-      def specific_result
-        @result = Result.find(params[:result_id])
-      end
-
-      def result_params
-        params.permit(
-            :fixture_id,
-            :home_goals,
-            :away_goals
-        )
+      def player_stats
+        render json: Result.player_stats(params[:league_id], params[:season_id])
       end
     end
   end

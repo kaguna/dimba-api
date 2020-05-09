@@ -7,15 +7,15 @@ class Result < Commentary
   scope :league_matches, -> (league_id, season_id) do
     Fixture.where(league_id: league_id, season_id: season_id).where("match_day < ?", Date.today)
   end 
-
+  attr_accessor :lsm
   # scope :goals, -> { where(event_id: 1) }
 
   def self.league_season_matches_results(league_id, season_id)
-    league_matches(league_id, season_id).map do |match|  
+    @lsm ||= league_matches(league_id, season_id).map do |match|  
         self.full_match_results(match&.id)
     end
 
-    # {league_season_matches: lsm}
+    {matches: @lsm.length, league_season_matches: @lsm}
   end
 
   def self.full_match_results(match_id)
@@ -23,9 +23,10 @@ class Result < Commentary
   end
 
   def self.standing(league_id, season_id)
-    standing = Standing.league_season_standings(self.league_season_matches_results(league_id, season_id))
+    ls_matches = self.league_season_matches_results(league_id, season_id)[:league_season_matches]
+    standing ||= Standing.league_season_standings(@lsm.nil? ? ls_matches : @lsm)
     {
-      count: standing.length,
+      teams: standing.length,
       standing: standing
     }.to_json
   end

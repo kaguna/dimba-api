@@ -15,9 +15,13 @@ class Fixture < ApplicationRecord
   has_many :players, through: :fixture_squad
   has_many :commentaries, dependent: :destroy
 
-  scope :league_fixtures, -> (league_id:, season_id:) { where(league_id: league_id, season_id: season_id).order(match_day: :ASC) }
+  # scope :league_fixtures, -> (league_id:, season_id:) { where(league_id: league_id, season_id: season_id).order(match_day: :ASC) }
   
   scope :not_played, -> {  where("match_day > ?", Date.today) }
+
+  def self.league_fixtures(league_id:, season_id:)
+    lsf ||= where(league_id: league_id, season_id: season_id).order(match_day: :ASC).not_played
+  end
 
   # class << self
 

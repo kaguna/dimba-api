@@ -1,6 +1,9 @@
 class FixtureSerializer < ActiveModel::Serializer
-  attributes :id, :home_team, :away_team, :match_day, :center_referee, :right_referee, :left_referee
-  
+  attributes :fixture_id, :home_team, :away_team, :match_day, :center_referee, :right_referee, :left_referee
+  def fixture_id
+    object.id
+  end
+
   def home_team
     {
       id: object.home_team.id, 

@@ -15,26 +15,20 @@ Rails.application.routes.draw do
           get '/matches' => 'results#matches_results', as: 'season_results'
           get '/standing' => 'results#league_season_standing', as: 'standing'
           get '/stats' => 'results#player_stats', as: 'top_scorer'
-          resources :fixtures do
-            resources :teams do
-              resources :fixture_squad
-            end
-          end
+          get '/generate_fixture' => 'fixtures#generate_fixture', as: 'gen_fixture'
+          resources :league_teams
+          resources :fixtures
         end
-        resources :leagues_teams
       end
 
-      # resources :fixtures do
-      #   resources :commentaries
-      # end
+      resources :fixtures do
+        resources :teams do
+          resources :fixture_squad
+        end
+      end
 
       resources :transfer, :events, :sponsor
 
-      scope 'league/:league_id/fixtures' do
-        get '/fixture_auto_gen' => 'fixtures#generate_fixture', as: 'gen_fixture'
-      end
-
-      # Temporary here
       scope 'match/:fixture_id' do
         get '/results' => 'results#match_result', as: 'results'
         get '/commentaries' => 'commentaries#index', as: 'commentaries'

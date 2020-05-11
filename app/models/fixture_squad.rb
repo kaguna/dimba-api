@@ -5,6 +5,8 @@ class FixtureSquad < ApplicationRecord
 
   validates_presence_of :fixture_id, :player_id, :team_id
 
-  scope :match_squad, -> (match_id:) { where(fixture_id: match_id) }
-
+  def self.match_squads(match_id:)
+    squads ||= where(fixture_id: match_id)
+    { squads: squads.map{ |squad| FixtureSquadSerializer.new(squad) } }
+  end
 end

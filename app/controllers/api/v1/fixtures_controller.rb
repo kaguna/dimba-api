@@ -16,7 +16,7 @@ module Api
 
       def index
         fixtures = Fixture.league_fixtures(league_id: params[:league_id], season_id: params[:season_id])
-        render json:  {count: fixtures.length, fixtures: fixtures.map{|fixture| FixtureSerializer.new(fixture)}}
+        render json: fixtures
       end
 
       def show

@@ -6,7 +6,7 @@ module Api
       after_action :verify_authorized, except: %i[index show]
 
       def index
-        leagues = League.all
+        leagues = League.all_leagues
 
         if leagues.empty?
           render json: { "error": 'No leagues!' },

@@ -1,5 +1,5 @@
 class CommentarySerializer < ActiveModel::Serializer
-  attributes :id, :description, :commentary_time
+  attributes :id, :event, :team, :player, :description, :commentary_time
 
   belongs_to :team
   belongs_to :player

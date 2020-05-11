@@ -11,7 +11,7 @@ class Result < Commentary
   # scope :goals, -> { where(event_id: 1) }
 
   def self.league_season_matches_results(league_id, season_id)
-    @lsm ||= league_matches(league_id, season_id).map do |match|  
+    @lsm = league_matches(league_id, season_id).map do |match|  
         self.full_match_results(match&.id)
     end
 

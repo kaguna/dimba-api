@@ -6,7 +6,7 @@ module Api
       after_action :verify_authorized, except: %i(index show)
 
       def index
-        fixture_squad = FixtureSquad.match_squad(match_id: params[:match_id])
+        fixture_squad = FixtureSquad.match_squads(match_id: params[:fixture_id])
         render json: fixture_squad, status: :ok
       end
 

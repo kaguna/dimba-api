@@ -1,15 +1,13 @@
 module Api
   module V1
     class CommentariesController < ApplicationController
-      before_action :authenticate_current_user!, except: %i(index show)
+      before_action :authenticate_current_user!, only: %i(create update destroy)
       before_action :set_commentary, only: %i(show update destroy)
       after_action :verify_authorized, except: %i(index show)
 
-      
-
       def index
-        commentaries = Commentary.commentaries(params[:fixture_id])
-        render json:  commentaries.each {|commentary| CommentarySerializer.new(commentary)}
+        commentaries = Commentary.match_commentaries(params[:fixture_id])
+        render json:  commentaries
       end
 
       def show

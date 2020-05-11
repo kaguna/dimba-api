@@ -36,6 +36,8 @@ Rails.application.routes.draw do
         put '/commentaries/:id' => 'commentaries#update', as: 'edit_commentary'
         post '/commentaries' => 'commentaries#create', as: 'add_commentaries'
         delete '/commentaries/:id' => 'commentaries#destroy', as: 'delete_commentary'
+
+        get '/squads' => 'fixture_squads#index', as: 'squads'
       end
     end
   end

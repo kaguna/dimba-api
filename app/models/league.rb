@@ -6,6 +6,8 @@ class League < ApplicationRecord
   has_many :sponsors, through: :leagues_sponsors
   has_many :seasons
 
+  validates :title, uniqueness: { case_sensitive: false}
+
   def self.all_leagues
     leagues = self.all
     {

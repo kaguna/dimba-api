@@ -11,10 +11,11 @@ Rails.application.routes.draw do
       end
 
       resources :leagues do
+        get '/matches' => 'results#matches_results', as: 'season_results'
+        get '/standing' => 'results#league_season_standing', as: 'standing'
+        get '/stats' => 'results#player_stats', as: 'top_scorer'
         resources :seasons do
-          get '/matches' => 'results#matches_results', as: 'season_results'
-          get '/standing' => 'results#league_season_standing', as: 'standing'
-          get '/stats' => 'results#player_stats', as: 'top_scorer'
+          # get '/matches' => 'results#matches_results', as: 'season_results'
           get '/generate_fixture' => 'fixtures#generate_fixture', as: 'gen_fixture'
           resources :league_teams
           resources :fixtures

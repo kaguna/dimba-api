@@ -6,4 +6,6 @@ class Season < ApplicationRecord
             allow_blank: false
 
   validates_uniqueness_of :name
+
+  scope :current, -> {where(current: true)}
 end

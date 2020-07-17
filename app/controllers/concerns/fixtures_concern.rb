@@ -16,7 +16,7 @@ module FixturesConcern
   def get_teams(league_id, season_id)
     matches ||= LeaguesTeam.joins(:team).
               where(league_id: league_id, season_id: season_id).
-              pluck(:id, :name)
+              pluck(:team_id, :name)
   end
 
   def combine_teams(league_id, season_id)

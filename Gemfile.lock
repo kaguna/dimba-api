@@ -98,7 +98,6 @@ GEM
     database_cleaner (1.7.0)
     diff-lcs (1.3)
     docile (1.3.1)
-    dotenv (2.7.5)
     erubi (1.7.1)
     execjs (2.7.0)
     factory_bot (4.11.1)
@@ -357,7 +356,6 @@ DEPENDENCIES
   chromedriver-helper
   coffee-rails (~> 4.2)
   database_cleaner
-  dotenv (~> 2.1, >= 2.1.1)
   factory_bot_rails (~> 4.10)
   faker (~> 1.9, >= 1.9.1)
   figaro (~> 1.1, >= 1.1.1)

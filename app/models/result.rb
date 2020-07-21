@@ -31,12 +31,12 @@ class Result < Commentary
   end
 
   def self.player_stats(league_id)
-    self.base_class
-        .eager_load(:fixture,:player, :team)
-        .goals
-        .where(fixtures: {league_id: league_id, season_id: current_season})
-        .where.not(player_id: nil)
-        .group(:player_id, :team_id)
-        .count(:id)
+    # TODO: A very ugly query and response. Refactor later
+    ts ||= Player.joins(commentaries: [{ fixture: [{league: :seasons}]}, :team])
+    .where(commentaries: {event_id: 1}, leagues: {id: league_id}, seasons: {id: current_season})
+    .group(:id, :nick_name, "teams.id", "teams.name")
+    .order(count: :desc)
+    .count(:id)
+    .to_a
   end
 end

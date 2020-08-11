@@ -1,22 +1,32 @@
 module Api
   module V1
     class ResultsController < ApplicationController
+      include Standing
       before_action :authenticate_current_user!, only: %i(create update destroy)
       
-      def matches_results
-        render json: Result.league_season_matches_results(params[:league_id])
+      def index
+        render json: all_matches
       end
 
-      def match_result
-        render json: Result.full_match_results(params[:fixture_id])
+      def show_table
+        # not used, refactor later
+        render json: league_season_standings(index)
       end
 
-      def league_season_standing
-        render json: Result.standing(params[:league_id])
+      def show
+        render json: Result.full_match_results(params[:match_id])
       end
+
+      # def league_season_standing
+      #   render json: AllResult.standing(params[:league_id])
+      # end
 
       def player_stats
-        render json: Result.player_stats(params[:league_id])
+        render json: AllResult.player_stats(params[:league_id])
+      end
+
+      def all_incoming_matches
+        render json: AllResult.all_incoming_matches
       end
 
       def create
@@ -26,6 +36,12 @@ module Api
       end
 
       def destroy
+      end
+
+      private
+
+      def all_matches
+        Result.league_season_matches_results(params[:league_id])
       end
 
     end

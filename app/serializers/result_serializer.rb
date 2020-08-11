@@ -1,7 +1,3 @@
 class ResultSerializer < ActiveModel::Serializer
-    attributes :player, :team
-
-    belongs_to :player
-    belongs_to :team
-    belongs_to :fixture
+  attributes :fixture_id, :home_team, :away_team, :match_day
 end

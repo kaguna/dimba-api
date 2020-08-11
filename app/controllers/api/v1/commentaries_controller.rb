@@ -6,7 +6,7 @@ module Api
       after_action :verify_authorized, except: %i(index show)
 
       def index
-        commentaries = Commentary.match_commentaries(params[:fixture_id])
+        commentaries = Commentary.match_commentaries(params[:match_id])
         render json:  commentaries
       end
 

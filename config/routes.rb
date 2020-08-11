@@ -11,11 +11,11 @@ Rails.application.routes.draw do
       end
 
       resources :leagues do
-        get '/matches' => 'results#matches_results', as: 'season_results'
-        get '/standing' => 'results#league_season_standing', as: 'standing'
-        get '/stats' => 'results#player_stats', as: 'top_scorer'
+        get '/matches' => 'results#index', as: 'season_results'
+        get '/fixtures' => 'fixtures#index', as: 'season_fixtures'
+        get '/standing' => 'league_standings#index', as: 'standing'
+        get '/stats' => 'all_results#player_stats', as: 'top_scorer'
         resources :seasons do
-          # get '/matches' => 'results#matches_results', as: 'season_results'
           get '/generate_fixture' => 'fixtures#generate_fixture', as: 'gen_fixture'
           resources :league_teams
           resources :fixtures
@@ -28,10 +28,12 @@ Rails.application.routes.draw do
         end
       end
 
+      get '/all_fixtures' => 'results#all_incoming_matches', as: 'current_season_matches'
+
       resources :transfer, :events, :sponsor
 
-      scope 'match/:fixture_id' do
-        get '/results' => 'results#match_result', as: 'results'
+      scope 'matches/:match_id' do
+        get '/results' => 'all_results#match_result', as: 'results'
         get '/commentaries' => 'commentaries#index', as: 'commentaries'
         get '/commentaries/:id' => 'commentaries#show', as: 'commentary'
         put '/commentaries/:id' => 'commentaries#update', as: 'edit_commentary'

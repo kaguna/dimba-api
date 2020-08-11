@@ -7,7 +7,8 @@ module Api
       after_action :verify_authorized, except: %i(index show)
 
       def generate_fixture
-        raise "The league season has fixtures already" if
+        raise "The league season has fixtures already" if 
+        Season.find(params[:season_id]).current
         Fixture.find_by(league_id: params[:league_id], season_id: params[:season_id])
         authorize Fixture.new
         pre_fixtures = generate(params[:league_id], params[:season_id])
@@ -15,7 +16,7 @@ module Api
       end
 
       def index
-        fixtures = Fixture.league_fixtures(league_id: params[:league_id], season_id: params[:season_id])
+        fixtures = Fixture.league_fixtures(league_id: params[:league_id])
         render json: fixtures
       end
 

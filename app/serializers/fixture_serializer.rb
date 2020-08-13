@@ -7,14 +7,16 @@ class FixtureSerializer < ActiveModel::Serializer
   def home_team
     {
       id: object.home_team.id, 
-      name: object.home_team.name
+      name: object.home_team.name,
+      goals_for: object.result&.home_goals,
     }
   end
 
   def away_team
     {
       id: object.away_team.id, 
-      name: object.away_team.name
+      name: object.away_team.name,
+      goals_for: object.result&.away_goals,
     }
   end
 

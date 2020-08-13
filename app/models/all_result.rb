@@ -2,7 +2,6 @@ class AllResult < Commentary
   include MatchResults
   include Standing
 
-  scope :current_season, -> {Season.current.first&.id}
   attr_accessor :lsm 
 
   def self.league_season_matches_results(league_id)

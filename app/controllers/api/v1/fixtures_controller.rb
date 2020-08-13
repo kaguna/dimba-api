@@ -2,9 +2,9 @@ module Api
   module V1   
     class FixturesController < ApplicationController
       include FixturesConcern
-      before_action :authenticate_current_user!, except: %i(index show)
+      before_action :authenticate_current_user!, except: %i(index show show_team_home_fixtures show_team_away_fixtures)
       before_action :set_fixture, only: %i(show update destroy)
-      after_action :verify_authorized, except: %i(index show)
+      after_action :verify_authorized, except: %i(index show show_team_home_fixtures show_team_away_fixtures)
 
       def generate_fixture
         raise "The league season has fixtures already" if 
@@ -13,6 +13,14 @@ module Api
         authorize Fixture.new
         pre_fixtures = generate(params[:league_id], params[:season_id])
         render json: {matches: pre_fixtures.length, pre_fixtures: pre_fixtures}, status: :ok
+      end
+
+      def show_team_home_fixtures
+        render json: Fixture.team_home_fixtures(params[:team_id])
+      end
+
+      def show_team_away_fixtures
+        render json: Fixture.team_away_fixtures(params[:team_id])
       end
 
       def index
@@ -72,7 +80,7 @@ module Api
       private
 
       def set_fixture
-        @fixture = Fixture.find_by(id: params[:id])
+        @fixture = Fixture.find_by(id: params[:match_id])
       end
 
       def fixture_params

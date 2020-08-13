@@ -6,7 +6,7 @@ class Commentary < ApplicationRecord
   belongs_to :event
   belongs_to :player, optional: :true
 
-  scope :commentaries, -> (match_id) { where(fixture_id: match_id).order(commentary_time: :desc) }
+  scope :commentaries, -> (match_id) { where(fixture_id: match_id).order('CAST(commentary_time as INT) desc') }
   scope :goals, -> { where(event_id: 1) }
   # refactor all here
   scope :current_season, -> {Season.current.first&.id}

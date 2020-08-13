@@ -23,4 +23,12 @@ class Fixture < ApplicationRecord
     lsf ||= not_played.where(league_id: league_id, season_id: current_season(league_id: league_id) ).order(match_day: :ASC)
     {count: lsf.length, fixtures: lsf.map{|fixture| FixtureSerializer.new(fixture)}}
   end
+
+  def self.team_home_fixtures(team_id)
+    includes(:home_team).not_played.where(home_team_id: team_id)
+  end
+
+  def self.team_away_fixtures(team_id)
+    includes(:away_team).not_played.where(away_team_id: team_id)
+  end
 end

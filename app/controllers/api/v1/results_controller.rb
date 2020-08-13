@@ -14,12 +14,16 @@ module Api
       end
 
       def show
-        render json: Result.full_match_results(params[:match_id])
+        render json: Result.full_match_results(params[:match_id]).first
       end
 
-      # def league_season_standing
-      #   render json: AllResult.standing(params[:league_id])
-      # end
+      def show_team_home_results
+        render json: Result.team_home_results(params[:team_id])
+      end
+
+      def show_team_away_results
+        render json: Result.team_away_results(params[:team_id])
+      end
 
       def player_stats
         render json: AllResult.player_stats(params[:league_id])

@@ -7,6 +7,10 @@ Rails.application.routes.draw do
       end
 
       resources :teams do
+        get '/home_results' => 'results#show_team_home_results', as: 'home_results'
+        get '/away_results' => 'results#show_team_away_results', as: 'away_results'
+        get '/home_fixtures' => 'fixtures#show_team_home_fixtures', as: 'home_fixtures'
+        get '/away_fixtures' => 'fixtures#show_team_away_fixtures', as: 'away_fixtures'
         resources :players
       end
 
@@ -33,7 +37,7 @@ Rails.application.routes.draw do
       resources :transfer, :events, :sponsor
 
       scope 'matches/:match_id' do
-        get '/results' => 'all_results#match_result', as: 'results'
+        get '/results' => 'fixtures#show', as: 'results'
         get '/commentaries' => 'commentaries#index', as: 'commentaries'
         get '/commentaries/:id' => 'commentaries#show', as: 'commentary'
         put '/commentaries/:id' => 'commentaries#update', as: 'edit_commentary'

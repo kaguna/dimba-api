@@ -12,7 +12,6 @@ module Api
       end
 
       def league_season_standing
-        binding.pry
         render json: AllResult.standings(params[:league_id])
       end
 

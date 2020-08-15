@@ -4,7 +4,7 @@ jobs:
   build:
     working_directory: ~/dimba-api
     docker:
-      - image: circleci/ruby:2.5.0-node
+      - image: circleci/ruby:2.5.8-node
       - image: postgres:9.5
     steps:
       - checkout
@@ -15,7 +15,7 @@ jobs:
 
   bundle_dependencies:
     docker:
-      - image: circleci/ruby:2.5.0-node
+      - image: circleci/ruby:2.5.8-node
       - image: postgres:9.5
     working_directory: ~/dimba-api
     steps:
@@ -29,9 +29,9 @@ jobs:
             - vendor/bundle
 
   rake_test:
-    working_directory: ~/dimba-api
+    working_directory: ~/b-dimba
     docker:
-      - image: circleci/ruby:2.5.0-node
+      - image: circleci/ruby:2.5.8-node
         environment:
           CC_TEST_REPORTER_ID: 3b1eb72982e5d07c429f5e28389be86acc4f108999e3a8e6248d99b78c9236a4
           PGHOST: localhost
@@ -42,7 +42,7 @@ jobs:
         environment:
           POSTGRES_USER: dimba-api
           POSTGRES_DB: dimba-api
-          POSTGRES_HOST_AUTH_METHOD: trust
+          POSTGRES_PASSWORD: dimba-api
     steps:
       - checkout
       - restore_cache:
@@ -66,9 +66,9 @@ jobs:
 
   precompile_assets:
     docker:
-      - image: circleci/ruby:2.5.0-node
+      - image: circleci/ruby:2.5.8-node
       - image: postgres:9.5
-    working_directory: ~/dimba-api
+    working_directory: ~/b-dimba
     steps:
       - checkout
       - restore_cache:
@@ -78,19 +78,51 @@ jobs:
           name: Precompile assets
           command: bundle exec rake assets:precompile
 
-  # deploy:
-  #   machine:
-  #       enabled: true
-  #   working_directory: ~/dimba-api
-  #   environment:
-  #     HEROKU_APP: dimba-api
+  deploy-test:
+    docker:
+      - image: circleci/ruby:2.5.8-node
+    working_directory: ~/b-dimba
+    steps:
+      - run:
+          name: Install dependencies and awsebcli
+          command: |
+            sudo apt-get -y -qq update
+            sudo apt-get install python-pip python-dev build-essential
+            sudo pip install awsebcli --upgrade
+      - run: 
+          name: Deploy to test branch
+          command: |
+            eb deploy Dev-env --region ${AWS_EB_REGION}
+
+
+  # deploy-prod:
+  #   docker:
+  #     - image: ubuntu:14.04
+  #   working_directory: /tmp/dimba-api
   #   steps:
-  #     - restore_cache:
-  #         key: dimba-api-{{ checksum "Gemfile.lock" }}
-  #     - run: bundle --path vendor/bundle
   #     - run:
-  #         name: Deploy Master to Heroku(fake)
-  #         command: bundle exec rake
+  #         name: Deploy to develop
+  #         commands:
+  #             - eb use Prod-env --profile default
+  #             - eb deploy --profile default
+
+          
+  # deploy:
+  #   working_directory: ~/dimba-api
+  #   develop:
+  #     branch: upload-app-to-beanstalk
+  #     steps:
+  #       - run: 
+  #           commands:
+  #             - eb use Dev-env --profile default
+  #             - eb deploy --profile default
+  #   production:
+  #     branch: develop
+  #     steps:
+  #       - run:
+  #           commands:
+  #             - eb use Prod-env --profile default
+  #             - eb deploy --profile default
 
 workflows:
   version: 2
@@ -105,5 +137,10 @@ workflows:
             - bundle_dependencies
       - precompile_assets:
           requires:
-            - bundle_dependencies
             - rake_test
+      - deploy-test:
+          requires:
+            - bundle_dependencies
+          filters:
+            branches:
+              only: upload-app-to-beanstalk

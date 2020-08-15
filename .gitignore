@@ -29,3 +29,7 @@ lib/tasks/.keep
 # Ignore application configuration
 /config/application.yml
 coverage
+
+# Elastic Beanstalk Files
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

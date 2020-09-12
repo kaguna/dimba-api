@@ -1,26 +1,26 @@
 module Api
   module V1
     class SeasonsController < ApplicationController
-      # before_action :authenticate_current_user!, except: [:index, :show]
-
-      def index
-      
-      end
-
-      def show
-    
-      end
+      before_action :authenticate_current_user!, except: %i[index show]
 
       def create
+        season = Season.new(season_params)
+        # authorize season
+        if season.save
+          render json: season, status: :created
+        else
+          render json: season.errors, status: :unprocessable_entity
+        end
+      end
+
+      private
       
-      end
-
-      def update
-        
-      end
-
-      def destroy
-        
+      def season_params
+        params.permit(
+          :name,
+          :description,
+          :league_id
+        )
       end
     end
   end

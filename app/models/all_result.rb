@@ -18,7 +18,6 @@ class AllResult < Commentary
 
   def self.standings(league_id)
     ls_matches = self.league_season_matches_results(league_id)[:league_season_matches]
-    # binding.pry
     standing ||= Standing.league_season_standings(@lsm.nil? ? ls_matches : @lsm)
     {
       teams: standing.length,
@@ -42,7 +41,7 @@ class AllResult < Commentary
     # lims: Leagues incoming matches
     Season.includes(:league, :fixtures)
     .where(current: true)
-    .where("Date(fixtures.match_day) > ?", Date.today)
+    .where("Date(fixtures.match_day) > ? AND Date(fixtures.match_day) < ?", Date.today, (Date.today + 15.days))
     .order("fixtures.match_day ASC")
     .group(:id, "fixtures.id, leagues.id")
   end

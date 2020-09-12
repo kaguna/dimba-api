@@ -1,10 +1,10 @@
 class LeaguePolicy < ApplicationPolicy
   def create?
-    user.present? && user.admin?
+    user.present? && (user.admin? || user.official?)
   end
 
   def update?
-    user.present? && user.admin?
+    user.present? && (user.admin? || user.official?)
   end
 
   def destroy?

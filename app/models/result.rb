@@ -3,7 +3,8 @@ class Result < ApplicationRecord
   belongs_to :fixture
 
   def self.league_season_matches_results(league_id)
-    includes(:fixture).where(fixtures: {league_id: league_id})
+    includes(fixture:[:season])
+    .where(fixtures: {league_id: league_id}, seasons: {current: true})
   end
 
   def self.team_home_results(team_id)

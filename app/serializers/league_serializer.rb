@@ -1,5 +1,7 @@
 class LeagueSerializer < ActiveModel::Serializer
-  attributes :id, :title
+  attributes :id, :title, :current_season
 
-  has_many :seasons 
+  def current_season
+    object.seasons.current.first
+  end
 end

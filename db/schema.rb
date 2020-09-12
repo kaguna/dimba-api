@@ -122,9 +122,9 @@ ActiveRecord::Schema.define(version: 2020_07_15_093438) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "league_id"
-    t.integer "start_date"
-    t.integer "end_date"
-    t.boolean "current", default: false
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.boolean "current", default: true
   end
 
   create_table "sponsors", force: :cascade do |t|
@@ -176,10 +176,7 @@ ActiveRecord::Schema.define(version: 2020_07_15_093438) do
   add_foreign_key "fixtures", "teams", column: "away_team_id"
   add_foreign_key "fixtures", "teams", column: "home_team_id"
   add_foreign_key "fixtures", "users", column: "center_referee_id"
-  add_foreign_key "fixtures", "users", column: "center_referee_id"
   add_foreign_key "fixtures", "users", column: "left_side_referee_id"
-  add_foreign_key "fixtures", "users", column: "left_side_referee_id"
-  add_foreign_key "fixtures", "users", column: "right_side_referee_id"
   add_foreign_key "fixtures", "users", column: "right_side_referee_id"
   add_foreign_key "leagues_sponsors", "leagues"
   add_foreign_key "leagues_sponsors", "sponsors"

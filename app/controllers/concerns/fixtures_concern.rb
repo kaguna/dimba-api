@@ -24,7 +24,7 @@ module FixturesConcern
   end
 
   def shuffle_matches(league_id, season_id)
-    combine_teams(league_id, season_id).shuffle
+    combine_teams(league_id, season_id).shuffle!.shuffle
   end
 
   def format_matches(home_team, away_team)

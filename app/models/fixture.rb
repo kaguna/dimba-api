@@ -16,11 +16,11 @@ class Fixture < ApplicationRecord
   has_many :commentaries, dependent: :destroy
 
   scope :not_played, -> {  where("match_day > ?", Date.today) }
-  scope :current_season, -> (league_id) { Season.includes(:league).where(leagues: {id: league_id}, current: true).first&.id}
+  # scope :current_season, -> (league_id) { Season.includes(:league).where(leagues: {id: league_id}, current: true).first&.id}
   # Fix this later. Ugly!!
 
   def self.league_fixtures(league_id:)
-    lsf ||= not_played.where(league_id: league_id, season_id: current_season(league_id: league_id) ).order(match_day: :ASC)
+    lsf ||= not_played.includes(:season).where(league_id: league_id, seasons: {current: true}).order(match_day: :ASC)
     {count: lsf.length, fixtures: lsf.map{|fixture| FixtureSerializer.new(fixture)}}
   end
 

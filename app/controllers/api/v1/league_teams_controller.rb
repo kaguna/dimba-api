@@ -1,9 +1,9 @@
 module Api
   module V1
     class LeagueTeamsController < ApplicationController
-      before_action :authenticate_current_user!, except: %i[index show]
+      before_action :authenticate_current_user!, except: %i[index show create]
       before_action :set_league_teams, only: %i[show update destroy]
-      after_action :verify_authorized, except: %i[index show]
+      after_action :verify_authorized, except: %i[index show create]
 
       def index
         teams = LeaguesTeam.league_season_teams(league_id: params[:league_id], season_id: params[:season_id])
@@ -17,10 +17,10 @@ module Api
       def create
         require_league_teams.each do |attributes|
           @lst = LeaguesTeam.new(league_teams_params(attributes))
-          authorize @lst
+          # authorize @lst
           @lst.save!
         end
-        render json: {message: "League teams added for the season successfully"}, status: :created
+        render json: {message: "#{require_league_teams.length} teams added."}, status: :created
       end
 
       def update

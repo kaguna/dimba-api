@@ -1,6 +1,6 @@
 class FixturePolicy < ApplicationPolicy
   def create?
-    user.present? && user.admin?
+    user.present? && (user.admin? || user.official?)
   end
 
   def update?
@@ -12,6 +12,6 @@ class FixturePolicy < ApplicationPolicy
   end
 
   def generate_fixture?
-    user.present? && user.admin?
+    user.present? && (user.admin? || user.official?)
   end
 end

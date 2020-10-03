@@ -3,6 +3,7 @@ module Api
     class ResultsController < ApplicationController
       include Standing
       before_action :authenticate_current_user!, only: %i(create update destroy)
+      after_action :verify_authorized, only: %i[create]
       
       def index
         render json: all_matches
@@ -34,6 +35,14 @@ module Api
       end
 
       def create
+        result = Result.new(result_params)
+        authorize result
+
+        if result.save!
+          render json: result, status: :created
+        else
+          render json: result.errors, status: :unprocessable_entity
+        end
       end
 
       def update
@@ -46,6 +55,14 @@ module Api
 
       def all_matches
         Result.league_season_matches_results(params[:league_id])
+      end
+
+      def result_params
+        params.permit(
+          :fixture_id,
+          :home_goals,
+          :away_goals
+        )
       end
 
     end

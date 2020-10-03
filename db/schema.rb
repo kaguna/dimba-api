@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_15_093438) do
+ActiveRecord::Schema.define(version: 2020_12_16_122710) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,6 +67,7 @@ ActiveRecord::Schema.define(version: 2020_07_15_093438) do
     t.text "season"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "official_id"
   end
 
   create_table "leagues_sponsors", force: :cascade do |t|
@@ -142,6 +143,7 @@ ActiveRecord::Schema.define(version: 2020_07_15_093438) do
     t.text "nickname"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "coach_id"
   end
 
   create_table "transfers", force: :cascade do |t|
@@ -176,8 +178,12 @@ ActiveRecord::Schema.define(version: 2020_07_15_093438) do
   add_foreign_key "fixtures", "teams", column: "away_team_id"
   add_foreign_key "fixtures", "teams", column: "home_team_id"
   add_foreign_key "fixtures", "users", column: "center_referee_id"
+  add_foreign_key "fixtures", "users", column: "center_referee_id"
+  add_foreign_key "fixtures", "users", column: "left_side_referee_id"
   add_foreign_key "fixtures", "users", column: "left_side_referee_id"
   add_foreign_key "fixtures", "users", column: "right_side_referee_id"
+  add_foreign_key "fixtures", "users", column: "right_side_referee_id"
+  add_foreign_key "leagues", "users", column: "official_id"
   add_foreign_key "leagues_sponsors", "leagues"
   add_foreign_key "leagues_sponsors", "sponsors"
   add_foreign_key "leagues_teams", "leagues"
@@ -186,6 +192,7 @@ ActiveRecord::Schema.define(version: 2020_07_15_093438) do
   add_foreign_key "players", "teams"
   add_foreign_key "results", "fixtures"
   add_foreign_key "seasons", "leagues"
+  add_foreign_key "teams", "users", column: "coach_id"
   add_foreign_key "transfers", "players"
   add_foreign_key "transfers", "teams", column: "from_team_id"
   add_foreign_key "transfers", "teams", column: "to_team_id"

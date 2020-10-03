@@ -4,6 +4,9 @@ Rails.application.routes.draw do
       scope 'user' do
         post '/sign_up' => 'register#signup', as: 'register'
         post '/login' => 'user_token#create', as: 'login'
+        get '/search_user' => 'admins#index', as: 'search_user'
+        get '/referees' => 'admins#get_referees', as: 'get_referees'
+        put '/update_user' => 'admins#update', as: 'update_user'
       end
 
       resources :teams do
@@ -19,7 +22,7 @@ Rails.application.routes.draw do
         get '/fixtures' => 'fixtures#index', as: 'season_fixtures'
         get '/standing' => 'league_standings#index', as: 'standing'
         get '/stats' => 'all_results#player_stats', as: 'top_scorer'
-        resources :seasons do
+        resources :seasons, only: [:create] do
           get '/generate_fixture' => 'fixtures#generate_fixture', as: 'gen_fixture'
           resources :league_teams
           resources :fixtures
@@ -34,10 +37,12 @@ Rails.application.routes.draw do
 
       get '/all_fixtures' => 'results#all_incoming_matches', as: 'current_season_matches'
 
-      resources :transfer, :events, :sponsor
+      resources :transfer, :events, :sponsor, :roles
 
       scope 'matches/:match_id' do
+        put '/edit' => 'fixtures#update', as: 'edit_match'
         get '/results' => 'fixtures#show', as: 'results'
+        post '/results' => 'results#create', as: 'add_results'
         get '/commentaries' => 'commentaries#index', as: 'commentaries'
         get '/commentaries/:id' => 'commentaries#show', as: 'commentary'
         put '/commentaries/:id' => 'commentaries#update', as: 'edit_commentary'
@@ -45,6 +50,7 @@ Rails.application.routes.draw do
         delete '/commentaries/:id' => 'commentaries#destroy', as: 'delete_commentary'
 
         get '/squads' => 'fixture_squads#index', as: 'squads'
+        post '/squads/new' => 'fixture_squads#create', as: 'create_squads'
       end
     end
   end

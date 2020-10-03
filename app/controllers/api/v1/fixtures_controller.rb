@@ -101,9 +101,9 @@ module Api
 
       def update_params
         params.permit(
-          :center_referee,
-          :right_side_referee,
-          :left_side_referee,
+          :center_referee_id,
+          :right_side_referee_id,
+          :left_side_referee_id,
           :match_day
         )
       end

@@ -6,6 +6,7 @@ class Team < ApplicationRecord
   has_many :commentaries
   has_many :home_team_fixtures, class_name: "Fixture", foreign_key: "home_team_id"
   has_many :away_team_fixtures, class_name: "Fixture", foreign_key: "away_team_id"
+  belongs_to :coach, class_name: "User", foreign_key: "coach_id"
 
   validates :name,
             uniqueness: { case_sensitive: false },

@@ -1,4 +1,6 @@
 class Fixture < ApplicationRecord
+  include MatchResults
+
   validates :away_team_id, presence: true
   validates :home_team_id, presence: true
   
@@ -15,9 +17,13 @@ class Fixture < ApplicationRecord
   has_many :players, through: :fixture_squad
   has_many :commentaries, dependent: :destroy
 
-  scope :not_played, -> {  where("match_day > ?", Date.today) }
+  scope :not_played, -> {  self.where.not(id: Result.all.map(&:fixture_id)) }
   # scope :current_season, -> (league_id) { Season.includes(:league).where(leagues: {id: league_id}, current: true).first&.id}
   # Fix this later. Ugly!!
+
+  def full_match_results(match_id)
+    MatchResults.get_match_results(match_id)
+  end
 
   def self.league_fixtures(league_id:)
     lsf ||= not_played.includes(:season).where(league_id: league_id, seasons: {current: true}).order(match_day: :ASC)

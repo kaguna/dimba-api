@@ -17,7 +17,7 @@ module Api
       def create
         require_league_teams.each do |attributes|
           @lst = LeaguesTeam.new(league_teams_params(attributes))
-          # authorize @lst
+          authorize @lst
           @lst.save!
         end
         render json: {message: "#{require_league_teams.length} teams added."}, status: :created

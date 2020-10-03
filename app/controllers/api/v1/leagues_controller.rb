@@ -53,7 +53,8 @@ module Api
       def league_params
         params.permit(
           :title,
-          :season
+          :season,
+          :official_id
         )
       end
     end

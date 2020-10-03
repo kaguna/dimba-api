@@ -4,7 +4,7 @@ class FixturePolicy < ApplicationPolicy
   end
 
   def update?
-    user.present? && user.admin?
+    user.present? && (user.admin? || user.official?)
   end
 
   def destroy?

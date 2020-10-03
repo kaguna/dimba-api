@@ -6,7 +6,7 @@ module Api
       after_action :verify_authorized, except: %i(index show)
 
       def index
-        fixture_squad = FixtureSquad.match_squads(match_id: params[:fixture_id])
+        fixture_squad = FixtureSquad.match_squads(match_id: params[:match_id])
         render json: fixture_squad, status: :ok
       end
 
@@ -37,7 +37,7 @@ module Api
 
       def create_fixture_squad
         players_paramaters.each do |attributes|
-          fixture_squad = FixtureSquad.new(players_params(attributes))
+          fixture_squad = FixtureSquad.new(attributes)
           authorize fixture_squad
           fixture_squad.save!
         end
@@ -47,15 +47,10 @@ module Api
         @fixture_squad = FixtureSquad.find(params[:id])
       end
 
-      def players_params(attributes)
-        attributes.permit(:player_id).to_h.merge!(
-          fixture_id: params[:fixture_id],
-          team_id: params[:team_id]
-        )
-      end
-
       def players_paramaters
-        params.require(:fixture_squad)
+        params.require(:fixture_squad).map do |p|
+          p.permit(:player_id, :fixture_id, :team_id)
+        end
       end
 
       def update_params

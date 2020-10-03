@@ -2,9 +2,11 @@ class Result < ApplicationRecord
   
   belongs_to :fixture
 
+  validates_uniqueness_of :fixture_id, message: "results has already been updated!"
+
   def self.league_season_matches_results(league_id)
     includes(fixture:[:season])
-    .where(fixtures: {league_id: league_id}, seasons: {current: true})
+    .where(fixtures: {league_id: league_id}, seasons: {current: true}).order("fixtures.match_day Desc")
   end
 
   def self.team_home_results(team_id)

@@ -62,7 +62,8 @@ module Api
             :name,
             :description,
             :location,
-            :nickname
+            :nickname,
+            :coach_id
         )
       end
     end

@@ -3,7 +3,7 @@ module Api
     class RegisterController < ApplicationController
       def signup
         user = User.new(user_params)
-
+        user.role_id = Role.find_by(name: "User")&.id
         if user.save
           render json: user, status: :created
 

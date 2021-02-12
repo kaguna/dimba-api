@@ -1,6 +1,6 @@
 class TeamPolicy < ApplicationPolicy
   def create?
-    user.present? && (user.admin? || user.official?)
+    user.present? && (user.admin? || user.coach?)
   end
 
   def update?

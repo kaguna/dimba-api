@@ -60,14 +60,15 @@ module Standing
     end
 
     def count_goals_for(team_stats)
-      team_stats[1].map { |team_hash| team_hash[:goals_for]}.inject(:+)
+      team_stats[1].map { |team_hash| team_hash[:goals_for]}.compact.inject(:+)
     end
 
     def count_goals_against(team_stats)
-      team_stats[1].map { |team_hash| team_hash[:goals_against]}.inject(:+)
+      team_stats[1].map { |team_hash| team_hash[:goals_against]}.compact.inject(:+)
     end
 
     def count_goal_difference(team_stats)
+      count_goals_for(team_stats).nil? || count_goals_against(team_stats).nil? ? 0 :
       count_goals_for(team_stats) - count_goals_against(team_stats)
     end
 

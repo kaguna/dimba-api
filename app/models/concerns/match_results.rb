@@ -2,7 +2,8 @@ module MatchResults
   extend ActiveSupport::Concern
 
   def self.commentaries(match_id)
-    Commentary.where(fixture_id: match_id)
+    commentaries = Commentary.where(fixture_id: match_id)
+    commentaries.empty? ? nil : commentaries
   end
 
   def self.get_match_results(match_id)
@@ -33,6 +34,7 @@ module MatchResults
   end
 
   def self.count_goals(match_commentaries:, team:)
+    match_commentaries.nil? ? 0 :
       match_commentaries.where(team: team).goals.pluck(:event_id).sum
   end
 

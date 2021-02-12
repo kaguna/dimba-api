@@ -7,6 +7,8 @@ class Season < ApplicationRecord
 
   has_many :fixtures
   belongs_to :league
+  has_many :leagues_teams
+  has_many :teams, through: :leagues_teams
   
   scope :current, -> { where(current: true) }
 end

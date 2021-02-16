@@ -4,17 +4,28 @@ class Result < ApplicationRecord
 
   validates_uniqueness_of :fixture_id, message: "results has already been updated!"
 
+  after_save :mark_fixture_played
+
   def self.league_season_matches_results(league_id)
     includes(fixture:[:season])
     .where(fixtures: {league_id: league_id}, seasons: {current: true}).order("fixtures.match_day Desc")
+    # .limit(15)
   end
 
   def self.team_home_results(team_id)
     includes(:fixture).where(fixtures: {home_team_id: team_id})
+    # .limit(15)
   end
 
   def self.team_away_results(team_id)
     includes(:fixture).where(fixtures: {away_team_id: team_id})
+    # .limit(15)
+  end
+
+  private
+
+  def mark_fixture_played
+    Fixture.where(id: self.fixture_id).update(played: true)
   end
 
   def points(home_goals, away_goals)

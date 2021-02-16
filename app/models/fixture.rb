@@ -17,7 +17,8 @@ class Fixture < ApplicationRecord
   has_many :players, through: :fixture_squad
   has_many :commentaries, dependent: :destroy
 
-  scope :not_played, -> {  self.where.not(id: Result.all.map(&:fixture_id)) }
+  scope :not_played, -> {  where(played: false) }
+  scope :played, -> {  where(played: true) }
   # scope :current_season, -> (league_id) { Season.includes(:league).where(leagues: {id: league_id}, current: true).first&.id}
   # Fix this later. Ugly!!
 
@@ -27,14 +28,17 @@ class Fixture < ApplicationRecord
 
   def self.league_fixtures(league_id:)
     lsf ||= not_played.includes(:season).where(league_id: league_id, seasons: {current: true}).order(match_day: :ASC)
+    # .limit(15)
     {count: lsf.length, fixtures: lsf.map{|fixture| FixtureSerializer.new(fixture)}}
   end
 
   def self.team_home_fixtures(team_id)
     includes(:home_team).not_played.where(home_team_id: team_id)
+    # .limit(15)
   end
 
   def self.team_away_fixtures(team_id)
     includes(:away_team).not_played.where(away_team_id: team_id)
+    # .limit(15)
   end
 end

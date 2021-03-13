@@ -28,17 +28,22 @@ class Fixture < ApplicationRecord
 
   def self.league_fixtures(league_id:)
     lsf ||= not_played.includes(:season).where(league_id: league_id, seasons: {current: true}).order(match_day: :ASC)
-    # .limit(15)
     {count: lsf.length, fixtures: lsf.map{|fixture| FixtureSerializer.new(fixture)}}
   end
 
   def self.team_home_fixtures(team_id)
-    includes(:home_team).not_played.where(home_team_id: team_id)
-    # .limit(15)
+    # Clean up later
+    Season.includes(:league, :fixtures)
+    .where(fixtures: {played: false, home_team_id: team_id})
+    .order("fixtures.match_day ASC")
+    .group(:id, "leagues.id", "fixtures.id")
   end
 
   def self.team_away_fixtures(team_id)
-    includes(:away_team).not_played.where(away_team_id: team_id)
-    # .limit(15)
+    # Clean up later
+    Season.includes(:league, :fixtures)
+    .where(fixtures: {played: false, away_team_id: team_id})
+    .order("fixtures.match_day ASC")
+    .group(:id, "leagues.id", "fixtures.id")
   end
 end

@@ -22,7 +22,7 @@ Rails.application.routes.draw do
         get '/fixtures' => 'fixtures#index', as: 'season_fixtures'
         get '/standing' => 'league_standings#index', as: 'standing'
         get '/stats' => 'all_results#player_stats', as: 'top_scorer'
-        resources :seasons, only: [:create] do
+        resources :seasons do
           get '/generate_fixture' => 'fixtures#generate_fixture', as: 'gen_fixture'
           resources :league_teams
           resources :fixtures

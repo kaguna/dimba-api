@@ -46,4 +46,21 @@ class Fixture < ApplicationRecord
     .order("fixtures.match_day ASC")
     .group(:id, "leagues.id", "fixtures.id")
   end
+
+  def self.team_home_results(team_id)
+    # Clean up later
+   Season.includes(:league, fixtures:[:result])
+   .where(fixtures: {played: true, home_team_id: team_id})
+   .order("fixtures.match_day ASC")
+   .group(:id, "leagues.id", "results.id", "fixtures.id")
+   # .limit(15)
+ end
+
+ def self.team_away_results(team_id)
+   Season.includes(:league, fixtures:[:result])
+   .where(fixtures: {played: true, away_team_id: team_id})
+   .order("fixtures.match_day ASC")
+   .group(:id, "leagues.id", "results.id", "fixtures.id")
+   # .limit(15)
+ end
 end

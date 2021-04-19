@@ -19,8 +19,6 @@ class Fixture < ApplicationRecord
 
   scope :not_played, -> {  where(played: false) }
   scope :played, -> {  where(played: true) }
-  # scope :current_season, -> (league_id) { Season.includes(:league).where(leagues: {id: league_id}, current: true).first&.id}
-  # Fix this later. Ugly!!
 
   def full_match_results(match_id)
     MatchResults.get_match_results(match_id)
@@ -30,37 +28,4 @@ class Fixture < ApplicationRecord
     lsf ||= not_played.includes(:season).where(league_id: league_id, seasons: {current: true}).order(match_day: :ASC)
     {count: lsf.length, fixtures: lsf.map{|fixture| FixtureSerializer.new(fixture)}}
   end
-
-  def self.team_home_fixtures(team_id)
-    # Clean up later
-    Season.includes(:league, :fixtures)
-    .where(fixtures: {played: false, home_team_id: team_id})
-    .order("fixtures.match_day ASC")
-    .group(:id, "leagues.id", "fixtures.id")
-  end
-
-  def self.team_away_fixtures(team_id)
-    # Clean up later
-    Season.includes(:league, :fixtures)
-    .where(fixtures: {played: false, away_team_id: team_id})
-    .order("fixtures.match_day ASC")
-    .group(:id, "leagues.id", "fixtures.id")
-  end
-
-  def self.team_home_results(team_id)
-    # Clean up later
-   Season.includes(:league, fixtures:[:result])
-   .where(fixtures: {played: true, home_team_id: team_id})
-   .order("fixtures.match_day ASC")
-   .group(:id, "leagues.id", "results.id", "fixtures.id")
-   # .limit(15)
- end
-
- def self.team_away_results(team_id)
-   Season.includes(:league, fixtures:[:result])
-   .where(fixtures: {played: true, away_team_id: team_id})
-   .order("fixtures.match_day ASC")
-   .group(:id, "leagues.id", "results.id", "fixtures.id")
-   # .limit(15)
- end
 end

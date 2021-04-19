@@ -8,12 +8,38 @@ class FixtureSerializer < ActiveModel::Serializer
     object&.full_match_results(object.id)
   end
 
+  def played?
+    object.played?
+  end
+
+  def home_goals_for
+    if played?
+      gf = object.result.home_goals
+    elsif !full_match_results.nil?
+      gf = full_match_results[:home_team][:goals_for]
+    else
+      nil
+    end
+    gf
+  end
+
+  def away_goals_for
+    if played?
+      gf = object.result.away_goals
+    elsif !full_match_results.nil?
+      gf = full_match_results[:away_team][:goals_for]
+    else
+      nil
+    end
+    gf
+  end
+
   def home_team
     {
       id: object.home_team.id, 
       name: object.home_team.name,
-      goals_for: full_match_results.nil? ? nil : full_match_results[:home_team][:goals_for],
-      points: full_match_results.nil? ? nil : full_match_results[:home_team][:points],
+      goals_for:  home_goals_for,
+      points: played? ? full_match_results[:home_team][:points] : nil,
       coach: object.home_team&.coach&.id
     }
   end
@@ -22,7 +48,7 @@ class FixtureSerializer < ActiveModel::Serializer
     {
       id: object.away_team.id, 
       name: object.away_team.name,
-      goals_for: full_match_results.nil? ? nil : full_match_results[:away_team][:goals_for],
+      goals_for: away_goals_for,
       points: full_match_results.nil? ? nil : full_match_results[:away_team][:points],
       coach: object.away_team&.coach&.id
     }

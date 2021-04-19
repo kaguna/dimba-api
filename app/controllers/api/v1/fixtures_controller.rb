@@ -13,11 +13,11 @@ module Api
       end
 
       def show_team_home_fixtures
-        render json: Fixture.team_home_fixtures(params[:team_id])
+        render json: TeamSeasonLeagueGamesQuery.call('home_team_id', params[:team_id], false)
       end
 
       def show_team_away_fixtures
-        render json: Fixture.team_away_fixtures(params[:team_id])
+        render json: TeamSeasonLeagueGamesQuery.call('away_team_id', params[:team_id], false)
       end
 
       def index

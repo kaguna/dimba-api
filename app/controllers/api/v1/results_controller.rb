@@ -19,11 +19,11 @@ module Api
       end
 
       def show_team_home_results
-        render json: Result.team_home_results(params[:team_id])
+        render json: TeamSeasonLeagueGamesQuery.call('home_team_id', params[:team_id], true)
       end
 
       def show_team_away_results
-        render json: Result.team_away_results(params[:team_id])
+        render json: TeamSeasonLeagueGamesQuery.call('away_team_id', params[:team_id], true)
       end
 
       def player_stats

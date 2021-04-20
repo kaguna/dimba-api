@@ -9,10 +9,10 @@ module MatchResults
   def self.get_match_results(match_id)
     raise "Fixture not found" unless match = Fixture.find_by(id: match_id)
 
-    home_team_goals ||= self.count_goals(match_commentaries: self.commentaries(match_id),
-                                        team: match.home_team)
-    away_team_goals ||= self.count_goals(match_commentaries: self.commentaries(match_id),
-                                        team: match.away_team)
+    home_team_goals ||= match.played? ? match.result.home_goals :
+     self.count_goals(match_commentaries: self.commentaries(match_id), team: match.home_team)
+    away_team_goals ||= match.played? ? match.result.away_goals :
+     self.count_goals(match_commentaries: self.commentaries(match_id), team: match.away_team)
     {
       fixture_id: match.id,
       match_day: match.match_day,

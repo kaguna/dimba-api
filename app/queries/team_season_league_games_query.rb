@@ -10,9 +10,10 @@ class TeamSeasonLeagueGamesQuery < BaseQuery
     h = {}
     h.send('[]=', column, team_id).to_sym
     relation
+    .where(current: true)
     .where(fixtures: h)
     .where(fixtures: {played: played})
-    .order("fixtures.match_day ASC")
+    .order("fixtures.match_day DESC")
     .group(:id, "leagues.id", "fixtures.id")
   end
 end

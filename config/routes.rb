@@ -6,6 +6,7 @@ Rails.application.routes.draw do
         post '/login' => 'user_token#create', as: 'login'
         get '/search_user' => 'admins#index', as: 'search_user'
         get '/referees' => 'admins#get_referees', as: 'get_referees'
+        get '/coaches' => 'admins#get_coaches', as: 'get_coaches'
         put '/update_user' => 'admins#update', as: 'update_user'
       end
 

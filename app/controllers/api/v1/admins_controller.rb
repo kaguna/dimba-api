@@ -1,9 +1,9 @@
 module Api
   module V1
     class AdminsController < ApplicationController
-      before_action :authenticate_current_user!, except: %i[index get_referees]
+      before_action :authenticate_current_user!, except: %i[index get_referees get_coaches]
       before_action :set_user, only: %i[show update destroy]
-      after_action :verify_authorized, except: %i[index show get_referees]
+      after_action :verify_authorized, except: %i[index show get_referees get_coaches]
 
       def index
         render json: User.search(params[:q])
@@ -11,6 +11,10 @@ module Api
 
       def get_referees
         render json: User.get_all_referees
+      end
+
+      def get_coaches
+        render json: User.get_all_coaches
       end
 
       def update

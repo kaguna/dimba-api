@@ -24,6 +24,9 @@ class User < ApplicationRecord
             uniqueness: { case_sensitive: false },
             presence: true, allow_blank: false
 
+  scope :get_all_referees, -> {includes(:role).where(roles: {name: 'Referee'})}
+  scope :get_all_coaches, -> {includes(:role).where(roles: {name: 'Coach'})}
+
   def self.search(search_value)
     self.where("username LIKE ?", "%#{search_value}%")
   end

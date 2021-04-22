@@ -4,7 +4,8 @@ class Result < ApplicationRecord
 
   validates_uniqueness_of :fixture_id, message: "results has already been updated!"
 
-  after_save :mark_fixture_played
+  before_save :check_if_any_event
+  after_save :mark_fixture_played!
 
   def self.league_season_matches_results(league_id)
     includes(fixture:[:season])
@@ -13,7 +14,11 @@ class Result < ApplicationRecord
 
   private
 
-  def mark_fixture_played
+  def check_if_any_event
+    raise "No events in this match!" unless Commentary.exists?(fixture_id: self.fixture_id)
+  end
+
+  def mark_fixture_played!
     Fixture.where(id: self.fixture_id).update(played: true)
   end
 

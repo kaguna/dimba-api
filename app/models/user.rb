@@ -26,6 +26,7 @@ class User < ApplicationRecord
 
   scope :get_all_referees, -> {includes(:role).where(roles: {name: 'Referee'})}
   scope :get_all_coaches, -> {includes(:role).where(roles: {name: 'Coach'})}
+  scope :get_all_officials, -> {includes(:role).where(roles: {name: 'Official'})}
 
   def self.search(search_value)
     self.where("username LIKE ?", "%#{search_value}%")

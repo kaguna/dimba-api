@@ -17,6 +17,11 @@ module Api
         render json: User.get_all_coaches
       end
 
+      def get_officials
+        authorize User.new
+        render json: User.get_all_officials
+      end
+
       def update
         authorize @user
         if @user

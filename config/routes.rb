@@ -7,6 +7,7 @@ Rails.application.routes.draw do
         get '/search_user' => 'admins#index', as: 'search_user'
         get '/referees' => 'admins#get_referees', as: 'get_referees'
         get '/coaches' => 'admins#get_coaches', as: 'get_coaches'
+        get '/officials' => 'admins#get_officials', as: 'get_officials'
         put '/update_user' => 'admins#update', as: 'update_user'
       end
 

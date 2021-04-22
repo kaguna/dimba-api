@@ -4,7 +4,7 @@ class SeasonPolicy < ApplicationPolicy
   end
 
   def update?
-    user.present? && (user.admin? || user.referee?)
+    user.present? && (user.admin? || user.official?)
   end
 
   def destroy?

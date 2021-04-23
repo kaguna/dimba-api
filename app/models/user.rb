@@ -41,10 +41,6 @@ class User < ApplicationRecord
     }
   end
 
-  def self.get_all_referees
-    where(role_id: 2)
-  end
-
   def admin?
     role.name == "Admin"
   end

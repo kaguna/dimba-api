@@ -42,7 +42,7 @@ class AllResult < Commentary
     # lims: Leagues incoming matches
     Season.includes(:league, :fixtures)
     .where(current: true)
-    .where("Date(fixtures.match_day) >= ? AND Date(fixtures.match_day) < ?", Date.today, (Date.today + 15.days))
+    .where("Date(fixtures.match_day) >= ? AND Date(fixtures.match_day) < ?", 130.minutes.ago, (Date.today + 15.days))
     .order("fixtures.match_day ASC")
     .group(:id, "fixtures.id, leagues.id")
   end

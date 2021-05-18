@@ -1,9 +1,13 @@
 class CommentarySerializer < ActiveModel::Serializer
+  SUBSTITUTION="Substitution".freeze
+
   attributes :id, :event, :team, :player, :description, :commentary_time
+  attribute :player_in, if: :is_substitution?
 
   belongs_to :team
   belongs_to :player
   belongs_to :event
+  belongs_to :commentary_player, class_name: "Player", foreign_key: "player_in", optional: true
 
   # def commentary
   #   {
@@ -15,6 +19,10 @@ class CommentarySerializer < ActiveModel::Serializer
   #     player: player
   #   }
   # end
+
+  def is_substitution?
+    object.event.name == SUBSTITUTION
+  end
 
   def event
     {
@@ -34,6 +42,13 @@ class CommentarySerializer < ActiveModel::Serializer
     {
       id: object.player&.id, 
       name: player_full_name
+    }
+  end
+
+  def player_in
+    {
+      id: object.commentary_player&.id, 
+      name: object.commentary_player&.nick_name
     }
   end
 

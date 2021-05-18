@@ -5,6 +5,7 @@ class Commentary < ApplicationRecord
   belongs_to :team, optional: :true
   belongs_to :event
   belongs_to :player, optional: :true
+  belongs_to :commentary_player, class_name: "Player", foreign_key: "player_in", optional: true
 
   scope :commentaries, -> (match_id) { where(fixture_id: match_id).order('CAST(commentary_time as INT) desc') }
   scope :goals, -> { where(event_id: 1) }

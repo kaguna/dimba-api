@@ -49,7 +49,8 @@ module Api
           :commentary_time,
           :team_id,
           :player_id,
-          :fixture_id
+          :fixture_id,
+          :player_in
         )
       end
     end

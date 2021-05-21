@@ -3,6 +3,10 @@ class FixtureSquadPolicy < ApplicationPolicy
     user.present? && (user.admin? || user.coach?)
   end
 
+  def add_first_11?
+    user.present? && (user.admin? || user.coach?)
+  end
+
   def update?
     user.present? && (user.admin? || user.coach?)
   end

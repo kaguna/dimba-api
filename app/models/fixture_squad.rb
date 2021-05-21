@@ -3,6 +3,8 @@ class FixtureSquad < ApplicationRecord
   belongs_to :player, optional: :true
   belongs_to :team, optional: :true
 
+  attribute :playing, :boolean, default: false
+
   validates_presence_of :fixture_id, :player_id, :team_id
 
   def self.match_squads(match_id:)

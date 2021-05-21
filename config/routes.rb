@@ -38,6 +38,7 @@ Rails.application.routes.draw do
       end
 
       get '/all_fixtures' => 'results#all_incoming_matches', as: 'current_season_matches'
+      post '/edit_fixture_squad' => 'fixture_squads#add_first_11', as: 'update_squad'
 
       resources :transfer, :events, :sponsor, :roles
 

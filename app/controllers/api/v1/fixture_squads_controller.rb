@@ -14,6 +14,22 @@ module Api
         render json: @fixture_squad
       end
 
+      def add_first_11
+        authorize FixtureSquad.new
+        selected_11 = players_paramaters.length
+        if selected_11 > 11 ||  selected_11 < 7
+          render json: {error: "Starting lineup can only be less 11 and greater than 7 !" },
+                        status: :bad_request
+        else
+          FixtureSquad.transaction do
+            players_paramaters.each do |attributes|
+              fixture_squad = FixtureSquad.find(attributes["id"])
+              fixture_squad.update!(playing: true)
+            end
+          end
+        end
+      end
+
       def create
         create_fixture_squad
         render json:
@@ -49,7 +65,7 @@ module Api
 
       def players_paramaters
         params.require(:fixture_squad).map do |p|
-          p.permit(:player_id, :fixture_id, :team_id)
+          p.permit(:player_id, :fixture_id, :team_id, :id)
         end
       end
 

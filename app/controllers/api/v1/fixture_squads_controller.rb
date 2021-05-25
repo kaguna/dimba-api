@@ -24,7 +24,7 @@ module Api
           FixtureSquad.transaction do
             players_paramaters.each do |attributes|
               fixture_squad = FixtureSquad.find(attributes["id"])
-              fixture_squad.update!(playing: true)
+              fixture_squad.update!(playing: true, starting: true)
             end
           end
         end

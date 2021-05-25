@@ -1,5 +1,5 @@
 class FixtureSquadSerializer < ActiveModel::Serializer
-  attributes :id, :player, :team, :playing
+  attributes :id, :player, :team, :playing, :starting
 
   def player
     {

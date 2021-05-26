@@ -5,6 +5,8 @@ class FixtureSquad < ApplicationRecord
 
   attribute :playing, :boolean, default: false
 
+  validates :player_id, uniqueness: { scope: :fixture_id, message: "Player already added!" }
+
   validates_presence_of :fixture_id, :player_id, :team_id
 
   scope :starting_11, -> { where(playing: true) }

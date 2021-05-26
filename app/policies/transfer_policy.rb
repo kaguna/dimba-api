@@ -1,10 +1,10 @@
 class TransferPolicy < ApplicationPolicy
   def create?
-    user.present? && (user.admin? || user.official?)
+    user.present? && (user.admin? || user.coach?)
   end
 
   def update?
-    user.present? && (user.admin? || user.official?)
+    user.present? && (user.admin? || user.coach?)
   end
 
   def destroy?

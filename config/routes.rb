@@ -40,7 +40,7 @@ Rails.application.routes.draw do
       get '/all_fixtures' => 'results#all_incoming_matches', as: 'current_season_matches'
       post '/edit_fixture_squad' => 'fixture_squads#add_first_11', as: 'update_squad'
 
-      resources :transfer, :events, :sponsor, :roles
+      resources :transfers, :events, :sponsor, :roles
 
       scope 'matches/:match_id' do
         put '/edit' => 'fixtures#update', as: 'edit_match'

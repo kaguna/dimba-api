@@ -1,6 +1,6 @@
 module Api
   module V1
-    class TransferController < ApplicationController
+    class TransfersController < ApplicationController
       before_action :authenticate_current_user!, except: %i[index show]
       before_action :set_transfer, only: %i[show update destroy]
       after_action :verify_authorized, except: %i[index show]
@@ -18,8 +18,8 @@ module Api
         authorize transfer
 
         if transfer.save
-          transfer_process(transfer_params['player_id'],
-                          transfer_params['to_team_id'])
+          # transfer_process(transfer_params['player_id'],
+          #                 transfer_params['to_team_id'])
           render json: transfer, status: :created
 
         else
@@ -56,10 +56,10 @@ module Api
         )
       end
 
-      def transfer_process(player_id, to_team_id)
-        player = Player.find_by_id(player_id)
-        player.update_columns(team_id: to_team_id)
-      end
+      # def transfer_process(player_id, to_team_id)
+      #   player = Player.find_by_id(player_id)
+      #   player.update_columns(team_id: to_team_id)
+      # end
     end
   end
 end

@@ -27,15 +27,18 @@ class AllResult < Commentary
   end
 
   def self.player_stats(league_id)
-    # TODO: A very ugly query and response. Refactor later
-    includes(:player, :team, fixture: [{league: :seasons}])
-    .where(leagues: {id: league_id}, seasons: {id: self.get_league_current_season(league_id).id})
-    .where.not(players: {id: nil}) # check later for: .where.not(players: {id: [nil, ""]})
-    .goals
-    .order(count: :desc)
-    .group("players.id", :nick_name, "teams.id", "teams.name")
-    .count(:id)
-    .to_a
+    # TODO: Make this an ActiveRecord Query
+    ActiveRecord::Base.connection.execute(
+    "SELECT COUNT(DISTINCT commentaries.id) AS goals, 
+      players.id AS player_id, nick_name AS nick_name, teams.id AS team_id, teams.name AS team_name 
+    FROM commentaries 
+    LEFT OUTER JOIN players ON players.id = commentaries.player_id 
+    LEFT OUTER JOIN teams ON teams.id = commentaries.team_id 
+    LEFT OUTER JOIN fixtures ON fixtures.id = commentaries.fixture_id 
+    LEFT OUTER JOIN leagues ON leagues.id = fixtures.league_id 
+    LEFT OUTER JOIN seasons ON seasons.league_id = leagues.id 
+    WHERE leagues.id = #{league_id} AND seasons.id = #{self.get_league_current_season(league_id).id} AND players.id IS NOT NULL AND commentaries.event_id = 1 
+    GROUP BY players.id, nick_name, teams.id, teams.name ORDER BY commentaries.count DESC").as_json
   end
 
   def self.all_incoming_matches

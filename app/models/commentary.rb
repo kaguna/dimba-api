@@ -7,10 +7,11 @@ class Commentary < ApplicationRecord
   belongs_to :player, optional: :true
   belongs_to :commentary_player, class_name: "Player", foreign_key: "player_in", optional: true
 
-  scope :commentaries, -> (match_id) { where(fixture_id: match_id).order('CAST(commentary_time as INT) desc') }
+  scope :commentaries, -> (match_id) { where(fixture_id: match_id).order('CAST(commentary_time as INT) desc', :created_at) }
   scope :goals, -> { where(event_id: 1) }
 
-  scope :played_match_ids , -> { Result.all.map(&:fixture_id) }
+  scope :played_match_ids , -> { Result.all.pluck(:fixture_id) }
+  scope :fixture_squad , -> { FixtureSquad.where(fixture_id: self.fixture.id) }
 
   after_save :avail_player_in_for_events!, if: :event_substitution?
 
@@ -32,8 +33,8 @@ class Commentary < ApplicationRecord
 
   def avail_player_in_for_events!
     ActiveRecord::Base.transaction do
-      FixtureSquad.where(fixture_id: self.fixture.id, player_id: self.player.id).first.update!(playing: false)
-      FixtureSquad.where(fixture_id: self.fixture.id, player_id: self.commentary_player.id).first.update!(playing: true)
+      fixture_squad.where(player_id: self.player.id).first.update!(playing: false)
+      fixture_squad.where(player_id: self.commentary_player.id).first.update!(playing: true)
     end
   end
 end

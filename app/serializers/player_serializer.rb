@@ -3,6 +3,6 @@ class PlayerSerializer < ActiveModel::Serializer
               :id_number, :dob, :phone_number
 
   def full_name
-    "#{object.first_name} #{object.second_name} #{object.last_name}"
+    "#{object.first_name} #{object.second_name} #{object.last_name}".capitalize
   end
 end

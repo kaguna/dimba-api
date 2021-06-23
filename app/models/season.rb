@@ -13,7 +13,7 @@ class Season < ApplicationRecord
   
   scope :current, -> { where(current: true) }
 
-  after_initialize :end_season!, if: :season_eligible_for_ending?
+  # after_initialize :end_season!, if: :season_eligible_for_ending?
 
   def end_season!
     update!(current: false)

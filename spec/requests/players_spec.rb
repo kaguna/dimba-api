@@ -32,6 +32,7 @@ RSpec.describe Player, type: :request do
       end
 
       it 'creates a new player with 8 keys' do
+        
         expect(json.size).to eq 8
       end
 

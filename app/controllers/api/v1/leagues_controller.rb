@@ -1,12 +1,12 @@
 module Api
   module V1   
     class LeaguesController < ApplicationController
-      before_action :authenticate_current_user, except: %i[index show]
+      before_action :authenticate_current_user!, except: %i[index show]
       before_action :set_league, only: %i[show update destroy]
       after_action :verify_authorized, except: %i[index show]
 
       def index
-        leagues = League.all
+        leagues = League.all_leagues
 
         if leagues.empty?
           render json: { "error": 'No leagues!' },
@@ -53,7 +53,8 @@ module Api
       def league_params
         params.permit(
           :title,
-          :season
+          :season,
+          :official_id
         )
       end
     end

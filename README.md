@@ -25,7 +25,7 @@ This project uses Postgresql. You will need to install postgres.On a Mac do:
 
 Now setup all the environment variables:
 
-        figaro install
+        bundle exec figaro install
 
 Inside the generated file in `config/application.yml` file, paste the sample data from `config/applicaion.yml.sample` file. Edit these variables to fit your local configuration of postgres.
 

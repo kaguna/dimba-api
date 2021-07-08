@@ -1,49 +1,70 @@
 module Api
-  module V1    
+  module V1
     class ResultsController < ApplicationController
-      before_action :authenticate_current_user, except: %i(index show)
-      before_action :specific_result, only: %i(update destroy)
-      after_action :verify_authorized, except: %i(index show)
-
+      include Standing
+      before_action :authenticate_current_user!, only: %i(create update destroy)
+      after_action :verify_authorized, only: %i[create]
+      
       def index
-        render json: Result.all, status: :ok
+        render json: all_matches
+      end
+
+      def show_table
+        # not used, refactor later
+        render json: league_season_standings(index)
       end
 
       def show
-        render json: specific_result, status: :ok
+        render json: Result.full_match_results(params[:match_id]).first
+      end
+
+      def show_team_home_results
+        render json: TeamSeasonLeagueGamesQuery.call('home_team_id', params[:team_id], true)
+      end
+
+      def show_team_away_results
+        render json: TeamSeasonLeagueGamesQuery.call('away_team_id', params[:team_id], true)
+      end
+
+      def player_stats
+        render json: AllResult.player_stats(params[:league_id])
+      end
+
+      def all_incoming_matches
+        render json: AllResult.all_incoming_matches
       end
 
       def create
-        result = Result.create!(result_params)
+        result = Result.new(result_params)
         authorize result
-        render json: result, status: :created
+
+        if result.save!
+          render json: result, status: :created
+        else
+          render json: result.errors, status: :unprocessable_entity
+        end
       end
 
       def update
-        authorize specific_result
-        specific_result.update_attributes(result_params)
-        render json: specific_result
       end
 
       def destroy
-        authorize specific_result
-        specific_result.destroy
-        render json: {}, status: :ok
       end
 
       private
 
-      def specific_result
-        @result = Result.find(params[:result_id])
+      def all_matches
+        Result.league_season_matches_results(params[:league_id])
       end
 
       def result_params
         params.permit(
-            :fixture_id,
-            :home_goals,
-            :away_goals
+          :fixture_id,
+          :home_goals,
+          :away_goals
         )
       end
+
     end
   end
 end

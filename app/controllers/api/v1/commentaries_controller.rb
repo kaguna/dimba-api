@@ -1,19 +1,13 @@
 module Api
   module V1
     class CommentariesController < ApplicationController
-      before_action :authenticate_current_user, except: %i(index show)
+      before_action :authenticate_current_user!, only: %i(create update destroy)
       before_action :set_commentary, only: %i(show update destroy)
-      after_action :verify_authorized, except: %i(show index show)
+      after_action :verify_authorized, except: %i(index show)
 
       def index
-        commentary = Commentary.find_by(fixture_id: params[:fixture_id])
-
-        if commentary.nil?
-          render json: { "error": "No commentary for this game." },
-                status: :bad_request
-        else
-          render json: commentary, status: :ok
-        end
+        commentaries = Commentary.match_commentaries(params[:match_id])
+        render json:  commentaries
       end
 
       def show
@@ -24,7 +18,7 @@ module Api
         commentary = Commentary.new(commentary_params)
         authorize commentary
 
-        if commentary.save
+        if commentary.save!
           render json: commentary, status: :created
         else
           render json: commentary.errors, status: :unprocessable_entity
@@ -55,7 +49,8 @@ module Api
           :commentary_time,
           :team_id,
           :player_id,
-          :fixture_id
+          :fixture_id,
+          :player_in
         )
       end
     end

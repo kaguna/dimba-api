@@ -4,9 +4,9 @@ class AllResult < Commentary
 
   attr_accessor :lsm
 
-  def self.league_season_matches_results(league_id)
-    self.get_league_current_season(league_id).nil? ? @lsm = [] :
-    @lsm = self.get_league_current_season(league_id).fixtures.where(id: played_match_ids).map do |match| 
+  def self.league_season_matches_results(league_id, season_id)
+    self.league_current_season_id(league_id).nil? && !season_id.present? ? @lsm = [] :
+    @lsm = Season.find(season_id.present? ? season_id : self.league_current_season_id(league_id)).fixtures.where(id: played_match_ids).map do |match| 
       self.full_match_results(match&.id)
     end
 
@@ -17,9 +17,9 @@ class AllResult < Commentary
     MatchResults.get_match_results(match_id)
   end
 
-  def self.standings(league_id)
-    ls_matches = self.league_season_matches_results(league_id)[:league_season_matches]
-    standing ||= Standing.league_season_standings(@lsm.nil? ? ls_matches : @lsm)
+  def self.standings(league_id, season_id)
+    ls_matches = self.league_season_matches_results(league_id, season_id)[:league_season_matches]
+    standing ||= Standing.league_season_standings(ls_matches || @lsm)
     {
       teams: standing.length,
       standing: standing
@@ -39,7 +39,7 @@ class AllResult < Commentary
     LEFT OUTER JOIN fixtures ON fixtures.id = commentaries.fixture_id 
     LEFT OUTER JOIN leagues ON leagues.id = fixtures.league_id 
     LEFT OUTER JOIN seasons ON seasons.league_id = leagues.id 
-    WHERE leagues.id = #{league_id} AND seasons.id = #{self.get_league_current_season(league_id).id} AND players.id IS NOT NULL AND commentaries.event_id = 1 AND
+    WHERE leagues.id = #{league_id} AND seasons.id = #{self.league_current_season_id(league_id)} AND players.id IS NOT NULL AND commentaries.event_id = 1 AND
     (fixture_squads.playing = true AND fixture_squads.starting = true OR fixture_squads.starting = false)
     GROUP BY players.id, nick_name, teams.id, teams.name ORDER BY goals DESC").as_json
   end
@@ -55,7 +55,7 @@ class AllResult < Commentary
 
   private
 
-  def self.get_league_current_season(league_id)
-    League.find(league_id).seasons.current.first
+  def self.league_current_season_id(league_id)
+    League.find(league_id).seasons.current&.first&.id
   end
 end

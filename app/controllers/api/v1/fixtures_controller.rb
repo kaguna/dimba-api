@@ -36,15 +36,14 @@ module Api
 
       def create
         authorize Fixture
-        if (fixture_exists?)
-          require_fixtures.each do |attributes|
-            @s_fixtures = Fixture.new(fixture_params(attributes))
-            @s_fixtures.save!
-          end
-          render json: {message: "#{require_fixtures.length} matches added."}, status: :created
-        else 
-          render json: {}, status: :found 
+        count = 0
+        require_fixtures.each do |attributes|
+          next if fixture_exists?(fixture_params(attributes).except!(:match_day))
+          count+=1
+          @s_fixtures = Fixture.new(fixture_params(attributes))
+          @s_fixtures.save!
         end
+        render json: {message: "#{count} matches added."}, status: :created
       end
 
       def update
@@ -78,8 +77,8 @@ module Api
         @fixture = Fixture.find_by(id: params[:match_id])
       end
 
-      def fixture_exists?
-        Fixture.find_by(league_id: params[:league_id], season_id: params[:season_id]).nil?
+      def fixture_exists?(attributes)
+        Fixture.exists?(attributes)
       end
 
       def fixture_params

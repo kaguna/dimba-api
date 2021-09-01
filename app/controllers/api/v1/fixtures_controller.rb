@@ -8,7 +8,7 @@ module Api
 
       def generate_fixture
         authorize Fixture
-        pre_fixtures = generate(params[:league_id], params[:season_id])
+        pre_fixtures = generate(params[:league_id], params[:season_id], params[:home_away])
         render json: {matches: pre_fixtures.length, pre_fixtures: pre_fixtures}, status: :ok
       end
 

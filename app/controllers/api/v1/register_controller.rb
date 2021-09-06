@@ -5,6 +5,7 @@ module Api
         user = User.new(user_params)
         user.role_id = Role.find_by(name: "User")&.id
         if user.save
+          UserMailer.with(to: user).welcome_email.deliver_now
           render json: user, status: :created
 
         else

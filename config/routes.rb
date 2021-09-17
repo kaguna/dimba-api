@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       scope 'user' do
         post '/sign_up' => 'register#signup', as: 'register'
+        get '/confirm_email' => 'register#confirm_email', as: 'confirm_email'
         post '/login' => 'user_token#create', as: 'login'
         get '/search_user' => 'admins#index', as: 'search_user'
         get '/referees' => 'admins#get_referees', as: 'get_referees'

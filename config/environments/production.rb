@@ -71,9 +71,10 @@ Rails.application.configure do
 
   config.action_mailer.perform_deliveries = true
   config.action_mailer.delivery_method = :smtp
+  config.action_mailer.default_url_options = { host: "https://www.chezadimba.co.ke" }
 
   config.action_mailer.smtp_settings = {
-  :user_name => 'CDIMBA_SENDGRID', # This is the string literal 'apikey', NOT the ID of your API key
+  :user_name => 'apikey', # This is the string literal 'apikey', NOT the ID of your API key
   :password => ENV['SENDGRID_API_KEY'], # This is the secret sendgrid API key which was issued during API key creation
   :domain => 'chezadimba.co.ke',
   :address => 'smtp.sendgrid.net',

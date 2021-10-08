@@ -82,4 +82,11 @@ class User < ApplicationRecord
     self.confirm_token = nil
     save!(:validate => false)
   end
+
+  def account_deactivation_warning!
+    transaction do
+      DeactivateAccountMailer.deactivate_account(self).deliver_now
+      update!(email_reminder_sent: true)
+    end
+  end
 end

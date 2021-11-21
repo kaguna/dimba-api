@@ -12,7 +12,7 @@ class Season < ApplicationRecord
 
   
   scope :current, -> { where(current: true) }
-  scope :archived, -> { where(current: false) }
+  scope :archived, -> { where(current: false).order(created_at: :desc) }
 
   after_find :end_season!, if: :season_eligible_for_ending?
 

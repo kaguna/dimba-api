@@ -27,5 +27,6 @@ module Dimba
 
     config.unverified_grace_period = 30.days
     config.unverified_reminder = 15.days
+    config.days_to_archive_season = 5.days
   end
 end

@@ -1,8 +1,5 @@
 class Fixture < ApplicationRecord
   include MatchResults
-
-  validates :away_team_id, presence: true
-  validates :home_team_id, presence: true
   
   belongs_to :league
   belongs_to :season
@@ -15,7 +12,12 @@ class Fixture < ApplicationRecord
   has_one :result, dependent: :destroy
   has_many :fixture_squad, dependent: :destroy
   has_many :players, through: :fixture_squad
-  has_many :commentaries, dependent: :destroy
+  has_many :match_commentaries, -> { order('CAST(commentary_time as INT) desc') }, class_name: "Commentary", dependent: :destroy
+
+  validates :away_team_id, presence: true
+  validates :home_team_id, presence: true
+  # validates_uniqueness_of :home_team_id, scope: [:away_team_id, :season_id, :league_id]
+  # validates_uniqueness_of :away_team_id, scope: [:home_team_id, :season_id, :league_id]
 
   scope :not_played, -> {  where(played: false) }
   scope :played, -> {  where(played: true) }

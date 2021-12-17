@@ -4,6 +4,6 @@ class TeamSerializer < ActiveModel::Serializer
   belongs_to :coach, serializer: UserSerializer
 
   def name
-    object.name.capitalize
+    object.name.titleize
   end
 end

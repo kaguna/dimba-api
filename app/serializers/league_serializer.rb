@@ -2,7 +2,7 @@ class LeagueSerializer < ActiveModel::Serializer
   attributes :id, :title, :official, :current_season
 
   def title
-    object.title.capitalize
+    object.title.titleize
   end
   
   def current_season
@@ -12,7 +12,7 @@ class LeagueSerializer < ActiveModel::Serializer
   def official
     {
       id: object&.official&.id,
-      username: object&.official&.username
+      username: object&.official&.username.to_s.titleize
     }
   end
 end

@@ -31,7 +31,7 @@ module Standing
     def formulate_standing_stats(team_stats)
       {
         team_id: team_stats[1][0][:team_id],
-        team_name: team_stats[1][0][:team_name],
+        team_name: team_stats[1][0][:team_name].capitalize,
         games_played: count_games_played(team_stats),
         wins: count_wins(team_stats),
         draws: count_draws(team_stats),

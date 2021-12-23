@@ -8,12 +8,13 @@ class Season < ApplicationRecord
 
   validates :name, uniqueness: { scope: :league_id, message: "Season name exists in this league!" }
 
-  validates_uniqueness_of :league_id, conditions: -> { current }, message: "Season in progress!"
+  validates_uniqueness_of :league_id, conditions: -> { where(current: true) }, message: "Season in progress!", :on => :save
 
   
   scope :current, -> { where(current: true) }
+  scope :archived, -> { where(current: false).order(created_at: :desc) }
 
-  # after_initialize :end_season!, if: :season_eligible_for_ending?
+  after_find :end_season!, if: :season_eligible_for_ending?
 
   def end_season!
     update!(current: false)
@@ -23,7 +24,7 @@ class Season < ApplicationRecord
 
   def season_eligible_for_ending?
     fixtures.empty? ? false :
-     (!fixtures.pluck(:played).include?(false) &&
-      fixtures.order(:match_day).pluck(:match_day).last <= Date.today+15)
+    (!fixtures.pluck(:played).include?(false) &&
+    fixtures.order(:match_day).pluck(:match_day).last >= Rails.application.config.days_to_archive_season.ago)
   end
 end

@@ -8,7 +8,7 @@ module Api
 
       def generate_fixture
         authorize Fixture
-        pre_fixtures = generate(params[:league_id], params[:season_id])
+        pre_fixtures = generate(params[:league_id], params[:season_id], params[:home_away])
         render json: {matches: pre_fixtures.length, pre_fixtures: pre_fixtures}, status: :ok
       end
 
@@ -36,15 +36,18 @@ module Api
 
       def create
         authorize Fixture
-        if (fixture_exists?)
-          require_fixtures.each do |attributes|
-            @s_fixtures = Fixture.new(fixture_params(attributes))
-            @s_fixtures.save!
-          end
-          render json: {message: "#{require_fixtures.length} matches added."}, status: :created
-        else 
-          render json: {}, status: :found 
+        count = 0
+        require_fixtures.each do |attributes|
+          h = fixture_params(attributes)
+          param = {home_team_id: h['away_team_id'], away_team_id: h['home_team_id'],league_id: h['league_id'], season_id: h['season_id']}
+          next if params[:home_away] && (fixture_exists?(h.except(:match_day)) || fixture_exists?(param))
+          # When a team joins the league after fixtures have been generated.(Home OR away only)
+          # TODO: Avoid dups when generating fixtures for team that joined later. 
+          count+=1
+          @s_fixtures = Fixture.new(h)
+          @s_fixtures.save!
         end
+        render json: {message: "#{count} matches added."}, status: :created
       end
 
       def update
@@ -78,8 +81,8 @@ module Api
         @fixture = Fixture.find_by(id: params[:match_id])
       end
 
-      def fixture_exists?
-        Fixture.find_by(league_id: params[:league_id], season_id: params[:season_id]).nil?
+      def fixture_exists?(attributes)
+        Fixture.exists?(attributes)
       end
 
       def fixture_params

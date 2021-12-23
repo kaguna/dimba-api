@@ -24,6 +24,8 @@ class User < ApplicationRecord
             uniqueness: { case_sensitive: false },
             presence: true, allow_blank: false
 
+  before_create :confirmation_token
+
   scope :get_all_referees, -> {includes(:role).where(roles: {name: 'Referee'})}
   scope :get_all_coaches, -> {includes(:role).where(roles: {name: 'Coach'})}
   scope :get_all_officials, -> {includes(:role).where(roles: {name: 'Official'})}
@@ -67,5 +69,24 @@ class User < ApplicationRecord
 
   def player?
     role.name == "Player"
+  end
+
+  def confirmation_token
+    if self.confirm_token.blank?
+      self.confirm_token = SecureRandom.urlsafe_base64.to_s
+    end
+  end
+
+  def email_activate
+    self.email_confirmed = true
+    self.confirm_token = nil
+    save!(:validate => false)
+  end
+
+  def account_deactivation_warning!
+    transaction do
+      DeactivateAccountMailer.deactivate_account(self).deliver_now
+      update!(email_reminder_sent: true)
+    end
   end
 end

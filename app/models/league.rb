@@ -8,12 +8,4 @@ class League < ApplicationRecord
   belongs_to :official, class_name: "User", foreign_key: "official_id"
 
   validates :title, uniqueness: { case_sensitive: false}
-
-  def self.all_leagues
-    leagues = self.all
-    {
-      count: leagues.length,
-      leagues: leagues.map{|league| LeagueSerializer.new(league)}
-    }
-  end
 end

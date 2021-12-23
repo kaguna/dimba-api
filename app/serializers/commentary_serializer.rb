@@ -43,11 +43,11 @@ class CommentarySerializer < ActiveModel::Serializer
   def player_in
     {
       id: object.commentary_player&.id, 
-      name: object.commentary_player&.nick_name.capitalize
+      name: object.commentary_player&.nick_name&.capitalize
     }
   end
 
   def player_full_name
-    object.player&.nick_name.capitalize # eventually it will be unique.
+    object.player&.nick_name&.capitalize # eventually it will be unique.
   end
 end

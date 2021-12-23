@@ -24,5 +24,9 @@ module Dimba
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
     config.autoload_paths << "#{Rails.root}/app/controllers/helpers"
+
+    config.unverified_grace_period = 30.days
+    config.unverified_reminder = 15.days
+    config.days_to_archive_season = 5.days
   end
 end

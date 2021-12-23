@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <div style="padding-left: 33.3%; padding-right: 33.3%; padding-top: 20px; padding-bottom: 20px;">
+      <div style="align-content: left;">
+        <h2>Welcome <%= @user.username %>!</h2>
+        <p>
+          You have successfully signed up,
+          your username is: <b><%= @user.username%></b>.<br>
+        </p>
+        <p>
+        <p>Click the button below to verify your email</p>
+        <p><a href=<%= @url %>> <button style="background: #fff; color: green; border-width: 1px; font-weight: 900; font-size: 1em; height: 42px; line-height: 15px; border-color: green; border-radius: 5px; box-shadow: solid; padding: 11px 22px; cursor: pointer;">Verify</button></a></p>
+        </p>
+        <p>Thanks for joining and have a great day!</p>
+      </div>
+    </div>
+  </body>
+</html>

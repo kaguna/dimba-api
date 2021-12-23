@@ -4,6 +4,11 @@ module Api
       before_action :authenticate_current_user!, except: %i[index show]
       after_action :verify_authorized, except: %i(index show)
 
+      def index
+        seasons = League.find(params[:league_id]).seasons.archived
+        render json: seasons
+      end
+
       def create
         season = Season.new(season_params)
         authorize season

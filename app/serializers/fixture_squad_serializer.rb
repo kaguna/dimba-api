@@ -16,6 +16,6 @@ class FixtureSquadSerializer < ActiveModel::Serializer
   end
 
   def two_names
-    "#{object.player.first_name} #{object.player.second_name}"
+    "#{object.player.first_name} #{object.player.second_name}".titleize
   end
 end

@@ -11,7 +11,6 @@ class Commentary < ApplicationRecord
   scope :goals, -> { where(event_id: 1) }
 
   scope :played_match_ids , -> { Result.all.pluck(:fixture_id) }
-  scope :fixture_squad , -> { FixtureSquad.where(fixture_id: self.fixture.id) }
 
   after_save :avail_player_in_for_events!, if: :event_substitution?
 
@@ -32,6 +31,7 @@ class Commentary < ApplicationRecord
   end
 
   def avail_player_in_for_events!
+    fixture_squad ||= FixtureSquad.where(fixture_id: self.fixture.id)
     ActiveRecord::Base.transaction do
       fixture_squad.where(player_id: self.player.id).first.update!(playing: false)
       fixture_squad.where(player_id: self.commentary_player.id).first.update!(playing: true)

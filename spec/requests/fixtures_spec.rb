@@ -76,7 +76,7 @@ RSpec.describe Fixture, type: :request do
     }
   end
 
-  describe "POST /league/:league_id/fixtures" do
+  xdescribe "POST /league/:league_id/fixtures" do
     context "when the request is valid" do
       before do
         post api_v1_league_fixtures_path(league_id: league_id), 
@@ -110,7 +110,7 @@ RSpec.describe Fixture, type: :request do
     end
   end
 
-  describe "GET /league/:league_id/fixtures" do
+  xdescribe "GET /league/:league_id/fixtures" do
     context "when the request is valid" do
       before do
         get api_v1_league_fixture_path(league_id: league_id, id: fixture_id)
@@ -141,7 +141,7 @@ RSpec.describe Fixture, type: :request do
     end
   end
 
-  describe "DELETE /league/:league_id/fixtures/:fixture_id" do
+  xdescribe "DELETE /league/:league_id/fixtures/:fixture_id" do
     context "when the request is valid" do
       before do
         delete api_v1_league_fixture_path(league_id: league_id,
@@ -177,7 +177,7 @@ RSpec.describe Fixture, type: :request do
     end
   end
 
-  describe "PUT /league/:league_id/fixtures/:fixture_id" do
+  xdescribe "PUT /league/:league_id/fixtures/:fixture_id" do
     context "when the request is valid" do
       before do
         put api_v1_league_fixture_path(league_id: league_id, 

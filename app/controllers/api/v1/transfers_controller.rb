@@ -1,9 +1,9 @@
 module Api
   module V1
     class TransfersController < ApplicationController
-      before_action :authenticate_current_user!, except: %i[index show]
+      before_action :authenticate_current_user!, except: %i[index show show_team_transfers]
       before_action :set_transfer, only: %i[show update destroy]
-      after_action :verify_authorized, except: %i[index show]
+      after_action :verify_authorized, except: %i[index show show_team_transfers]
 
       def index
         render json: Transfer.all
@@ -39,6 +39,10 @@ module Api
         @transfer.destroy
       end
 
+      def show_team_transfers
+        render json: get_team_transfers, status: :ok
+      end
+
       private
 
       def set_transfer
@@ -54,6 +58,11 @@ module Api
           :transfer_budget,
           :contract_time
         )
+      end
+
+      def get_team_transfers
+        team = Team.find(params[:team_id])
+        team.from_team_transfers.or(team.to_team_transfers).order(created_at: :desc)
       end
 
       # def transfer_process(player_id, to_team_id)

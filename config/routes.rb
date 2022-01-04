@@ -17,6 +17,7 @@ Rails.application.routes.draw do
         get '/away_results' => 'results#show_team_away_results', as: 'away_results'
         get '/home_fixtures' => 'fixtures#show_team_home_fixtures', as: 'home_fixtures'
         get '/away_fixtures' => 'fixtures#show_team_away_fixtures', as: 'away_fixtures'
+        get '/transfers' => 'transfers#show_team_transfers', as: 'team_transfers'
         resources :players
       end
 

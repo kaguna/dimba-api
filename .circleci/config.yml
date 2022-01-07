@@ -14,7 +14,6 @@ jobs:
           key: dimba-api-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
-
   rake_test:
     working_directory: ~/dimba-api
     docker:

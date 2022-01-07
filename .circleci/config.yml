@@ -9,11 +9,18 @@ jobs:
     steps:
       - checkout
       # Bundle install dependencies
+      - restore_cache:
+          keys: 
+          - dimba-api-{{ checksum "Gemfile.lock" }}
+          - dimba-api-
+      - run: 
+          name: Install dependencies
+          command: |
+            bundle check --path vendor/bundle || bundle install --path vendor/bundle
       - save_cache:
           key: dimba-api-{{ checksum "Gemfile.lock" }}
           paths:
-            - vendor/bundle
-      - run: bundle install --path vendor/bundle
+            - ./vendor/bundle
       
   rake_test:
     working_directory: ~/dimba-api
@@ -32,8 +39,14 @@ jobs:
           POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - checkout
-      - restore_cache:
+      - run: 
+          name: Install dependencies
+          command: |
+            bundle check --path vendor/bundle || bundle install --path vendor/bundle
+      - save_cache:
           key: dimba-api-{{ checksum "Gemfile.lock" }}
+          paths:
+            - ./vendor/bundle
       - run:
           name: Wait for DB
           command: dockerize -wait tcp://localhost:5432 -timeout 1m

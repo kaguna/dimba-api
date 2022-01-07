@@ -28,8 +28,6 @@ jobs:
           POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - checkout
-      - restore_cache:
-          key: dimba-api-{{ checksum "Gemfile.lock" }}
       - run: bundle --path vendor/bundle
       - run:
           name: Wait for DB

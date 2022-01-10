@@ -1,8 +1,8 @@
 module Api
   module V1
     class TeamsController < ApplicationController
-      before_action :authenticate_current_user, except: %i(index show)
-      before_action :set_team, only: %i(update destroy)
+      before_action :authenticate_current_user!, except: %i(index show)
+      before_action :set_team, only: %i(show update destroy)
       after_action :verify_authorized, except: %i(index show)
 
       def index
@@ -11,7 +11,7 @@ module Api
       end
 
       def show
-        render json: Team.find(params[:id])
+        render json: @team, status: :ok
       end
 
       def create
@@ -27,8 +27,8 @@ module Api
       end
 
       def update
+        authorize @team
         if @team
-
           @team.update_attributes(team_params)
           render json: @team, status: :ok
 
@@ -39,6 +39,7 @@ module Api
       end
 
       def destroy
+        authorize @team
         if @team
           @team.destroy
           render json: { message: "Team was successfully deleted" },
@@ -53,8 +54,7 @@ module Api
       private
 
       def set_team
-        @team = Team.find_by(id: params[:id])
-        authorize @team
+        @team = Team.find(params[:id])
       end
 
       def team_params
@@ -62,7 +62,8 @@ module Api
             :name,
             :description,
             :location,
-            :nickname
+            :nickname,
+            :coach_id
         )
       end
     end

@@ -1,45 +1,62 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      scope 'league/:league_id/season/:season_id' do
-        get '/table' => 'league_standings#show', as: 'standings'
-      end
-
       scope 'user' do
         post '/sign_up' => 'register#signup', as: 'register'
+        get '/confirm_email' => 'register#confirm_email', as: 'confirm_email'
         post '/login' => 'user_token#create', as: 'login'
+        get '/search_user' => 'admins#index', as: 'search_user'
+        get '/referees' => 'admins#get_referees', as: 'get_referees'
+        get '/coaches' => 'admins#get_coaches', as: 'get_coaches'
+        get '/officials' => 'admins#get_officials', as: 'get_officials'
+        put '/update_user' => 'admins#update', as: 'update_user'
       end
 
       resources :teams do
+        get '/home_results' => 'results#show_team_home_results', as: 'home_results'
+        get '/away_results' => 'results#show_team_away_results', as: 'away_results'
+        get '/home_fixtures' => 'fixtures#show_team_home_fixtures', as: 'home_fixtures'
+        get '/away_fixtures' => 'fixtures#show_team_away_fixtures', as: 'away_fixtures'
+        get '/transfers' => 'transfers#show_team_transfers', as: 'team_transfers'
         resources :players
       end
 
       resources :leagues do
-        resources :fixtures do
-          resources :teams do
-            resources :fixture_squad
-          end
+        get '/matches' => 'results#index', as: 'season_results'
+        get '/fixtures' => 'fixtures#index', as: 'season_fixtures'
+        get '/standing' => 'league_standings#index', as: 'standing'
+        get '/stats' => 'all_results#player_stats', as: 'top_scorer'
+        resources :seasons do
+          get '/generate_fixture' => 'fixtures#generate_fixture', as: 'gen_fixture'
+          get '/archived_season' => 'league_standings#archived_season', as: 'archived'
+          resources :league_teams
+          resources :fixtures
         end
-        resources :leagues_teams
       end
 
       resources :fixtures do
-        resources :commentaries
+        resources :teams do
+          resources :fixture_squad
+        end
       end
 
-      resources :transfer, :events, :sponsor
+      get '/all_fixtures' => 'results#all_incoming_matches', as: 'current_season_matches'
+      post '/edit_fixture_squad' => 'fixture_squads#add_first_11', as: 'update_squad'
 
-      scope 'league/:league_id/fixtures' do
-        get '/fixture_auto_gen' => 'fixtures#generate_fixture', as: 'gen_fixture'
-      end
+      resources :transfers, :events, :sponsor, :roles
 
-      # Temporary here
-      scope 'fixture/:fixture_id/results' do
-        get '/' => 'results#index', as: 'results'
-        post '/' => 'results#create', as: 'add_results'
-        get '/:result_id' => 'results#show', as: 'result'
-        put '/:result_id' => 'results#update', as: 'edit_result'
-        delete '/:result_id' => 'results#destroy', as: 'delete_result'
+      scope 'matches/:match_id' do
+        put '/edit' => 'fixtures#update', as: 'edit_match'
+        get '/results' => 'fixtures#show', as: 'results'
+        post '/results' => 'results#create', as: 'add_results'
+        get '/commentaries' => 'commentaries#index', as: 'commentaries'
+        get '/commentaries/:id' => 'commentaries#show', as: 'commentary'
+        put '/commentaries/:id' => 'commentaries#update', as: 'edit_commentary'
+        post '/commentaries' => 'commentaries#create', as: 'add_commentaries'
+        delete '/commentaries/:id' => 'commentaries#destroy', as: 'delete_commentary'
+
+        get '/squads' => 'fixture_squads#index', as: 'squads'
+        post '/squads/new' => 'fixture_squads#create', as: 'create_squads'
       end
     end
   end

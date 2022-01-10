@@ -1,12 +1,21 @@
 class FixtureSquadSerializer < ActiveModel::Serializer
-  attributes :squad
+  attributes :id, :player, :team, :playing, :starting
 
-  def squad
+  def player
     {
-      id: self.object.id,
-      player: [self.object.player.id, self.object.player.nick_name],
-      team: self.object.team.id,
-      playing: self.object.playing
+      id: object.player.id,
+      name: two_names,
+      nick_name: object.player.nick_name
     }
+  end
+
+  def team
+    {
+      id: object.team_id
+    }
+  end
+
+  def two_names
+    "#{object.player.first_name} #{object.player.second_name}".titleize
   end
 end

@@ -23,7 +23,7 @@ RSpec.describe Player, type: :request do
 
   let(:player_params) { attributes_for(:player) }
 
-  describe 'POST players/create' do
+  xdescribe 'POST players/create' do
     context 'when the request is valid' do
       before do
         post api_v1_team_players_path(team_id: team_id),
@@ -32,6 +32,7 @@ RSpec.describe Player, type: :request do
       end
 
       it 'creates a new player with 8 keys' do
+        
         expect(json.size).to eq 8
       end
 
@@ -70,7 +71,7 @@ RSpec.describe Player, type: :request do
     end
   end
 
-  describe 'GET /team/:team_id/players' do
+  xdescribe 'GET /team/:team_id/players' do
     context 'when the request is valid' do
       before do
         get api_v1_team_players_path(team_id: team_id)
@@ -97,7 +98,7 @@ RSpec.describe Player, type: :request do
     end
   end
 
-  describe 'DELETE /team/:team_id/players/:player_id' do
+  xdescribe 'DELETE /team/:team_id/players/:player_id' do
     before do
       delete api_v1_team_player_path(id: player_id, team_id: team_id),
             headers: authenticated_header(user)
@@ -131,7 +132,7 @@ RSpec.describe Player, type: :request do
     end
   end
 
-  describe 'PUT /team/:team_id/players/:player_id' do
+  xdescribe 'PUT /team/:team_id/players/:player_id' do
     context 'when the request is valid' do
       before do
         put api_v1_team_player_path(id: player_id, team_id: team_id),

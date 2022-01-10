@@ -15,7 +15,7 @@ RSpec.describe Team, type: :request do
 
   let(:team_params) { attributes_for(:team) }
 
-  describe "POST teams/create" do
+  xdescribe "POST teams/create" do
     context "when the request is valid" do
       before do
         post api_v1_teams_path,
@@ -58,7 +58,7 @@ RSpec.describe Team, type: :request do
     end
   end
 
-  describe "GET /teams" do
+  xdescribe "GET /teams" do
     context "when the request is valid" do
       before { get api_v1_teams_path }
 
@@ -72,7 +72,7 @@ RSpec.describe Team, type: :request do
     end
   end
 
-  describe "DELETE /team/:team_id" do
+  xdescribe "DELETE /team/:team_id" do
     context "when the request is valid" do
       before do
         delete api_v1_team_path(id: team_id),
@@ -100,7 +100,7 @@ RSpec.describe Team, type: :request do
     end
   end
 
-  describe "GET /team/:id" do
+  xdescribe "GET /team/:id" do
     context "when the request is valid" do
       before do
         get api_v1_team_path(id: team_id)
@@ -127,7 +127,7 @@ RSpec.describe Team, type: :request do
     end
   end
 
-  describe "PUT /teams/edit/:id" do
+  xdescribe "PUT /teams/edit/:id" do
     context "when the request is valid" do
 
       before do

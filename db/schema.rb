@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_10_131527) do
+ActiveRecord::Schema.define(version: 2021_10_08_154943) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 2019_09_10_131527) do
     t.bigint "fixture_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "player_in"
     t.index ["event_id"], name: "index_commentaries_on_event_id"
     t.index ["fixture_id"], name: "index_commentaries_on_fixture_id"
     t.index ["player_id"], name: "index_commentaries_on_player_id"
@@ -44,6 +45,7 @@ ActiveRecord::Schema.define(version: 2019_09_10_131527) do
     t.bigint "team_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "starting", default: false
     t.index ["fixture_id"], name: "index_fixture_squads_on_fixture_id"
     t.index ["player_id"], name: "index_fixture_squads_on_player_id"
     t.index ["team_id"], name: "index_fixture_squads_on_team_id"
@@ -60,6 +62,7 @@ ActiveRecord::Schema.define(version: 2019_09_10_131527) do
     t.datetime "match_day"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "played", default: false
   end
 
   create_table "leagues", force: :cascade do |t|
@@ -67,6 +70,7 @@ ActiveRecord::Schema.define(version: 2019_09_10_131527) do
     t.text "season"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "official_id"
   end
 
   create_table "leagues_sponsors", force: :cascade do |t|
@@ -83,6 +87,7 @@ ActiveRecord::Schema.define(version: 2019_09_10_131527) do
     t.integer "league_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "season_id"
   end
 
   create_table "players", force: :cascade do |t|
@@ -120,6 +125,10 @@ ActiveRecord::Schema.define(version: 2019_09_10_131527) do
     t.integer "duration"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "league_id"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.boolean "current", default: true
   end
 
   create_table "sponsors", force: :cascade do |t|
@@ -137,6 +146,7 @@ ActiveRecord::Schema.define(version: 2019_09_10_131527) do
     t.text "nickname"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "coach_id"
   end
 
   create_table "transfers", force: :cascade do |t|
@@ -157,11 +167,15 @@ ActiveRecord::Schema.define(version: 2019_09_10_131527) do
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "email_confirmed", default: false
+    t.string "confirm_token"
+    t.boolean "email_reminder_sent", default: false
   end
 
   add_foreign_key "commentaries", "events"
   add_foreign_key "commentaries", "fixtures"
   add_foreign_key "commentaries", "players"
+  add_foreign_key "commentaries", "players", column: "player_in"
   add_foreign_key "commentaries", "teams"
   add_foreign_key "fixture_squads", "fixtures"
   add_foreign_key "fixture_squads", "players"
@@ -171,14 +185,21 @@ ActiveRecord::Schema.define(version: 2019_09_10_131527) do
   add_foreign_key "fixtures", "teams", column: "away_team_id"
   add_foreign_key "fixtures", "teams", column: "home_team_id"
   add_foreign_key "fixtures", "users", column: "center_referee_id"
+  add_foreign_key "fixtures", "users", column: "center_referee_id"
+  add_foreign_key "fixtures", "users", column: "left_side_referee_id"
   add_foreign_key "fixtures", "users", column: "left_side_referee_id"
   add_foreign_key "fixtures", "users", column: "right_side_referee_id"
+  add_foreign_key "fixtures", "users", column: "right_side_referee_id"
+  add_foreign_key "leagues", "users", column: "official_id"
   add_foreign_key "leagues_sponsors", "leagues"
   add_foreign_key "leagues_sponsors", "sponsors"
   add_foreign_key "leagues_teams", "leagues"
+  add_foreign_key "leagues_teams", "seasons"
   add_foreign_key "leagues_teams", "teams"
   add_foreign_key "players", "teams"
   add_foreign_key "results", "fixtures"
+  add_foreign_key "seasons", "leagues"
+  add_foreign_key "teams", "users", column: "coach_id"
   add_foreign_key "transfers", "players"
   add_foreign_key "transfers", "teams", column: "from_team_id"
   add_foreign_key "transfers", "teams", column: "to_team_id"

@@ -2,13 +2,27 @@ module Api
   module V1   
     class FixturesController < ApplicationController
       include FixturesConcern
-      before_action :authenticate_current_user, except: %i(index show)
+      before_action :authenticate_current_user!, except: %i(index show show_team_home_fixtures show_team_away_fixtures)
       before_action :set_fixture, only: %i(show update destroy)
-      after_action :verify_authorized, except: %i(show)
+      after_action :verify_authorized, except: %i(index show show_team_home_fixtures show_team_away_fixtures)
 
       def generate_fixture
-        authorize Fixture.new
-        render json: generate(params[:league_id]), status: :ok
+        authorize Fixture
+        pre_fixtures = generate(params[:league_id], params[:season_id], params[:home_away])
+        render json: {matches: pre_fixtures.length, pre_fixtures: pre_fixtures}, status: :ok
+      end
+
+      def show_team_home_fixtures
+        render json: TeamSeasonLeagueGamesQuery.call('home_team_id', params[:team_id], false)
+      end
+
+      def show_team_away_fixtures
+        render json: TeamSeasonLeagueGamesQuery.call('away_team_id', params[:team_id], false)
+      end
+
+      def index
+        fixtures = Fixture.league_fixtures(league_id: params[:league_id])
+        render json: fixtures
       end
 
       def show
@@ -22,17 +36,18 @@ module Api
 
       def create
         authorize Fixture
-        league = League.find(params[:league_id])
-        league.fixtures.new(fixture_params)
-
-        if league.valid?
-          league.save
-          render json:  { message: "Created" },
-                        status: :created
-        else
-          render json:  { errors: "Invalid fixture" },
-                  status: :bad_request
+        count = 0
+        require_fixtures.each do |attributes|
+          h = fixture_params(attributes)
+          param = {home_team_id: h['away_team_id'], away_team_id: h['home_team_id'],league_id: h['league_id'], season_id: h['season_id']}
+          next if params[:home_away] && (fixture_exists?(h.except(:match_day)) || fixture_exists?(param))
+          # When a team joins the league after fixtures have been generated.(Home OR away only)
+          # TODO: Avoid dups when generating fixtures for team that joined later. 
+          count+=1
+          @s_fixtures = Fixture.new(h)
+          @s_fixtures.save!
         end
+        render json: {message: "#{count} matches added."}, status: :created
       end
 
       def update
@@ -63,7 +78,11 @@ module Api
       private
 
       def set_fixture
-        @fixture = Fixture.find_by(id: params[:id])
+        @fixture = Fixture.find_by(id: params[:match_id])
+      end
+
+      def fixture_exists?(attributes)
+        Fixture.exists?(attributes)
       end
 
       def fixture_params
@@ -72,11 +91,22 @@ module Api
         end
       end
 
+      def fixture_params(attributes)
+        attributes.permit(:home_team_id, :away_team_id, :match_day).to_h.merge!(
+          league_id: params[:league_id],
+          season_id: params[:season_id]
+        )
+      end
+
+      def require_fixtures
+        params.require(:fixtures)
+      end
+
       def update_params
         params.permit(
-          :center_referee,
-          :right_side_referee,
-          :left_side_referee,
+          :center_referee_id,
+          :right_side_referee_id,
+          :left_side_referee_id,
           :match_day
         )
       end

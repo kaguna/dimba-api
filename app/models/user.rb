@@ -1,10 +1,12 @@
 class User < ApplicationRecord
   has_secure_password
 
+  has_many :teams, class_name: "Team", foreign_key: "coach_id"
+  has_many :leagues, class_name: "League", foreign_key: "official_id"
   has_many :center_referee, class_name: "Fixture", foreign_key: "center_referee_id"
   has_many :right_side_referee, class_name: "Fixture", foreign_key: "right_side_referee_id"
   has_many :left_side_referee, class_name: "Fixture", foreign_key: "left_side_referee_id"
-
+  
   belongs_to :role, optional: true
 
   validates_length_of       :password,
@@ -21,6 +23,16 @@ class User < ApplicationRecord
   validates :email,
             uniqueness: { case_sensitive: false },
             presence: true, allow_blank: false
+
+  before_create :confirmation_token
+
+  scope :get_all_referees, -> {includes(:role).where(roles: {name: 'Referee'})}
+  scope :get_all_coaches, -> {includes(:role).where(roles: {name: 'Coach'})}
+  scope :get_all_officials, -> {includes(:role).where(roles: {name: 'Official'})}
+
+  def self.search(search_value)
+    self.where("username LIKE ?", "%#{search_value}%")
+  end
 
   def to_token_payload
     {
@@ -57,5 +69,24 @@ class User < ApplicationRecord
 
   def player?
     role.name == "Player"
+  end
+
+  def confirmation_token
+    if self.confirm_token.blank?
+      self.confirm_token = SecureRandom.urlsafe_base64.to_s
+    end
+  end
+
+  def email_activate
+    self.email_confirmed = true
+    self.confirm_token = nil
+    save!(:validate => false)
+  end
+
+  def account_deactivation_warning!
+    transaction do
+      DeactivateAccountMailer.deactivate_account(self).deliver_now
+      update!(email_reminder_sent: true)
+    end
   end
 end

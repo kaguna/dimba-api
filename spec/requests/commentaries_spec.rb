@@ -67,7 +67,7 @@ RSpec.describe Commentary, type: :request do
     }
   end
 
-  describe "POST commentary/create" do
+  xdescribe "POST commentary/create" do
     context "when the request is valid" do
       before do
         post api_v1_fixture_commentaries_path(fixture_id: fixture_id),
@@ -104,7 +104,7 @@ RSpec.describe Commentary, type: :request do
     end
   end
 
-  describe "GET /fixture/:fixture_id/commentaries" do
+  xdescribe "GET /fixture/:fixture_id/commentaries" do
     context "when the request is valid" do
       before do
         get  api_v1_fixture_commentaries_path(fixture_id: fixture_id)
@@ -133,7 +133,7 @@ RSpec.describe Commentary, type: :request do
     end
   end
 
-  describe "DELETE /commentaries/:commentary_id" do
+  xdescribe "DELETE /commentaries/:commentary_id" do
     context "when the request is made by normal user" do
       let(:role) { create(:role, name: "User") }
       let(:user) { create(:user, role_id: role.id) }
@@ -181,7 +181,7 @@ RSpec.describe Commentary, type: :request do
     end
   end
 
-  describe "PUT /commentaries/:commentary_id" do
+  xdescribe "PUT /commentaries/:commentary_id" do
     context "when the request is valid" do
       before do
         put api_v1_fixture_commentary_path(fixture_id: fixture_id,

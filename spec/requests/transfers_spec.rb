@@ -33,7 +33,7 @@ RSpec.describe Transfer, type: :request do
     }
   end
 
-  describe 'POST /transfers' do
+  xdescribe 'POST /transfers' do
     context 'when the request is valid' do
       before do
         post api_v1_transfer_index_path,
@@ -51,7 +51,7 @@ RSpec.describe Transfer, type: :request do
     end
   end
 
-  describe 'GET /transfers' do
+  xdescribe 'GET /transfers' do
     context 'when the request is valid' do
       before do
         get api_v1_transfer_index_path
@@ -92,7 +92,7 @@ RSpec.describe Transfer, type: :request do
     end
   end
 
-  describe 'DELETE /transfers/:transfer_id' do
+  xdescribe 'DELETE /transfers/:transfer_id' do
     context 'when the request is valid' do
       before do
         delete api_v1_transfer_path(id: transfer_id),
@@ -118,7 +118,7 @@ RSpec.describe Transfer, type: :request do
     end
   end
 
-  describe 'PUT /transfers/:transfer_id' do
+  xdescribe 'PUT /transfers/:transfer_id' do
     context 'when the request is valid' do
       before do
         put api_v1_transfer_path(id: transfer_id),

@@ -1,27 +1,33 @@
 module Api
   module V1
-    class FixtureSquadController < ApplicationController
-      before_action :authenticate_current_user, except: %i(index show)
+    class FixtureSquadsController < ApplicationController
+      before_action :authenticate_current_user!, except: %i(index show)
       before_action :set_fixture_squad, only: %i(show update destroy)
       after_action :verify_authorized, except: %i(index show)
 
       def index
-        fixture_squad = FixtureSquad.where(fixture_id: params[:fixture_id],
-                                          team_id: params[:team_id]
-        )
-
-        if fixture_squad.empty?
-          render json: { errors: "No squad for this match." },
-                status: :bad_request
-
-        else
-          render json: fixture_squad, status: :ok
-        end
+        fixture_squad = FixtureSquad.match_squads(match_id: params[:match_id])
+        render json: fixture_squad, status: :ok
       end
 
       def show
-        p @fixture_squad
         render json: @fixture_squad
+      end
+
+      def add_first_11
+        authorize FixtureSquad.new
+        selected_11 = players_paramaters.length
+        if selected_11 > 11 ||  selected_11 < 7
+          render json: {error: "Starting lineup can only be less 11 and greater than 7 !" },
+                        status: :bad_request
+        else
+          FixtureSquad.transaction do
+            players_paramaters.each do |attributes|
+              fixture_squad = FixtureSquad.find(attributes["id"])
+              fixture_squad.update!(playing: true, starting: true)
+            end
+          end
+        end
       end
 
       def create
@@ -47,7 +53,7 @@ module Api
 
       def create_fixture_squad
         players_paramaters.each do |attributes|
-          fixture_squad = FixtureSquad.new(players_params(attributes))
+          fixture_squad = FixtureSquad.new(attributes)
           authorize fixture_squad
           fixture_squad.save!
         end
@@ -57,15 +63,10 @@ module Api
         @fixture_squad = FixtureSquad.find(params[:id])
       end
 
-      def players_params(attributes)
-        attributes.permit(:player_id).to_h.merge!(
-          fixture_id: params[:fixture_id],
-          team_id: params[:team_id]
-        )
-      end
-
       def players_paramaters
-        params.require(:fixture_squad)
+        params.require(:fixture_squad).map do |p|
+          p.permit(:player_id, :fixture_id, :team_id, :id)
+        end
       end
 
       def update_params

@@ -22,7 +22,7 @@ jobs:
           paths:
             - ./vendor/bundle
       
-  rake_test:
+  test:
     working_directory: ~/dimba-api
     docker:
       - image: circleci/ruby:2.5.0-node
@@ -63,25 +63,28 @@ jobs:
             ./cc-test-reporter before-build
             ./cc-test-reporter after-build --exit-code $?
 
-  # deploy:
-  #   machine:
-  #       enabled: true
-  #   working_directory: ~/dimba-api
-  #   environment:
-  #     HEROKU_APP: dimba-api
-  #   steps:
-  #     - restore_cache:
-  #         key: dimba-api-{{ checksum "Gemfile.lock" }}
-  #     - run: bundle --path vendor/bundle
-  #     - run:
-  #         name: Deploy Master to Heroku(fake)
-  #         command: bundle exec rake
+  deploy:
+    docker:
+        - image: circleci/ruby:2.5.0-node
+        - image: circleci/postgres:9.5-alpine
+    steps:
+      - checkout
+      - run:
+          name: Deploy Develop to Heroku
+          command: |
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git develop
 
 workflows:
   version: 2
-  build-and-deploy:
+  build-test-and-deploy:
     jobs:
       - build
-      - rake_test:
+      - test:
           requires:
             - build
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only: develop

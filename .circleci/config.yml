@@ -33,11 +33,11 @@ jobs:
           PGUSER: dimba-api
           RAILS_ENV: test
           DATABASE_URL: postgresql://dimba-api@localhost/dimba-api
-      # - image: postgres:9.5-alpine
-      #   environment:
-      #     POSTGRES_USER: dimba-api
-      #     POSTGRES_DB: dimba-api
-      #     POSTGRES_HOST_AUTH_METHOD: trust
+      - image: postgres:9.5-alpine
+        environment:
+          POSTGRES_USER: dimba-api
+          POSTGRES_DB: dimba-api
+          POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - checkout
       - run: 

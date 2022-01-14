@@ -33,11 +33,11 @@ jobs:
           PGUSER: dimba-api
           RAILS_ENV: test
           DATABASE_URL: postgresql://dimba-api@localhost/dimba-api
-      - image: postgres:9.5-alpine
-        environment:
-          POSTGRES_USER: dimba-api
-          POSTGRES_DB: dimba-api
-          POSTGRES_HOST_AUTH_METHOD: trust
+      # - image: postgres:9.5-alpine
+      #   environment:
+      #     POSTGRES_USER: dimba-api
+      #     POSTGRES_DB: dimba-api
+      #     POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - checkout
       - run: 
@@ -60,7 +60,7 @@ jobs:
       - run:
           name: Run tests
           command: |
-            TESTFILES=$(circleci tests glob "spec/{controllers,helpers,mailers,models,services,workers}/**/*.rb" | circleci tests split --split-by=timings)
+            TESTFILES=$(circleci tests glob "spec/{requests,helpers,mailers,models,services,workers}/**/*.rb" | circleci tests split --split-by=timings)
             bundle exec rspec -- ${TESTFILES}
             ./cc-test-reporter before-build
             ./cc-test-reporter after-build --exit-code $?

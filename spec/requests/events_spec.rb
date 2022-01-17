@@ -15,11 +15,20 @@ RSpec.describe Event, type: :request do
 
   let(:event_params) { attributes_for(:event) }
 
+  let(:payload) do
+    {
+      sub: user.id,
+      email: user.email,
+      username: user.username,
+      role: user.role.name
+    }
+  end
+
   describe 'POST /events' do
     context 'when the request is valid' do
       before do
         post api_v1_events_path,
-            headers: authenticated_header(user),
+            headers: authenticated_header(payload),
             params: event_params
       end
 
@@ -69,7 +78,7 @@ RSpec.describe Event, type: :request do
     context 'when the request is valid' do
       before do
         delete api_v1_event_path(id: event_id),
-              headers: authenticated_header(user)
+              headers: authenticated_header(user.id)
       end
 
       it 'returns status code 204' do
@@ -82,7 +91,7 @@ RSpec.describe Event, type: :request do
 
       before do
         delete api_v1_event_path(id: event_id),
-              headers: authenticated_header(user)
+              headers: authenticated_header(user.id)
       end
 
       it 'returns status code 404' do
@@ -95,7 +104,7 @@ RSpec.describe Event, type: :request do
     context 'when the request is valid' do
       before do
         put api_v1_event_path(id: event_id),
-            headers: authenticated_header(user)
+            headers: authenticated_header(user.id)
       end
 
       it 'returns status code 200' do
@@ -108,7 +117,7 @@ RSpec.describe Event, type: :request do
 
       before do
         put api_v1_event_path(id: event_id),
-            headers: authenticated_header(user)
+            headers: authenticated_header(user.id)
       end
 
       it 'returns status code 404' do

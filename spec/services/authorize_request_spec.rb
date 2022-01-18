@@ -5,8 +5,9 @@ require 'rails_helper'
 RSpec.describe AuthorizeRequest do
   include AuthenticationSpecHelper
 
-  let(:user) { create(:user) }
-  let(:header) { authenticated_header(user.id) }
+  let!(:role) { create(:role, name: 'Admin') }
+  let(:user) { create(:user, role_id: role.id) }
+  let(:header) { authenticated_header(payload) }
   let(:valid_request) { described_class.new(header) }
   let(:invalid_request) { described_class.new({}) }
 
@@ -26,9 +27,8 @@ RSpec.describe AuthorizeRequest do
       end
 
       context 'with invalid token' do
+        let(:invalid_token_header) { { Authorization: "Bearer #{generate_token(payload: 'invalid_token')}" } }
         subject(:invalid_token_request) { described_class.new(invalid_token_header) }
-
-        let(:invalid_token_header) { { Authorization: "Bearer #{generate_token('invalid_token')}" } }
 
         it 'raises invalid token error' do
           expect { invalid_token_request.call }.to raise_error(RuntimeError, /Invalid token!/)

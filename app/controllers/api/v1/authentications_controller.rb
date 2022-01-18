@@ -12,7 +12,7 @@
 module Api
   module V1
     class AuthenticationsController < ApplicationController
-      before_action :authorize_api_request, except: :authenticate
+      before_action :authenticate_current_user!, except: :authenticate
 
       def authenticate
         auth_token = AuthenticateUser.new(params[:email], params[:password]).call

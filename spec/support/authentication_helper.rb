@@ -12,4 +12,13 @@ module AuthenticationSpecHelper
   def generate_expired_token(payload)
     JsonWebToken.encode({ payload: payload }, 24.hours.ago)
   end
+
+  def payload
+    {
+      sub: user.id,
+      email: user.email,
+      username: user.username,
+      role: user.role.name
+    }
+  end
 end

@@ -39,8 +39,8 @@ RSpec.describe User, type: :request do
       end
 
       it "does not create a new user with empty username or email" do
-        expect(json["username"]).to eq(["can't be blank"])
-        expect(json["email"]).to eq(["can't be blank"])
+        expect(json[:username]).to eq(["can't be blank"])
+        expect(json[:email]).to eq(["can't be blank"])
       end
 
       it "returns status code 422" do

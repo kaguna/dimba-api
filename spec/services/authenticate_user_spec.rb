@@ -4,9 +4,8 @@ require 'rails_helper'
 
 RSpec.describe AuthenticateUser do
   subject(:user_invalid_credentials) { described_class.new('invalid_email', 'invalid_password') }
-
-  let(:user) { create(:user) }
-
+  let!(:role) { create(:role, name: 'Admin') }
+  let!(:user) { create(:user, role_id: role.id) }
   let(:user_valid_credentials) { described_class.new(user.email, user.password) }
 
   describe '#call' do

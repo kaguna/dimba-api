@@ -1,7 +1,7 @@
 module Api
   module V1
-    class ErrorsController < ActionController::Base
-      protect_from_forgery
+    class ErrorsController < ActionController::API
+      # protect_from_forgery
 
       attr_reader :current_user
 
@@ -17,7 +17,8 @@ module Api
       private
 
       def authenticate_current_user!
-        if current_user.nil?
+        authorize_api_request
+        if @current_user.nil?
           render json: { message: "Please login to access the resource" },
                 status: 401
         end

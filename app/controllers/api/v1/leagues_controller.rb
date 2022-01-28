@@ -13,6 +13,7 @@ module Api
                 status: :not_found
 
         else
+          ActionCable.server.broadcast "league_channel", leagues
           render json: leagues, each_serializer: LeagueSerializer, status: :ok
         end
       end
@@ -26,6 +27,7 @@ module Api
         authorize league
 
         if league.save
+          ActionCable.server.broadcast "league_channel", league
           render json: league, status: :created
 
         else

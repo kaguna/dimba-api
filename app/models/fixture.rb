@@ -29,9 +29,10 @@ class Fixture < ApplicationRecord
     MatchResults.get_match_results(self.id)
   end
 
-  def self.league_fixtures(league_id:)
+  def self.league_fixtures(league_id:, per_page:, page:)
     lsf ||= not_played.includes(:season).where(league_id: league_id, seasons: {current: true}).order(match_day: :ASC)
-    {count: lsf.length, fixtures: lsf.map{|fixture| FixtureSerializer.new(fixture)}}
+    l_season_fixtures = lsf.limit(per_page.to_i).offset(page.to_i)
+    {count: lsf.length, fixtures: l_season_fixtures.map{|fixture| FixtureSerializer.new(fixture)}}
   end
 
   def home_goals_for

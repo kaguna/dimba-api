@@ -21,7 +21,7 @@ module Api
       end
 
       def index
-        fixtures = Fixture.league_fixtures(league_id: params[:league_id])
+        fixtures = Fixture.league_fixtures(league_id: params[:league_id], per_page: params[:per_page], page: params[:page])
         render json: fixtures
       end
 

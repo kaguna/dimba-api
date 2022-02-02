@@ -6,14 +6,15 @@ module Api
       after_action :verify_authorized, except: %i[index show]
 
       def index
-        leagues = League.order(title: :asc)
+        all_leagues = League.order(title: :asc)
+        leagues = all_leagues.limit(params[:per_page].to_i).offset(params[:page].to_i)
 
         if leagues.empty?
           render json: { "error": 'No leagues!' },
                 status: :not_found
 
         else
-          render json: leagues, each_serializer: LeagueSerializer, status: :ok
+          render json: {leagues: leagues, total: all_leagues.length}, each_serializer: LeagueSerializer, status: :ok
         end
       end
 

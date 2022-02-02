@@ -7,9 +7,11 @@ class Result < ApplicationRecord
   # before_save :check_if_any_event
   after_save :mark_fixture_played!
 
-  def self.league_season_matches_results(league_id)
-    includes(fixture:[:season])
+  def self.league_season_matches_results(league_id, per_page, page)
+    lsr = includes(fixture:[:season])
     .where(fixtures: {league_id: league_id}, seasons: {current: true}).order("fixtures.match_day Desc")
+    results = lsr.limit(per_page.to_i).offset(page.to_i)
+    {count: lsr.length, results: results.map{|result| ResultSerializer.new(result)}}
   end
 
   private

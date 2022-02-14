@@ -54,7 +54,7 @@ module Api
       private
 
       def all_matches
-        Result.league_season_matches_results(params[:league_id], params[:per_page], params[:page])
+        Result.league_season_matches_results(params[:league_id], params[:season_id], params[:per_page], params[:page])
       end
 
       def result_params

@@ -3,7 +3,8 @@ class AllResult < Commentary
   include Standing
 
   attr_accessor :lsm
-
+  # Same method in Results Model. Refactor! This is for live matches and standing
+  # Current season matches/live matches
   def self.league_season_matches_results(league_id, season_id)
     self.league_current_season_id(league_id).nil? && !season_id.present? ? @lsm = [] :
     @lsm = Season.find(season_id.present? ? season_id : self.league_current_season_id(league_id)).fixtures.where(id: played_match_ids).map do |match| 

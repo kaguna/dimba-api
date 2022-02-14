@@ -22,13 +22,14 @@ Rails.application.routes.draw do
       end
 
       resources :leagues do
-        get '/matches' => 'results#index', as: 'season_results'
+        get '/matches' => 'results#index', as: 'season_results' # Current season matches/live
         get '/fixtures' => 'fixtures#index', as: 'season_fixtures'
         get '/standing' => 'league_standings#index', as: 'standing'
         get '/stats' => 'all_results#player_stats', as: 'top_scorer'
         resources :seasons do
           get '/generate_fixture' => 'fixtures#generate_fixture', as: 'gen_fixture'
           get '/archived_season' => 'league_standings#archived_season', as: 'archived'
+          get '/season_matches' => 'seasons#season_matches', as: 'season_matches_results'
           resources :league_teams
           resources :fixtures
         end

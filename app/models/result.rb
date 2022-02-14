@@ -33,6 +33,12 @@ class Result < ApplicationRecord
   end
 
   def self.get_season(league_id, season_id)
+    # TODO: Refactor this, maybe in a service
     Season.find(season_id.present? ? season_id : self.league_current_season_id(league_id))
+  end
+
+  def self.league_current_season_id(league_id)
+    # TODO: Refactor this, maybe in a service
+    League.find(league_id).seasons.current&.first&.id
   end
 end

@@ -1,15 +1,29 @@
+# frozen_string_literal: true
+
 module Api
-  module V1   
+  module V1
     class FixturesController < ApplicationController
       include FixturesConcern
-      before_action :authenticate_current_user!, except: %i(index show show_team_home_fixtures show_team_away_fixtures h2h_matches)
-      before_action :set_fixture, only: %i(show update destroy)
-      after_action :verify_authorized, except: %i(index show show_team_home_fixtures show_team_away_fixtures h2h_matches)
+      before_action :authenticate_current_user!, except: %i[
+        index
+        show
+        show_team_home_fixtures
+        show_team_away_fixtures
+        h2h_matches
+      ]
+      before_action :set_fixture, only: %i[show update destroy]
+      after_action :verify_authorized, except: %i[
+        index
+        show
+        show_team_home_fixtures
+        show_team_away_fixtures
+        h2h_matches
+      ]
 
       def generate_fixture
         authorize Fixture
         pre_fixtures = generate(params[:league_id], params[:season_id], params[:home_away])
-        render json: {matches: pre_fixtures.length, pre_fixtures: pre_fixtures}, status: :ok
+        render json: { matches: pre_fixtures.length, pre_fixtures: pre_fixtures }, status: :ok
       end
 
       def show_team_home_fixtures
@@ -21,7 +35,7 @@ module Api
       end
 
       def h2h_matches
-        teams_ids = params[:team_id].split(",")
+        teams_ids = params[:team_id].split(',')
         render json: Fixture.h2h_team_matches(teams_ids, params[:per_page], params[:page])
       end
 
@@ -32,8 +46,8 @@ module Api
 
       def show
         if @fixture.nil?
-          render json: { error: "The fixture is not available." },
-                status: :bad_request
+          render json: { error: 'The fixture is not available.' },
+                 status: :bad_request
         else
           render json: @fixture, status: :ok
         end
@@ -44,15 +58,15 @@ module Api
         count = 0
         require_fixtures.each do |attributes|
           h = fixture_params(attributes)
-          param = {home_team_id: h['away_team_id'], away_team_id: h['home_team_id'],league_id: h['league_id'], season_id: h['season_id']}
+          param = { home_team_id: h['away_team_id'], away_team_id: h['home_team_id'], league_id: h['league_id'], season_id: h['season_id'] }
           next if params[:home_away] && (fixture_exists?(h.except(:match_day)) || fixture_exists?(param))
           # When a team joins the league after fixtures have been generated.(Home OR away only)
-          # TODO: Avoid dups when generating fixtures for team that joined later. 
-          count+=1
+          # TODO: Avoid dups when generating fixtures for team that joined later.
+          count += 1
           @s_fixtures = Fixture.new(h)
           @s_fixtures.save!
         end
-        render json: {message: "#{count} matches added."}, status: :created
+        render json: { message: "#{count} matches added." }, status: :created
       end
 
       def update
@@ -62,8 +76,8 @@ module Api
           render json: @fixture, status: :ok
 
         else
-          render json: { errors: "The fixture does not exist" },
-                status: :bad_request
+          render json: { errors: 'The fixture does not exist' },
+                 status: :bad_request
         end
       end
 
@@ -71,12 +85,12 @@ module Api
         authorize @fixture
         if @fixture
           @fixture.destroy
-          render json: { message: "Fixture was successfully deleted" },
-                status: :ok
+          render json: { message: 'Fixture was successfully deleted' },
+                 status: :ok
 
         else
-          render json: { errors: "The fixture does not exist" },
-                status: :bad_request
+          render json: { errors: 'The fixture does not exist' },
+                 status: :bad_request
         end
       end
 

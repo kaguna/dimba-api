@@ -2,9 +2,9 @@ module Api
   module V1   
     class FixturesController < ApplicationController
       include FixturesConcern
-      before_action :authenticate_current_user!, except: %i(index show show_team_home_fixtures show_team_away_fixtures)
+      before_action :authenticate_current_user!, except: %i(index show show_team_home_fixtures show_team_away_fixtures h2h_matches)
       before_action :set_fixture, only: %i(show update destroy)
-      after_action :verify_authorized, except: %i(index show show_team_home_fixtures show_team_away_fixtures)
+      after_action :verify_authorized, except: %i(index show show_team_home_fixtures show_team_away_fixtures h2h_matches)
 
       def generate_fixture
         authorize Fixture
@@ -18,6 +18,11 @@ module Api
 
       def show_team_away_fixtures
         render json: TeamSeasonLeagueGamesQuery.call('away_team_id', params[:team_id], false)
+      end
+
+      def h2h_matches
+        teams_ids = params[:team_id].split(",")
+        render json: Fixture.h2h_team_matches(teams_ids, params[:per_page], params[:page])
       end
 
       def index

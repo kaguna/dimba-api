@@ -18,6 +18,7 @@ Rails.application.routes.draw do
         get '/home_fixtures' => 'fixtures#show_team_home_fixtures', as: 'home_fixtures'
         get '/away_fixtures' => 'fixtures#show_team_away_fixtures', as: 'away_fixtures'
         get '/transfers' => 'transfers#show_team_transfers', as: 'team_transfers'
+        get '/h2h_matches' => 'fixtures#h2h_matches', as: 'h2h_matches'
         resources :players
       end
 

@@ -35,6 +35,16 @@ class Fixture < ApplicationRecord
     {count: lsf.length, fixtures: l_season_fixtures.map{|fixture| FixtureSerializer.new(fixture)}}
   end
 
+  def self.h2h_team_matches(teams_ids, per_page, page)
+    # TODO: check if secure from sql injection 
+    cond = teams_ids.length == 2 ? "and" : "or"
+    matches = played.where(
+      "home_team_id IN (?) #{cond} away_team_id IN (?) ", teams_ids, teams_ids
+    ).order(match_day: :ASC)
+    h2h_matches = matches.limit(per_page.to_i).offset(page.to_i)
+    {count: matches.length, fixtures: h2h_matches.map{|fixture| FixtureSerializer.new(fixture)}}
+  end
+
   def home_goals_for
     if played? then result.home_goals
     elsif !full_match_results.nil? then full_match_results[:home_team][:goals_for]

@@ -45,11 +45,11 @@ class AllResult < Commentary
     GROUP BY players.id, nick_name, teams.id, teams.name ORDER BY goals DESC").as_json
   end
 
-  def self.all_incoming_matches
+  def self.all_incoming_matches(match_day)
     # lims: Leagues incoming matches
     Season.includes(:league, :fixtures)
     .where(current: true)
-    .where("Date(fixtures.match_day) >= ? AND Date(fixtures.match_day) < ?", 130.minutes.ago, (Date.today + 2.days))
+    .where("Date(fixtures.match_day) = ?", Date.parse(match_day, '%Y-%m-%d'))
     .order("fixtures.match_day ASC")
     .group(:id, "fixtures.id, leagues.id")
   end

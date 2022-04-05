@@ -20,7 +20,7 @@ module Api
       end
 
       def all_incoming_matches
-        render json: AllResult.all_incoming_matches
+        render json: AllResult.all_incoming_matches(params[:match_day])
       end
 
       def create

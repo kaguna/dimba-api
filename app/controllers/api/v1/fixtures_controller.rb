@@ -27,11 +27,11 @@ module Api
       end
 
       def show_team_home_fixtures
-        render json: TeamSeasonLeagueGamesQuery.call('home_team_id', params[:team_id], false)
+        render json: TeamSeasonLeagueGamesQuery.call('home_team_id', params[:team_id], false), relevant: true
       end
 
       def show_team_away_fixtures
-        render json: TeamSeasonLeagueGamesQuery.call('away_team_id', params[:team_id], false)
+        render json: TeamSeasonLeagueGamesQuery.call('away_team_id', params[:team_id], false), relevant: true
       end
 
       def h2h_matches

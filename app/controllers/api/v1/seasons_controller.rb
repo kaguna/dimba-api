@@ -6,7 +6,7 @@ module Api
 
       def index
         seasons = League.find(params[:league_id]).seasons.archived
-        render json: seasons
+        render json: seasons, relevant: false
       end
 
       def season_matches
@@ -16,7 +16,7 @@ module Api
           params[:per_page], 
           params[:page]
         )
-        render json: matches
+        render json: matches, relevant: false
       end
 
       def create

@@ -7,7 +7,7 @@ module Api
       end
 
       def archived_season
-        render json: AllResult.standings(params[:league_id], params[:season_id])
+        render json: AllResult.standings(params[:league_id], params[:season_id]), relevant: true
       end
     end
   end

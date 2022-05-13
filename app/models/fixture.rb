@@ -32,7 +32,7 @@ class Fixture < ApplicationRecord
   def self.league_fixtures(league_id:, per_page:, page:)
     lsf ||= not_played.includes(:season).where(league_id: league_id, seasons: {current: true}).order(match_day: :ASC)
     l_season_fixtures = lsf.limit(per_page.to_i).offset(page.to_i)
-    {count: lsf.length, fixtures: l_season_fixtures.map{|fixture| FixtureSerializer.new(fixture)}}
+    {count: lsf.length, fixtures: l_season_fixtures}
   end
 
   def self.h2h_team_matches(teams_ids, per_page, page)

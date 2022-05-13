@@ -25,18 +25,13 @@ module FixturesConcern
   end
 
   def shuffle_matches(league_id, season_id, home_away)
-    combine_teams(league_id, season_id, home_away).shuffle!.shuffle
+    combine_teams(league_id, season_id, home_away).shuffle!
   end
 
   def format_matches(home_team, away_team)
     { 
       home_team: home_team, 
-      away_team: away_team,
-      match_day: generate_match_dates
+      away_team: away_team
     }
-  end
-
-  def generate_match_dates
-    rand(Time.now + 2.weeks..Time.now + 5.weeks)
   end
 end

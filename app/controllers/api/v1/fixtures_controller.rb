@@ -149,10 +149,10 @@ module Api
 
       def assign_match_day
         @pre_fixtures.each_slice(4).each_with_index do |matches, i| # TBD by league official. Future work
-          f_match = list_match_dates[i]
+          match_date = list_match_dates[i]
           matches.each do |match|
-            match[:match_day] = f_match
-            f_match += 1.75.hours
+            match[:match_day] = match_date
+            match_date += 1.75.hours
           end
         end
         @pre_fixtures

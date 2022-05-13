@@ -42,11 +42,11 @@ module Api
       def index
         fixtures = Fixture.league_fixtures(league_id: params[:league_id], per_page: params[:per_page], page: params[:page])
         serialized_fxts = ActiveModel::Serializer::CollectionSerializer.new(
-                                                                              fixtures[:fixtures], 
-                                                                              serializer: FixtureSerializer
-                                                                            ).as_json
-        grouped_fixtures = serialized_fxts.group_by {|x| x[:match_day].to_date}
-        render json: {count: fixtures[:count],  fixtures: grouped_fixtures.to_a }
+          fixtures[:fixtures],
+          serializer: FixtureSerializer
+        ).as_json
+        grouped_fixtures = serialized_fxts.group_by { |x| x[:match_day].to_date }
+        render json: { count: fixtures[:count], fixtures: grouped_fixtures.to_a }
       end
 
       def show
@@ -64,7 +64,7 @@ module Api
         require_fixtures.each do |attributes|
           h = fixture_params(attributes)
           param = { home_team_id: h['away_team_id'], away_team_id: h['home_team_id'], league_id: h['league_id'], season_id: h['season_id'] }
-          next if (fixture_exists?(h.except(:match_day)) || fixture_exists?(param))
+          next if fixture_exists?(h.except(:match_day)) || fixture_exists?(param)
           # When a team joins the league after fixtures have been generated.(Home OR away only)
           # TODO: Avoid dups when generating fixtures for team that joined later.
           count += 1
@@ -142,17 +142,17 @@ module Api
       def list_match_dates
         # Take some of the variables in the config
         matches_per_day = 5 # TBD by league official. Future work
-        all_matches_duration = (@pre_fixtures.length/matches_per_day).floor + 1
-        today = DateTime.now.change({ hour: 10 })# TBD by league official. Future work
-        (today..today+all_matches_duration.weeks).group_by(&:wday)[0]# TBD by league official. Future work
+        all_matches_duration = (@pre_fixtures.length / matches_per_day).floor + 1
+        today = DateTime.now.change(hour: 10) # TBD by league official. Future work
+        (today..today + all_matches_duration.weeks).group_by(&:wday)[0] # TBD by league official. Future work
       end
 
       def assign_match_day
-        @pre_fixtures.each_slice(4).each_with_index do |matches, i|# TBD by league official. Future work
+        @pre_fixtures.each_slice(4).each_with_index do |matches, i| # TBD by league official. Future work
           f_match = list_match_dates[i]
           matches.each do |match|
-            match.merge!({match_day: f_match})
-            f_match+=1.75.hours
+            match[:match_day] = f_match
+            f_match += 1.75.hours
           end
         end
         @pre_fixtures

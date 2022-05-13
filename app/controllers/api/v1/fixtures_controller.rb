@@ -143,7 +143,7 @@ module Api
         # Take some of the variables in the config
         matches_per_day = 4 # TBD by league official. Future work
         all_matches_duration = (@pre_fixtures.length / matches_per_day).floor + 1
-        today = DateTime.now.change(hour: 10) # TBD by league official. Future work
+        today = DateTime.now.beginning_of_day.change({hour: 10}) # TBD by league official. Future work
         (today..today + all_matches_duration.weeks).group_by(&:wday)[0] # TBD by league official. Future work
       end
 

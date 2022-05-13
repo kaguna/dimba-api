@@ -152,7 +152,7 @@ module Api
           match_date = list_match_dates[i]
           matches.each do |match|
             match[:match_day] = match_date
-            match_date += 1.75.hours
+            match_date += 2.hours
           end
         end
         @pre_fixtures

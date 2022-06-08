@@ -29,7 +29,7 @@ Rails.application.routes.draw do
         get '/stats' => 'all_results#player_stats', as: 'top_scorer'
         resources :seasons do
           get '/generate_fixture' => 'fixtures#generate_fixture', as: 'gen_fixture'
-          get '/archived_season' => 'league_standings#archived_season', as: 'archived'
+          get '/archived_season' => 'season_standings#archived_season', as: 'archived'
           get '/season_matches' => 'seasons#season_matches', as: 'season_matches_results'
           resources :league_teams
           resources :fixtures

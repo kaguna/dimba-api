@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_08_154943) do
+ActiveRecord::Schema.define(version: 2022_05_31_154158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(version: 2021_10_08_154943) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "played", default: false
+    t.string "state"
   end
 
   create_table "leagues", force: :cascade do |t|
@@ -115,6 +116,13 @@ ActiveRecord::Schema.define(version: 2021_10_08_154943) do
   create_table "roles", force: :cascade do |t|
     t.string "name"
     t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "season_standings", force: :cascade do |t|
+    t.integer "season_id"
+    t.text "standing"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -198,6 +206,7 @@ ActiveRecord::Schema.define(version: 2021_10_08_154943) do
   add_foreign_key "leagues_teams", "teams"
   add_foreign_key "players", "teams"
   add_foreign_key "results", "fixtures"
+  add_foreign_key "season_standings", "seasons"
   add_foreign_key "seasons", "leagues"
   add_foreign_key "teams", "users", column: "coach_id"
   add_foreign_key "transfers", "players"

@@ -14,7 +14,6 @@ class SeasonSerializer < ActiveModel::Serializer
   end
 
   def season_winner
-    # JSON.parse(AllResult.standings(object.league_id, object.id))['standing'][0]
     JSON.parse(object.season_standing.standing)['standing'][0]
   end
 end

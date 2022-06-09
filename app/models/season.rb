@@ -46,6 +46,6 @@ class Season < ApplicationRecord
   def season_eligible_for_ending?
     fixtures.empty? ? false :
     (!fixtures.pluck(:played).include?(false) &&
-    fixtures.order(:match_day).pluck(:match_day).last >= Rails.application.config.days_to_archive_season.ago)
+    fixtures.order(:match_day).pluck(:match_day).last <= Rails.application.config.days_to_archive_season.ago)
   end
 end

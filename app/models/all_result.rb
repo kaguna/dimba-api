@@ -6,12 +6,12 @@ class AllResult < Commentary
   # Same method in Results Model. Refactor! This is for live matches and standing
   # Current season matches/live matches
   def self.league_season_matches_results(league_id, season_id)
-    self.league_current_season_id(league_id).nil? && !season_id.present? ? @lsm = [] :
-    @lsm = Season.find(season_id.present? ? season_id : self.league_current_season_id(league_id)).fixtures.where(id: played_match_ids).map do |match| 
-      self.full_match_results(match&.id)
-    end
+    current_season_id = self.league_current_season_id(league_id)
+    current_season_id.nil? && season_id.nil? ? @lsm = [] :
+      @lsm = Season.find(season_id.present? ? season_id : current_season_id)
+                    .fixtures.played.map { |match| self.full_match_results(match&.id) }
 
-    {matches: @lsm.length, league_season_matches: @lsm}
+    { matches: @lsm.length, league_season_matches: @lsm }
   end
 
   def self.full_match_results(match_id)

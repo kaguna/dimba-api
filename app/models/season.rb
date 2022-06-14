@@ -21,9 +21,11 @@ class Season < ApplicationRecord
   after_find :end_season!, if: :season_eligible_for_ending?
 
   def end_season!
-    transaction do
-      SeasonStanding.create!(season_id: id, standing: table) if season_standing.nil?
-      update!(current: false)
+    if season_standing.nil?
+      transaction do
+        SeasonStanding.create!(season_id: id, standing: table)
+        update!(current: false)
+      end
     end
   end
 

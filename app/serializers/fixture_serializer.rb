@@ -1,5 +1,6 @@
 class FixtureSerializer < ActiveModel::Serializer
-  attributes :fixture_id, :home_team, :away_team, :match_day, :center_referee, :right_referee, :left_referee, :played
+  attributes :fixture_id, :home_team, :away_team, :match_day, :center_referee, :right_referee,
+              :left_referee, :played, :fixture_season, :fixture_league
   attribute :postponed
   attribute :submit_results
   attribute :in_progress
@@ -8,6 +9,14 @@ class FixtureSerializer < ActiveModel::Serializer
 
   def fixture_id
     object.id
+  end
+
+  def fixture_season
+    object.season # Remember to check for leagues without seasons e.g friendly
+  end
+
+  def fixture_league
+    object.season.league
   end
 
   def played?

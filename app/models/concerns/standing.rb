@@ -39,7 +39,8 @@ module Standing
         goals_for: count_goals_for(team_stats),
         goals_against: count_goals_against(team_stats),
         goal_difference: count_goal_difference(team_stats),
-        points: calculate_points(team_stats)
+        points: calculate_points(team_stats), 
+        form: form(team_stats)
       }
     end
 
@@ -75,6 +76,10 @@ module Standing
     def calculate_points(team_stats)
       count_games_played(team_stats) == 0 ? 0 :
       team_stats[1].map { |team_hash| team_hash[:points]}.inject(:+)
+    end
+
+    def form(team_matches)
+      team_matches[1].last(5).map {|p| p[:points]}
     end
   end
 end

@@ -22,8 +22,8 @@ class Fixture < ApplicationRecord
   # validates_uniqueness_of :home_team_id, scope: [:away_team_id, :season_id, :league_id]
   # validates_uniqueness_of :away_team_id, scope: [:home_team_id, :season_id, :league_id]
 
-  scope :not_played, -> {  where(played: false) }
-  scope :played, -> {  where(played: true) }
+  scope :not_played, -> {  where(played: false).order(match_day: :ASC) }
+  scope :played, -> {  where(played: true).order(match_day: :ASC) }
 
   def full_match_results
     MatchResults.get_match_results(self.id)

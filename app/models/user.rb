@@ -39,7 +39,8 @@ class User < ApplicationRecord
       sub: id,
       email: email,
       username: username,
-      role: self.role.name
+      role: self.role.name,
+      email_confirmed: email_confirmed
     }
   end
 

@@ -16,17 +16,23 @@ module MatchResults
     {
       fixture_id: match.id,
       match_day: match.match_day,
-      home_team: self.team_goals(team: match.home_team, goals_for: home_team_goals,
+      home_team: self.team_goals(team: match.home_team, other_team: match.away_team.name,
+                                                  match_day: match.match_day,
+                                                  goals_for: home_team_goals,
                                                   goals_against: away_team_goals),
-      away_team: self.team_goals(team: match.away_team, goals_for: away_team_goals, 
+      away_team: self.team_goals(team: match.away_team, other_team: match.home_team.name,
+                                                  match_day: match.match_day,
+                                                  goals_for: away_team_goals, 
                                                   goals_against: home_team_goals)
     }
   end
 
-  def self.team_goals(team:, goals_for:, goals_against:)
+  def self.team_goals(team:, other_team:, match_day:, goals_for:, goals_against:)
     {
       team_id: team.id,
       team_name: team.name,
+      other_team: other_team,
+      match_day: match_day,
       goals_for: goals_for,
       goals_against: goals_against,
       points: self.calculate_match_points(goals_for: goals_for, goals_against: goals_against)

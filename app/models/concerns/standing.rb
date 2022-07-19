@@ -79,7 +79,7 @@ module Standing
     end
 
     def form(team_matches)
-      team_matches[1].last(5).map {|p| p[:points]}
+      team_matches[1].last(5)
     end
   end
 end

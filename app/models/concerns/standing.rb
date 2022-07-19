@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Standing
   extend ActiveSupport::Concern
 
@@ -9,23 +11,23 @@ module Standing
     private
 
     def extract_team_stat(game_stats:)
-      teams ||= game_stats.map { |team| [ team[:home_team], team[:away_team] ] }.flatten
+      teams ||= game_stats.map { |team| [team[:home_team], team[:away_team]] }.flatten
     end
 
     def calculate_team_standing(game_stats:)
       extract_team_stat(game_stats: game_stats)
-      .group_by { |aggregates| aggregates[:team_id] }
-          .map{ |team_stats| 
-            formulate_standing_stats(team_stats)
-          }
+        .group_by { |aggregates| aggregates[:team_id] }
+        .map do |team_stats|
+        formulate_standing_stats(team_stats)
+      end
     end
 
     def sort_standings(game_stats:)
       calculate_team_standing(game_stats: game_stats)
-        .sort { |a, b| 
-          [b[:points], b[:goal_difference], b[:goals_for], a[:team_name]] <=> 
-          [a[:points], a[:goal_difference],a[:goals_for], b[:team_name]] 
-      }
+        .sort do |a, b|
+        [b[:points], b[:goal_difference], b[:goals_for], a[:team_name]] <=>
+          [a[:points], a[:goal_difference], a[:goals_for], b[:team_name]]
+      end
     end
 
     def formulate_standing_stats(team_stats)
@@ -39,7 +41,7 @@ module Standing
         goals_for: count_goals_for(team_stats),
         goals_against: count_goals_against(team_stats),
         goal_difference: count_goal_difference(team_stats),
-        points: calculate_points(team_stats), 
+        points: calculate_points(team_stats),
         form: form(team_stats)
       }
     end
@@ -61,11 +63,11 @@ module Standing
     end
 
     def count_goals_for(team_stats)
-      team_stats[1].map { |team_hash| team_hash[:goals_for]}.compact.inject(:+)
+      team_stats[1].map { |team_hash| team_hash[:goals_for] }.compact.inject(:+)
     end
 
     def count_goals_against(team_stats)
-      team_stats[1].map { |team_hash| team_hash[:goals_against]}.compact.inject(:+)
+      team_stats[1].map { |team_hash| team_hash[:goals_against] }.compact.inject(:+)
     end
 
     def count_goal_difference(team_stats)
@@ -75,7 +77,7 @@ module Standing
 
     def calculate_points(team_stats)
       count_games_played(team_stats) == 0 ? 0 :
-      team_stats[1].map { |team_hash| team_hash[:points]}.inject(:+)
+      team_stats[1].map { |team_hash| team_hash[:points] }.inject(:+)
     end
 
     def form(team_matches)

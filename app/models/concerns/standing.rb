@@ -81,7 +81,7 @@ module Standing
     end
 
     def form(team_matches)
-      team_matches[1].last(5)
+      team_matches[1].last(5).reverse!
     end
   end
 end

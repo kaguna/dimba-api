@@ -19,6 +19,7 @@ class AllResult < Commentary
   end
 
   def self.standings(league_id, season_id)
+    return {teams: 0, standing: []}.to_json if self.league(league_id).friendly?
     ls_matches = self.league_season_matches_results(league_id, season_id)[:league_season_matches]
     standing ||= Standing.league_season_standings(ls_matches || @lsm)
     {
@@ -57,6 +58,10 @@ class AllResult < Commentary
   private
 
   def self.league_current_season_id(league_id)
-    League.find(league_id).seasons.current&.first&.id
+    self.league(league_id).seasons.current&.first&.id
+  end
+
+  def self.league(league_id)
+    League.find(league_id)
   end
 end

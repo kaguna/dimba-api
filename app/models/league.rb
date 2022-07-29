@@ -8,4 +8,8 @@ class League < ApplicationRecord
   belongs_to :official, class_name: "User", foreign_key: "official_id"
 
   validates :title, uniqueness: { case_sensitive: false}
+
+  def friendly?
+    title.to_s.downcase.in? ["friendly", "friendlies", "club friendlies"]
+  end
 end

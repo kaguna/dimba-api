@@ -1,12 +1,12 @@
 class SeasonSerializer < ActiveModel::Serializer
   attributes :id, :name, :current
-  attribute :season_winner, if: :not_current
+  attribute :season_winner, if: :not_current_not_friendly
 
   belongs_to :league, if: :relevant?
   has_many :fixtures, if: :relevant?
 
-  def not_current
-    !object.current
+  def not_current_not_friendly
+    !object.current && !object.league.friendly?
   end
 
   def relevant?

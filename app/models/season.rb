@@ -23,7 +23,7 @@ class Season < ApplicationRecord
   def end_season!
     if season_standing.nil?
       transaction do
-        SeasonStanding.create!(season_id: id, standing: table)
+        SeasonStanding.create!(season_id: id, standing: table) unless league.friendly?
         update!(current: false)
       end
     end

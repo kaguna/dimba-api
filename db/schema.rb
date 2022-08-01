@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_31_154158) do
+ActiveRecord::Schema.define(version: 2022_07_31_182208) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -178,6 +178,7 @@ ActiveRecord::Schema.define(version: 2022_05_31_154158) do
     t.boolean "email_confirmed", default: false
     t.string "confirm_token"
     t.boolean "email_reminder_sent", default: false
+    t.string "password_reset_token"
   end
 
   add_foreign_key "commentaries", "events"

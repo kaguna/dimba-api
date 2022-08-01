@@ -4,6 +4,9 @@ Rails.application.routes.draw do
       scope 'user' do
         post '/sign_up' => 'register#signup', as: 'register'
         get '/confirm_email' => 'register#confirm_email', as: 'confirm_email'
+        post '/reset-password' => 'register#reset_password', as: 'reset_password'
+        get '/show-password-reset-form' => 'register#show_password_reset_form', as: 'show_password_reset_form'
+        post '/reset-password-email' => 'register#send_reset_password_token', as: 'send_reset_password_token'
         post '/login' => 'user_token#create', as: 'login'
         get '/search_user' => 'admins#index', as: 'search_user'
         get '/referees' => 'admins#get_referees', as: 'get_referees'

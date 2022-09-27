@@ -64,7 +64,7 @@ module Api
         require_fixtures.each do |attributes|
           h = fixture_params(attributes)
           param = { home_team_id: h['away_team_id'], away_team_id: h['home_team_id'], league_id: h['league_id'], season_id: h['season_id'] }
-          next if fixture_exists?(h.except(:match_day)) || fixture_exists?(param)
+          next if (fixture_exists?(h.except(:match_day)) || fixture_exists?(param)) && params[:home_away] == 'false'
           # When a team joins the league after fixtures have been generated.(Home OR away only)
           # TODO: Avoid dups when generating fixtures for team that joined later.
           count += 1

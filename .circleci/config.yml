@@ -1,11 +1,11 @@
 ---
-version: 2.0
+version: 2.1
 jobs:
   build:
     working_directory: ~/dimba-api
     docker:
-      - image: circleci/ruby:2.7.6-node
-      - image: circleci/postgres:9.5-alpine
+      - image: cimg/ruby:2.7.6-node
+      - image: cimg/postgres:10.20
     steps:
       - checkout
       # Bundle install dependencies
@@ -33,14 +33,14 @@ jobs:
     parallelism: 2
     working_directory: ~/dimba-api
     docker:
-      - image: circleci/ruby:2.7.6-node
+      - image: cimg/ruby:2.7.6-node
         environment:
           CC_TEST_REPORTER_ID: 3b1eb72982e5d07c429f5e28389be86acc4f108999e3a8e6248d99b78c9236a4
           PGHOST: localhost
           PGUSER: dimba-api
           RAILS_ENV: test
           DATABASE_URL: postgresql://dimba-api@localhost/dimba-api
-      - image: postgres:9.5-alpine
+      - image: postgres:10.20
         environment:
           POSTGRES_USER: dimba-api
           POSTGRES_DB: dimba-api
@@ -81,8 +81,8 @@ jobs:
 
   deploy:
     docker:
-        - image: circleci/ruby:2.7.6-node
-        - image: circleci/postgres:9.5-alpine
+      - image: cimg/ruby:2.7.6-node
+      - image: cimg/postgres:10.20
     steps:
       - checkout
       - run:

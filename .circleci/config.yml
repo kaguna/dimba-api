@@ -9,6 +9,15 @@ jobs:
     steps:
       - checkout
       # Bundle install dependencies
+      - run:
+          name: Force Bundler Version
+          command: |
+            echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
+            source $BASH_ENV
+            bundle update --bundler
+      - run:
+          name: Do Anything Bundler Related
+          command: bundler -v
       - restore_cache:
           keys: 
           - dimba-api-{{ checksum "Gemfile.lock" }}
@@ -40,6 +49,15 @@ jobs:
           POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - checkout
+      - run:
+          name: Force Bundler Version
+          command: |
+            echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
+            source $BASH_ENV
+            bundle update --bundler
+      - run:
+          name: Do Anything Bundler Related
+          command: bundler -v
       - run: 
           name: Install dependencies
           command: |

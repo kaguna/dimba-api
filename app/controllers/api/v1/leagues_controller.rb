@@ -6,7 +6,7 @@ module Api
       after_action :verify_authorized, except: %i[index show]
 
       def index
-        all_leagues = League.order(title: :asc)
+        all_leagues = League.active
         leagues = all_leagues.limit(params[:per_page].to_i).offset(params[:page].to_i)
 
         if leagues.empty?

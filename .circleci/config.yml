@@ -4,11 +4,18 @@ jobs:
   build:
     working_directory: ~/dimba-api
     docker:
-      - image: circleci/ruby:2.5.0-node
+      - image: circleci/ruby:2.7.0-node
       - image: circleci/postgres:9.5-alpine
     steps:
       - checkout
       # Bundle install dependencies
+      - run:
+          name: Force Bundler Version
+          command: |
+            sudo gem update --system
+            echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
+            source $BASH_ENV
+            gem install bundler
       - restore_cache:
           keys: 
           - dimba-api-{{ checksum "Gemfile.lock" }}
@@ -26,7 +33,7 @@ jobs:
     parallelism: 2
     working_directory: ~/dimba-api
     docker:
-      - image: circleci/ruby:2.5.0-node
+      - image: circleci/ruby:2.7.0-node
         environment:
           CC_TEST_REPORTER_ID: 3b1eb72982e5d07c429f5e28389be86acc4f108999e3a8e6248d99b78c9236a4
           PGHOST: localhost
@@ -40,6 +47,13 @@ jobs:
           POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - checkout
+      - run:
+          name: Force Bundler Version
+          command: |
+            sudo gem update --system
+            echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
+            source $BASH_ENV
+            gem install bundler
       - run: 
           name: Install dependencies
           command: |
@@ -67,7 +81,7 @@ jobs:
 
   deploy:
     docker:
-        - image: circleci/ruby:2.5.0-node
+        - image: circleci/ruby:2.7.0-node
         - image: circleci/postgres:9.5-alpine
     steps:
       - checkout

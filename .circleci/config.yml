@@ -12,12 +12,10 @@ jobs:
       - run:
           name: Force Bundler Version
           command: |
+            sudo gem update --system
             echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
             source $BASH_ENV
-            bundle update --bundler
-      - run:
-          name: Do Anything Bundler Related
-          command: bundler -v
+            gem install bundler
       - restore_cache:
           keys: 
           - dimba-api-{{ checksum "Gemfile.lock" }}
@@ -52,12 +50,10 @@ jobs:
       - run:
           name: Force Bundler Version
           command: |
+            sudo gem update --system
             echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
             source $BASH_ENV
-            bundle update --bundler
-      - run:
-          name: Do Anything Bundler Related
-          command: bundler -v
+            gem install bundler
       - run: 
           name: Install dependencies
           command: |

@@ -15,8 +15,8 @@ RSpec.describe User, type: :request do
         post api_v1_register_path, params: user_params
       end
 
-      it "creates a new user with 3 attributes" do
-        expect(json.size).to eq 3
+      it "creates a new user with 4 attributes" do
+        expect(json.size).to eq 4
       end
 
       it "returns status code 201" do

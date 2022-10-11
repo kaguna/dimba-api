@@ -31,7 +31,7 @@ class User < ApplicationRecord
   scope :get_all_officials, -> {includes(:role).where(roles: {name: 'Official'})}
 
   def self.search(search_value)
-    self.where("username LIKE ?", "%#{search_value}%")
+    self.where("LOWER(username) LIKE ?", "%#{search_value.downcase}%")
   end
 
   def to_token_payload

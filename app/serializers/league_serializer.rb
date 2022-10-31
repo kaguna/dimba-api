@@ -10,7 +10,7 @@ class LeagueSerializer < ActiveModel::Serializer
   end
 
   def has_played_matches
-    object.seasons.current.first.fixtures.map(&:played).include?(true)
+    current_season.nil? ? false : current_season.fixtures.map(&:played).include?(true)
   end
 
   def official

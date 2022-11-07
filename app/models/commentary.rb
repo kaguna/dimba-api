@@ -12,7 +12,7 @@ class Commentary < ApplicationRecord
 
   scope :played_match_ids , -> { Result.all.pluck(:fixture_id) }
 
-  after_save :avail_player_in_for_events!, if: :event_substitution?
+  # after_save :avail_player_in_for_events!, if: :event_substitution?
 
   # refactor all here
   # scope :current_season, -> {Season.current.first&.id}
@@ -26,15 +26,15 @@ class Commentary < ApplicationRecord
 
   private
 
-  def event_substitution?
-    self.event.name == SUBSTITUTION
-  end
+  # def event_substitution?
+  #   self.event.name == SUBSTITUTION
+  # end
 
-  def avail_player_in_for_events!
-    fixture_squad ||= FixtureSquad.where(fixture_id: self.fixture.id)
-    ActiveRecord::Base.transaction do
-      fixture_squad.where(player_id: self.player.id).first.update!(playing: false)
-      fixture_squad.where(player_id: self.commentary_player.id).first.update!(playing: true)
-    end
-  end
+  # def avail_player_in_for_events!
+  #   fixture_squad ||= FixtureSquad.where(fixture_id: self.fixture.id)
+  #   ActiveRecord::Base.transaction do
+  #     fixture_squad.where(player_id: self.player.id).first.update!(playing: false)
+  #     fixture_squad.where(player_id: self.commentary_player.id).first.update!(playing: true)
+  #   end
+  # end
 end

@@ -6,6 +6,7 @@ class FixtureSerializer < ActiveModel::Serializer
   attribute :in_progress
   attribute :match_time, key: :minutes_played, if: :in_progress  
   attribute :pre_match
+  attribute :has_commentary
 
   def fixture_id
     object.id
@@ -82,5 +83,9 @@ class FixtureSerializer < ActiveModel::Serializer
 
   def match_time
     object.match_time
+  end
+
+  def has_commentary
+    !object.commentary?
   end
 end

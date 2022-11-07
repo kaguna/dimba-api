@@ -32,17 +32,14 @@ class AllResult < Commentary
     # TODO: Make this an ActiveRecord Query
     ActiveRecord::Base.connection.execute(
     "SELECT COUNT(DISTINCT commentaries.id) AS goals,
-      COUNT(DISTINCT fixture_squads.id) AS appearances,
       players.id AS player_id, nick_name AS nick_name, teams.id AS team_id, teams.name AS team_name 
     FROM commentaries 
-    LEFT OUTER JOIN players ON players.id = commentaries.player_id 
-    LEFT OUTER JOIN fixture_squads ON fixture_squads.player_id = players.id
+    LEFT OUTER JOIN players ON players.id = commentaries.player_id
     LEFT OUTER JOIN teams ON teams.id = commentaries.team_id 
     LEFT OUTER JOIN fixtures ON fixtures.id = commentaries.fixture_id 
     LEFT OUTER JOIN leagues ON leagues.id = fixtures.league_id 
     LEFT OUTER JOIN seasons ON seasons.league_id = leagues.id 
-    WHERE leagues.id = #{league_id} AND seasons.id = #{self.league_current_season_id(league_id)} AND players.id IS NOT NULL AND commentaries.event_id = 1 AND
-    (fixture_squads.playing = true AND fixture_squads.starting = true OR fixture_squads.starting = false)
+    WHERE leagues.id = #{league_id} AND seasons.id = #{self.league_current_season_id(league_id)} AND players.id IS NOT NULL AND commentaries.event_id = 1
     GROUP BY players.id, nick_name, teams.id, teams.name ORDER BY goals DESC").as_json
   end
 

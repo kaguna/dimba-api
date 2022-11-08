@@ -12,6 +12,7 @@ class League < ApplicationRecord
   validates :title, uniqueness: { case_sensitive: false }
 
   scope :active, -> {  where(active: true).order(title: :asc) }
+  scope :sponsors, -> {  sponsors.order(budget_amount: :asc) }
 
   def friendly?
     title.to_s.downcase.in? ['friendly', 'friendlies', 'club friendlies']

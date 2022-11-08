@@ -1,5 +1,5 @@
 class LeagueSerializer < ActiveModel::Serializer
-  attributes :id, :title, :official, :current_season, :friendly, :has_played_matches
+  attributes :id, :title, :official, :current_season, :friendly, :has_played_matches, :sponsors
 
   def title
     object.title.titleize
@@ -11,6 +11,10 @@ class LeagueSerializer < ActiveModel::Serializer
 
   def has_played_matches
     current_season.nil? ? false : current_season.fixtures.map(&:played).include?(true)
+  end
+
+  def league_sponsors
+    object.sponsors
   end
 
   def official

@@ -36,9 +36,9 @@ class AllResult < Commentary
     FROM commentaries 
     LEFT OUTER JOIN players ON players.id = commentaries.player_id
     LEFT OUTER JOIN teams ON teams.id = commentaries.team_id 
-    LEFT OUTER JOIN fixtures ON fixtures.id = commentaries.fixture_id 
-    LEFT OUTER JOIN leagues ON leagues.id = fixtures.league_id 
-    LEFT OUTER JOIN seasons ON seasons.league_id = leagues.id 
+    LEFT OUTER JOIN fixtures ON fixtures.id = commentaries.fixture_id
+    LEFT OUTER JOIN seasons ON seasons.id = fixtures.season_id
+    LEFT OUTER JOIN leagues ON leagues.id = seasons.league_id 
     WHERE leagues.id = #{league_id} AND seasons.id = #{self.league_current_season_id(league_id)} AND players.id IS NOT NULL AND commentaries.event_id = 1
     GROUP BY players.id, nick_name, teams.id, teams.name ORDER BY goals DESC").as_json
   end

@@ -6,7 +6,7 @@ module Api
       after_action :verify_authorized, except: %i(index show)
 
       def index
-        all_teams ||= Team.all
+        all_teams = Team.search(params[:q])
         render json: all_teams, status: :ok
       end
 

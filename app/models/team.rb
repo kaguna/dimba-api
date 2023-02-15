@@ -17,4 +17,10 @@ class Team < ApplicationRecord
   validates :nickname,
             uniqueness: { case_sensitive: false },
             presence: true, allow_blank: false
+
+  def self.search(search_value)
+    self.where("LOWER(name) LIKE ? or LOWER(nickname) LIKE ?", 
+                "%#{search_value.downcase}%", "%#{search_value.downcase}%"
+              )
+  end
 end

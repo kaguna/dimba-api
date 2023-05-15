@@ -23,7 +23,7 @@ class Season < ApplicationRecord
   def end_season!
     if season_standing.nil?
       transaction do
-        SeasonStanding.create!(season_id: id, standing: table) unless league.friendly?
+        SeasonStanding.create!(season_id: id, standing: table, scorers: scorers) unless league.friendly?
         update!(current: false)
       end
     end
@@ -43,6 +43,10 @@ class Season < ApplicationRecord
 
   def table
     { standing: Standing.league_season_standings(matches) }.to_json
+  end
+
+  def scorers
+    { scorers: AllResult.player_stats(self.league.id, id) }.to_json
   end
 
   def season_eligible_for_ending?

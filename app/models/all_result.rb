@@ -28,8 +28,9 @@ class AllResult < Commentary
     }.to_json
   end
 
-  def self.player_stats(league_id)
+  def self.player_stats(league_id, season_id)
     # TODO: Make this an ActiveRecord Query
+    season_id = season_id ? season_id : self.league_current_season_id(league_id) ? self.league_current_season_id(league_id) : "NULL"
     ActiveRecord::Base.connection.execute(
     "SELECT COUNT(DISTINCT commentaries.id) AS goals,
       players.id AS player_id, nick_name AS nick_name, teams.id AS team_id, teams.name AS team_name 
@@ -39,7 +40,7 @@ class AllResult < Commentary
     LEFT OUTER JOIN fixtures ON fixtures.id = commentaries.fixture_id
     LEFT OUTER JOIN seasons ON seasons.id = fixtures.season_id
     LEFT OUTER JOIN leagues ON leagues.id = seasons.league_id 
-    WHERE leagues.id = #{league_id} AND seasons.id = #{self.league_current_season_id(league_id)} AND players.id IS NOT NULL AND commentaries.event_id = 1
+    WHERE leagues.id = #{league_id} AND seasons.id = #{season_id} AND players.id IS NOT NULL AND commentaries.event_id = 1
     GROUP BY players.id, nick_name, teams.id, teams.name ORDER BY goals DESC").as_json
   end
 

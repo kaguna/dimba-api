@@ -16,7 +16,7 @@ module Api
       end
 
       def player_stats
-        render json: AllResult.player_stats(params[:league_id])
+        render json: AllResult.player_stats(params[:league_id], params[:season_id])
       end
 
       def all_incoming_matches

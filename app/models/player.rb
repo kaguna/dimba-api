@@ -20,4 +20,15 @@ class Player < ApplicationRecord
   validates :first_name, presence: true
   validates :second_name, presence: true
 
+  def self.search(search_value)
+    self.includes(:team).where("LOWER(first_name) LIKE ? or
+                LOWER(second_name) LIKE ? or
+                LOWER(last_name) LIKE ? or
+                LOWER(nick_name) LIKE ?",
+                "%#{search_value.downcase}%", 
+                "%#{search_value.downcase}%",
+                "%#{search_value.downcase}%",
+                "%#{search_value.downcase}%"
+              )
+  end
 end

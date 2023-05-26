@@ -38,7 +38,7 @@ module Api
 
         else
           render json: { errors: 'The player does not exist' },
-                status: :bad_request
+                 status: :bad_request
         end
       end
 

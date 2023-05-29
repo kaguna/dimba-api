@@ -1,9 +1,9 @@
 module Api
   module V1
     class PlayersController < ApplicationController
-      before_action :authenticate_current_user!, except: %i[index show]
+      before_action :authenticate_current_user!, except: %i[index show search_player]
       before_action :set_player, only: %i[show update destroy]
-      after_action :verify_authorized, except: %i[index show]
+      after_action :verify_authorized, except: %i[index show search_player]
 
       def index
         render json: show_team_players(params[:team_id])
@@ -11,6 +11,11 @@ module Api
 
       def show
         render json: @player
+      end
+
+      def search_player
+        players = Player.search(params[:q])
+        render json: players, status: :ok
       end
 
       def create
@@ -33,7 +38,7 @@ module Api
 
         else
           render json: { errors: 'The player does not exist' },
-                status: :bad_request
+                 status: :bad_request
         end
       end
 

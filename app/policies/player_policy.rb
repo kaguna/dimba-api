@@ -1,6 +1,6 @@
 class PlayerPolicy < ApplicationPolicy
   def create?
-    user.present? && (user.admin? || user.coach?)
+    user.present? && (user.admin? || user.coach? || user.official?)
   end
 
   def update?

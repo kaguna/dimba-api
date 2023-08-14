@@ -1,61 +1,106 @@
 ---
-version: 2
+version: 2.1
 jobs:
   build:
     working_directory: ~/dimba-api
     docker:
-      - image: circleci/ruby:2.5.0-node
+      - image: cimg/ruby:2.7.6-node
+      - image: cimg/postgres:10.20
+    steps:
+      - checkout
+      # Bundle install dependencies
+      - run:
+          name: Force Bundler Version
+          command: |
+            sudo gem update --system
+            echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
+            source $BASH_ENV
+            gem install bundler
+      - restore_cache:
+          keys: 
+          - dimba-api-{{ checksum "Gemfile.lock" }}
+          - dimba-api-
+      - run: 
+          name: Install dependencies
+          command: |
+            bundle check --path vendor/bundle || bundle install --path vendor/bundle
+      - save_cache:
+          key: dimba-api-{{ checksum "Gemfile.lock" }}
+          paths:
+            - ./vendor/bundle
+      
+  test:
+    parallelism: 2
+    working_directory: ~/dimba-api
+    docker:
+      - image: cimg/ruby:2.7.6-node
         environment:
           CC_TEST_REPORTER_ID: 3b1eb72982e5d07c429f5e28389be86acc4f108999e3a8e6248d99b78c9236a4
           PGHOST: localhost
           PGUSER: dimba-api
           RAILS_ENV: test
           DATABASE_URL: postgresql://dimba-api@localhost/dimba-api
-      - image: postgres:9.5
+      - image: postgres:10.20
         environment:
           POSTGRES_USER: dimba-api
           POSTGRES_DB: dimba-api
-          POSTGRES_PASSWORD: ""
+          POSTGRES_HOST_AUTH_METHOD: trust
     steps:
       - checkout
-
-      # Restore Cached Dependencies
-      - type: cache-restore
-        name: Restore bundle cache
-        key: dimba-api-{{ checksum "Gemfile.lock" }}
-
-      # Bundle install dependencies
-      - run: bundle install --path vendor/bundle
-
-      # Cache Dependencies
-      - type: cache-save
-        name: Store bundle cache
-        key: dimba-api-{{ checksum "Gemfile.lock" }}
-        paths:
-          - vendor/bundle
-
-      # Wait for DB
-      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
-
-      # Setup the database
       - run:
-          name: Set up DB
+          name: Force Bundler Version
           command: |
-            bundle exec rake db:create db:schema:load --trace
-            bundle exec rake db:migrate
-            bundle exec rake assets:precompile
-          environment:
-            DATABASE_URL: "postgres://dimba-api@localhost:5432/dimba-api"
-
+            sudo gem update --system
+            echo 'export BUNDLER_VERSION=$(cat Gemfile.lock | tail -1 | tr -d " ")' >> $BASH_ENV
+            source $BASH_ENV
+            gem install bundler
+      - run: 
+          name: Install dependencies
+          command: |
+            bundle check --path vendor/bundle || bundle install --path vendor/bundle
+      - save_cache:
+          key: dimba-api-{{ checksum "Gemfile.lock" }}
+          paths:
+            - ./vendor/bundle
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run: bundle exec rake db:drop db:create db:migrate
       - run:
           name: Setup Code Climate test-reporter
           command: |
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
-      
       - run:
           name: Run tests
           command: |
-            bundle exec rspec
+            TESTFILES=$(circleci tests glob "spec/{requests,helpers,mailers,models,services,workers}/**/*.rb" | circleci tests split --split-by=timings)
+            bundle exec rspec -- ${TESTFILES}
             ./cc-test-reporter before-build
             ./cc-test-reporter after-build --exit-code $?
+
+  deploy:
+    docker:
+      - image: cimg/ruby:2.7.6-node
+      - image: cimg/postgres:10.20
+    steps:
+      - checkout
+      - run:
+          name: Deploy Develop to Heroku
+          command: |
+            git push -f https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git develop:master
+
+workflows:
+  version: 2
+  build-test-and-deploy:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - deploy:
+          requires:
+            - test
+          filters:
+            branches:
+              only: develop

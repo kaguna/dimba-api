@@ -25,7 +25,7 @@ This project uses Postgresql. You will need to install postgres.On a Mac do:
 
 Now setup all the environment variables:
 
-        figaro install
+        bundle exec figaro install
 
 Inside the generated file in `config/application.yml` file, paste the sample data from `config/applicaion.yml.sample` file. Edit these variables to fit your local configuration of postgres.
 
@@ -42,65 +42,61 @@ If you want data sample data in your database, do:
 
         rails s
        
-## API Sample Endpoints
+## API Documentation
 
 ### User Authentication
 
 
-|URL Endpoints                 | HTTP Requests | Description                                      |
-|------------------------------|---------------|--------------------------------------------------|
-|POST /sign_up                 | POST          | Create a new user                                |
-|POST /login                   | POST          | Generate token and grant access to the resources |
+| Endpoint                                    | Method        | Description                                |
+| :---                                        | :---          | :---                                       |
+| sign_up                                     | POST          | Create a new user                          |
+| login                                       | POST          | Generate token to grant access to API      |
 
 
 
 ### Teams
 
 
-|    URL Endpoints                 | HTTP Requests | Description                                   |
-|----------------------------------|---------------|-----------------------------------------------|
-|    POST teams/                   | POST          | Create a new team                             |
-|    GET teams/                    | GET           | Retrieve all teams                            |
-|    GET teams/<team_id>           | GET           | Retrieve specific team                        |
-|    PUT teams/<team_id>           | PUT           | Edit team details                             |
-|    DELETE teams/<team_id>        | DELETE        | Delete a team                                 |
+| Endpoint                                    | Method        | Description                                |
+| :---                                        | :---          | :---                                       |
+| teams/                                      | POST          | Create a new team                          |
+| teams/                                      | GET           | Retrieve all teams                         |
+| teams/<team_id>                             | GET           | Retrieve specific team                     |
+| teams/<team_id>                             | PUT           | Edit team details                          |
+| teams/<team_id>                             | DELETE        | Delete a team                              |
 
 ### Players
 
 
-|    URL Endpoints                                   | HTTP Requests | Description                      |
-|----------------------------------------------------|---------------|----------------------------------|
-|    POST team/<team_id>/players/                    | POST          | Create a player                  |
-|    GET team/<team_id>/players/                     | GET           | Retrieve specific team's players |
-|    GET team/<team_id>/player/<player_id>           | GET           | Retrieve specific team's player  |
-|    PUT team/<team_id>/player/<player_id>           | PUT           | Edit player details              |
-|    DELETE team/<team_id>/player/<player_id>        | DELETE        | Delete a player                  |
+| Endpoint                                    | Method        | Description                                |
+| :---                                        | :---          | :---                                       |
+| team/<team_id>/players/                     | POST          | Create a player                            |
+| team/<team_id>/players/                     | GET           | Retrieve specific team's players           |
+| team/<team_id>/player/<player_id>           | GET           | Retrieve specific team's player            |
+| team/<team_id>/player/<player_id>           | PUT           | Edit player details                        |
+| team/<team_id>/player/<player_id>           | DELETE        | Delete a player                            |
 
 ### Leagues
 
 
-|    URL Endpoints                 | HTTP Requests | Description             |
-|----------------------------------|---------------|-------------------------|
-|    POST leagues/                 | POST          | Create a new league     |
-|    GET leagues/                  | GET           | Retrieve all leagues    |
-|    GET leagues/<league_id>       | GET           | Retrieve specific league|
-|    PUT leagues/<league_id>       | PUT           | Edit league details     |
-|    DELETE leagues/<league_id>    | DELETE        | Delete a league         |
+| Endpoint                                    | Method        | Description                                |
+| :---                                        | :---          | :---                                       |
+| leagues/                                    | POST          | Create a new league                        |
+| leagues/                                    | GET           | Retrieve all leagues                       |
+| leagues/<league_id>                         | GET           | Retrieve specific league                   |
+| leagues/<league_id>                         | PUT           | Edit league details                        |
+| leagues/<league_id>                         | DELETE        | Delete a league                            |
 
 ### Fixtures
 
 
-|    URL Endpoints                                   | HTTP Requests | Description                                |
-|----------------------------------------------------|---------------|--------------------------------------------|
-|    POST league/:league_id/fixtures/                | POST          | Create fixtures/matches of specific league |
-|    GET league/:league_id/fixtures/                 | GET           | Retrieve specific league's fixtures        |
-|    GET league/:league_id/fixtures/<fixture_id>     | GET           | Retrieve specific league's fixture         |
-|    PUT league/:league_id/fixtures/<fixture_id>     | PUT           | Edit fixture details                       |
-|    DELETE league/:league_id/fixtures/<fixture_id>  | DELETE        | Delete a fixture                           |
-
-
-## Test the API
-Test the API online [here](https://dimba-api.herokuapp.com).
+| Endpoint                                    | Method        | Description                                |
+| :---                                        | :---          | :---                                       |
+| league/:league_id/fixtures/                 | POST          | Create fixtures/matches of specific league |
+| league/:league_id/fixtures/                 | GET           | Retrieve specific league's fixtures        |
+| league/:league_id/fixtures/<fixture_id>     | GET           | Retrieve specific league's fixture         |
+| league/:league_id/fixtures/<fixture_id>     | PUT           | Edit fixture details                       |
+| league/:league_id/fixtures/<fixture_id>     | DELETE        | Delete a fixture                           |
 
 
 #### Tests
@@ -108,6 +104,9 @@ Test the API online [here](https://dimba-api.herokuapp.com).
 To run tests
 
     rspec spec
+
+## Test the API
+Test the API online [here](https://staging-dimba-api.herokuapp.com/api/v1/leagues).
 
 #### Contribution
 This repository is a safe place for contribution.

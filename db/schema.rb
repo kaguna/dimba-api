@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_11_120449) do
+ActiveRecord::Schema.define(version: 2023_05_15_112050) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 2019_06_11_120449) do
     t.bigint "fixture_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "player_in"
     t.index ["event_id"], name: "index_commentaries_on_event_id"
     t.index ["fixture_id"], name: "index_commentaries_on_fixture_id"
     t.index ["player_id"], name: "index_commentaries_on_player_id"
@@ -44,22 +45,25 @@ ActiveRecord::Schema.define(version: 2019_06_11_120449) do
     t.bigint "team_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "starting", default: false
     t.index ["fixture_id"], name: "index_fixture_squads_on_fixture_id"
     t.index ["player_id"], name: "index_fixture_squads_on_player_id"
     t.index ["team_id"], name: "index_fixture_squads_on_team_id"
   end
 
   create_table "fixtures", force: :cascade do |t|
-    t.integer "home_team"
-    t.integer "away_team"
+    t.integer "home_team_id"
+    t.integer "away_team_id"
     t.integer "league_id"
-    t.integer "center_referee"
-    t.integer "right_side_referee"
-    t.integer "left_side_referee"
+    t.integer "center_referee_id"
+    t.integer "right_side_referee_id"
+    t.integer "left_side_referee_id"
     t.integer "season_id"
-    t.date "match_day"
+    t.datetime "match_day"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "played", default: false
+    t.string "state"
   end
 
   create_table "leagues", force: :cascade do |t|
@@ -67,6 +71,8 @@ ActiveRecord::Schema.define(version: 2019_06_11_120449) do
     t.text "season"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "official_id"
+    t.boolean "active", default: true
   end
 
   create_table "leagues_sponsors", force: :cascade do |t|
@@ -83,6 +89,7 @@ ActiveRecord::Schema.define(version: 2019_06_11_120449) do
     t.integer "league_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "season_id"
   end
 
   create_table "players", force: :cascade do |t|
@@ -114,12 +121,24 @@ ActiveRecord::Schema.define(version: 2019_06_11_120449) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "season_standings", force: :cascade do |t|
+    t.integer "season_id"
+    t.text "standing"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "scorers"
+  end
+
   create_table "seasons", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.integer "duration"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "league_id"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.boolean "current", default: true
   end
 
   create_table "sponsors", force: :cascade do |t|
@@ -137,6 +156,7 @@ ActiveRecord::Schema.define(version: 2019_06_11_120449) do
     t.text "nickname"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "coach_id"
   end
 
   create_table "transfers", force: :cascade do |t|
@@ -157,28 +177,41 @@ ActiveRecord::Schema.define(version: 2019_06_11_120449) do
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "email_confirmed", default: false
+    t.string "confirm_token"
+    t.boolean "email_reminder_sent", default: false
+    t.string "password_reset_token"
   end
 
   add_foreign_key "commentaries", "events"
   add_foreign_key "commentaries", "fixtures"
   add_foreign_key "commentaries", "players"
+  add_foreign_key "commentaries", "players", column: "player_in"
   add_foreign_key "commentaries", "teams"
   add_foreign_key "fixture_squads", "fixtures"
   add_foreign_key "fixture_squads", "players"
   add_foreign_key "fixture_squads", "teams"
   add_foreign_key "fixtures", "leagues"
   add_foreign_key "fixtures", "seasons"
-  add_foreign_key "fixtures", "teams", column: "away_team"
-  add_foreign_key "fixtures", "teams", column: "home_team"
-  add_foreign_key "fixtures", "users", column: "center_referee"
-  add_foreign_key "fixtures", "users", column: "left_side_referee"
-  add_foreign_key "fixtures", "users", column: "right_side_referee"
+  add_foreign_key "fixtures", "teams", column: "away_team_id"
+  add_foreign_key "fixtures", "teams", column: "home_team_id"
+  add_foreign_key "fixtures", "users", column: "center_referee_id"
+  add_foreign_key "fixtures", "users", column: "center_referee_id"
+  add_foreign_key "fixtures", "users", column: "left_side_referee_id"
+  add_foreign_key "fixtures", "users", column: "left_side_referee_id"
+  add_foreign_key "fixtures", "users", column: "right_side_referee_id"
+  add_foreign_key "fixtures", "users", column: "right_side_referee_id"
+  add_foreign_key "leagues", "users", column: "official_id"
   add_foreign_key "leagues_sponsors", "leagues"
   add_foreign_key "leagues_sponsors", "sponsors"
   add_foreign_key "leagues_teams", "leagues"
+  add_foreign_key "leagues_teams", "seasons"
   add_foreign_key "leagues_teams", "teams"
   add_foreign_key "players", "teams"
   add_foreign_key "results", "fixtures"
+  add_foreign_key "season_standings", "seasons"
+  add_foreign_key "seasons", "leagues"
+  add_foreign_key "teams", "users", column: "coach_id"
   add_foreign_key "transfers", "players"
   add_foreign_key "transfers", "teams", column: "from_team_id"
   add_foreign_key "transfers", "teams", column: "to_team_id"

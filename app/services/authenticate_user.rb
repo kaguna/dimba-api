@@ -39,7 +39,8 @@ class AuthenticateUser
       sub: user.id,
       email: user.email,
       username: user.username,
-      role: user.role.name
+      role: user.role.name,
+      email_confirmed: user.email_confirmed
     }
   end
 end

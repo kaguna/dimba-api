@@ -17,7 +17,6 @@ module Api
       private
 
       def authenticate_current_user!
-        authorize_api_request
         if @current_user.nil?
           render json: { message: "Please login to access the resource" },
                 status: 401

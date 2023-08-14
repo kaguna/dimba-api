@@ -34,6 +34,12 @@ gem 'rack-cors'
 gem 'sendgrid-ruby'
 gem 'scout_apm'
 
+# Use Active Model has_secure_password
+gem 'bcrypt', '~> 3.1.7'
+
+# Use 'jwt' to manage JSON web tokens
+gem 'jwt'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]

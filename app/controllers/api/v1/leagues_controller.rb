@@ -6,20 +6,27 @@ module Api
       after_action :verify_authorized, except: %i[index show]
 
       def index
-        all_leagues = League.active
-        leagues = all_leagues.limit(params[:per_page].to_i).offset(params[:page].to_i)
-
+        leagues = League.active
+        all_leagues = leagues.all_paginated_leagues(per_page: params[:per_page].to_i, page: params[:page].to_i)
+  binding.pry
         if leagues.empty?
           render json: { "error": 'No leagues!' },
                 status: :not_found
 
         else
-          render json: {leagues: leagues, total: all_leagues.length}, each_serializer: LeagueSerializer, status: :ok
+          render json: { 
+                 leagues: ActiveModelSerializers::SerializableResource.new(all_leagues, 
+                          each_serializer: LeagueSerializer,
+                          scope: { current_user: current_user, show: "all" }
+                        ),
+                        current_user: current_user,
+                 total: leagues.count
+                }, status: :ok
         end
       end
 
       def show
-        render json: @league
+        render json: @league, scope: { current_user: current_user, show: "details" }
       end
 
       def create

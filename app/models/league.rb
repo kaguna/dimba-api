@@ -17,4 +17,8 @@ class League < ApplicationRecord
   def friendly?
     title.to_s.downcase.in? ['friendly', 'friendlies', 'club friendlies']
   end
+
+  def self.all_paginated_leagues(per_page:, page:)
+    limit(per_page).offset(page)
+  end
 end

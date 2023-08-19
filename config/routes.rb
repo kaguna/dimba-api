@@ -55,6 +55,8 @@ Rails.application.routes.draw do
         get '/search' => 'players#search_player', as: 'player_search'
       end
 
+      delete '/unfavourite' => 'favourites#unfavourite', as: 'unfavourite'
+
       scope 'matches/:match_id' do
         put '/edit' => 'fixtures#update', as: 'edit_match'
         get '/results' => 'fixtures#show', as: 'results'

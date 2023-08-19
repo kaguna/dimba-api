@@ -32,10 +32,22 @@ module Api
         @favourite.destroy
       end
 
+      def unfavourite
+        unfavourite_category.destroy
+      end
+
       private
 
       def set_favourite
         @favourite = Favourite.find(params[:id])
+      end
+
+      def unfavourite_category
+        Favourite.find_by(
+                          category: params[:category],
+                          category_id: params[:category_id],
+                          user_id: current_user&.id
+                        )
       end
 
       def favourite_params

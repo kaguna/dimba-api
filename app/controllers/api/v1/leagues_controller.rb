@@ -8,18 +8,16 @@ module Api
       def index
         leagues = League.active
         all_leagues = leagues.all_paginated_leagues(per_page: params[:per_page].to_i, page: params[:page].to_i)
-  binding.pry
         if leagues.empty?
           render json: { "error": 'No leagues!' },
                 status: :not_found
 
         else
-          render json: { 
+          render json: {
                  leagues: ActiveModelSerializers::SerializableResource.new(all_leagues, 
                           each_serializer: LeagueSerializer,
                           scope: { current_user: current_user, show: "all" }
                         ),
-                        current_user: current_user,
                  total: leagues.count
                 }, status: :ok
         end

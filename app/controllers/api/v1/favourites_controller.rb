@@ -14,7 +14,7 @@ module Api
 
       def create
         favourite = Favourite.new(favourite_params)
-        # favourite.user_id = current_user&.id
+        favourite.user_id = current_user&.id
 
         if favourite.save
           render json: favourite, status: :created
@@ -42,7 +42,7 @@ module Api
         params.permit(
           :category,
           :category_id,
-          :user_id
+          :user_id # not needed, remove later
         )
       end
     end

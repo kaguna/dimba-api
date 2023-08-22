@@ -1,12 +1,18 @@
 class FixtureSerializer < ActiveModel::Serializer
-  attributes :fixture_id, :home_team, :away_team, :match_day, :center_referee, :right_referee,
-              :left_referee, :played, :fixture_season, :fixture_league
+  attributes :fixture_id, :home_team, :away_team, :match_day,
+             :played
   attribute :postponed
+  attribute :center_referee, if: -> { detailed? }
+  attribute :right_referee, if: -> { detailed? }
+  attribute :left_referee, if: -> { detailed? }
+  attribute :fixture_season, if: -> { detailed? }
+  attribute :fixture_league, if: -> { detailed? }
   attribute :submit_results
   attribute :in_progress
   attribute :match_time, key: :minutes_played, if: :in_progress  
   attribute :pre_match
   attribute :has_commentary
+  attribute :favourited, if: -> { current_user.present? }
 
   def fixture_id
     object.id
@@ -32,6 +38,18 @@ class FixtureSerializer < ActiveModel::Serializer
       points: played? || !object.commentary? ? object.full_match_results[:home_team][:points] : nil,
       coach: object.home_team&.coach&.id
     }
+  end
+
+  def favourited
+    current_user&.favourites.where(category: 'match').pluck(:category_id).include? object.id if current_user.present?
+  end
+
+  def current_user
+    scope[:current_user] || nil
+  end
+
+  def detailed?
+    scope[:show] === "details"
   end
 
   def away_team

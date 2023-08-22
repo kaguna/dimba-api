@@ -19,11 +19,11 @@ module Api
       end
 
       def show_team_home_results
-        render json: TeamSeasonLeagueGamesQuery.call('home_team_id', params[:team_id], true), relevant: true
+        render json: TeamSeasonLeagueGamesQuery.call('home_team_id', params[:team_id], true), relevant: true, scope: { show: 'all'}
       end
 
       def show_team_away_results
-        render json: TeamSeasonLeagueGamesQuery.call('away_team_id', params[:team_id], true), relevant: true
+        render json: TeamSeasonLeagueGamesQuery.call('away_team_id', params[:team_id], true), relevant: true, scope: { show: 'all' }
       end
 
       def player_stats
@@ -31,7 +31,7 @@ module Api
       end
 
       def all_incoming_matches
-        render json: AllResult.all_incoming_matches(params[:match_day]), relevant: true
+        render json: AllResult.all_incoming_matches(params[:match_day]), relevant: true, scope: { show: 'all' }
       end
 
       def create

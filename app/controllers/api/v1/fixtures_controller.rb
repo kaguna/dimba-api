@@ -27,11 +27,11 @@ module Api
       end
 
       def show_team_home_fixtures
-        render json: TeamSeasonLeagueGamesQuery.call('home_team_id', params[:team_id], false), relevant: true
+        render json: TeamSeasonLeagueGamesQuery.call('home_team_id', params[:team_id], false), relevant: true, scope: { show: 'all' }
       end
 
       def show_team_away_fixtures
-        render json: TeamSeasonLeagueGamesQuery.call('away_team_id', params[:team_id], false), relevant: true
+        render json: TeamSeasonLeagueGamesQuery.call('away_team_id', params[:team_id], false), relevant: true, scope: { show: 'all' }
       end
 
       def h2h_matches
@@ -43,7 +43,8 @@ module Api
         fixtures = Fixture.league_fixtures(league_id: params[:league_id], per_page: params[:per_page], page: params[:page])
         serialized_fxts = ActiveModel::Serializer::CollectionSerializer.new(
           fixtures[:fixtures],
-          serializer: FixtureSerializer
+          serializer: FixtureSerializer,
+          scope: { current_user: current_user, show: 'all'},
         ).as_json
         grouped_fixtures = serialized_fxts.group_by { |x| x[:match_day].to_date }
         render json: { count: fixtures[:count], fixtures: grouped_fixtures.to_a }
@@ -54,7 +55,7 @@ module Api
           render json: { error: 'The fixture is not available.' },
                  status: :bad_request
         else
-          render json: @fixture, status: :ok
+          render json: @fixture, scope: { current_user: current_user, show: 'details'}, status: :ok
         end
       end
 

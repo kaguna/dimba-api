@@ -6,7 +6,7 @@ module Api
       after_action :verify_authorized, except: %i[index show search_player]
 
       def index
-        render json: show_team_players(params[:team_id])
+        render json: show_team_players(params[:team_id]), scope: { current_user: current_user }
       end
 
       def show

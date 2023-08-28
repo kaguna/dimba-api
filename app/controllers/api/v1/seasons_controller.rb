@@ -16,7 +16,12 @@ module Api
           params[:per_page], 
           params[:page]
         )
-        render json: matches, relevant: false
+        serialized_results = ActiveModelSerializers::SerializableResource.new(matches[:results],
+                                                                      each_serializer: ResultSerializer,
+                                                                      relevant: false,
+                                                                      scope: { current_user: current_user,
+                                                                               show: 'all' })                                                         
+        render json: { count: matches[:count], results: serialized_results }, status: :ok
       end
 
       def create

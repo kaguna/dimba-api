@@ -1,4 +1,6 @@
 class LeagueSerializer < ActiveModel::Serializer
+  include FavouriteConcern
+
   attributes :id, :title, :friendly, :has_played_matches
   attribute :official, if: -> { detailed? }
   attribute :current_season, if: -> { detailed? }
@@ -33,7 +35,7 @@ class LeagueSerializer < ActiveModel::Serializer
   end
 
   def favourited
-    current_user&.favourites.where(category: 'league').pluck(:category_id).include? object.id if current_user.present?
+    favourited?(category: 'league', category_id: object.id, user: current_user)
   end
 
   def current_user

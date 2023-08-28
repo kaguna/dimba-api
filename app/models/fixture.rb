@@ -42,7 +42,7 @@ class Fixture < ApplicationRecord
       "home_team_id IN (?) #{cond} away_team_id IN (?) ", teams_ids, teams_ids
     ).reorder(match_day: :desc)
     h2h_matches = matches.limit(per_page.to_i).offset(page.to_i)
-    {count: matches.length, fixtures: h2h_matches.map{|fixture| FixtureSerializer.new(fixture)}}
+    { count: matches.length, fixtures: h2h_matches }
   end
 
   def home_goals_for

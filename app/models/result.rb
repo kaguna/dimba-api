@@ -12,7 +12,7 @@ class Result < ApplicationRecord
     .where(fixtures: {league_id: league_id}, seasons: {id: self.get_season(league_id, season_id)})
     .order("fixtures.match_day Desc")
     results = lsr.limit(per_page.to_i).offset(page.to_i)
-    {count: lsr.length, results: results.map{|result| ResultSerializer.new(result)}}
+    {count: lsr.length, results: results}
   end
 
   private

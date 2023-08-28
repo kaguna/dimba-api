@@ -1,4 +1,6 @@
 class FixtureSerializer < ActiveModel::Serializer
+  include FavouriteConcern
+
   attributes :fixture_id, :home_team, :away_team, :match_day,
              :played
   attribute :postponed
@@ -30,18 +32,28 @@ class FixtureSerializer < ActiveModel::Serializer
     object.played?
   end
 
+  def home_team_favourited
+    favourited?(category: 'team', category_id: object.home_team&.id, user: current_user)
+  end
+
+  def away_team_favourited
+    favourited?(category: 'team', category_id: object.away_team&.id, user: current_user)
+  end
+
   def home_team
-    {
+    ht = {
       id: object.home_team.id, 
       name: object.home_team.name,
       goals_for:  object.home_goals_for,
       points: played? || !object.commentary? ? object.full_match_results[:home_team][:points] : nil,
       coach: object.home_team&.coach&.id
     }
+    ht.merge!({favourited: home_team_favourited}) if current_user.present?
+    ht
   end
 
   def favourited
-    current_user&.favourites.where(category: 'match').pluck(:category_id).include? object.id if current_user.present?
+    favourited?(category: 'match', category_id: object.id, user: current_user)
   end
 
   def current_user
@@ -53,13 +65,15 @@ class FixtureSerializer < ActiveModel::Serializer
   end
 
   def away_team
-    {
+    at = {
       id: object.away_team.id, 
       name: object.away_team.name,
       goals_for: object.away_goals_for,
       points: played? || !object.commentary? ? object.full_match_results[:away_team][:points] : nil,
       coach: object.away_team&.coach&.id
     }
+    at.merge!({favourited: away_team_favourited}) if current_user.present?
+    at
   end
 
   def center_referee

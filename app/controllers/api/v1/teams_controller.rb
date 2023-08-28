@@ -7,11 +7,11 @@ module Api
 
       def index
         all_teams = Team.search(params[:q])
-        render json: all_teams, status: :ok
+        render json: all_teams, scope: { current_user: current_user, show: 'all' },  status: :ok
       end
 
       def show
-        render json: @team, status: :ok
+        render json: @team, scope: { current_user: current_user, show: 'details' }, status: :ok
       end
 
       def create

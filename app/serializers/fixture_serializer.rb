@@ -1,12 +1,20 @@
 class FixtureSerializer < ActiveModel::Serializer
-  attributes :fixture_id, :home_team, :away_team, :match_day, :center_referee, :right_referee,
-              :left_referee, :played, :fixture_season, :fixture_league
+  include FavouriteConcern
+
+  attributes :fixture_id, :home_team, :away_team, :match_day,
+             :played
   attribute :postponed
+  attribute :center_referee, if: -> { detailed? }
+  attribute :right_referee, if: -> { detailed? }
+  attribute :left_referee, if: -> { detailed? }
+  attribute :fixture_season, if: -> { detailed? }
+  attribute :fixture_league, if: -> { detailed? }
   attribute :submit_results
   attribute :in_progress
   attribute :match_time, key: :minutes_played, if: :in_progress  
   attribute :pre_match
   attribute :has_commentary
+  attribute :favourited, if: -> { current_user.present? }
 
   def fixture_id
     object.id
@@ -24,24 +32,48 @@ class FixtureSerializer < ActiveModel::Serializer
     object.played?
   end
 
+  def home_team_favourited
+    favourited?(category: 'team', category_id: object.home_team&.id, user: current_user)
+  end
+
+  def away_team_favourited
+    favourited?(category: 'team', category_id: object.away_team&.id, user: current_user)
+  end
+
   def home_team
-    {
+    ht = {
       id: object.home_team.id, 
       name: object.home_team.name,
       goals_for:  object.home_goals_for,
       points: played? || !object.commentary? ? object.full_match_results[:home_team][:points] : nil,
       coach: object.home_team&.coach&.id
     }
+    ht.merge!({favourited: home_team_favourited}) if current_user.present?
+    ht
+  end
+
+  def favourited
+    favourited?(category: 'match', category_id: object.id, user: current_user)
+  end
+
+  def current_user
+    scope[:current_user] || nil
+  end
+
+  def detailed?
+    scope[:show] === "details"
   end
 
   def away_team
-    {
+    at = {
       id: object.away_team.id, 
       name: object.away_team.name,
       goals_for: object.away_goals_for,
       points: played? || !object.commentary? ? object.full_match_results[:away_team][:points] : nil,
       coach: object.away_team&.coach&.id
     }
+    at.merge!({favourited: away_team_favourited}) if current_user.present?
+    at
   end
 
   def center_referee

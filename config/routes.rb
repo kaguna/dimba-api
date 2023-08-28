@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       scope 'user' do
         post '/sign_up' => 'register#signup', as: 'register'
+        get '/current_user' => 'users#current', as: 'current_user'
         get '/confirm_email' => 'register#confirm_email', as: 'confirm_email'
         post '/reset-password' => 'register#reset_password', as: 'reset_password'
         get '/show-password-reset-form' => 'register#show_password_reset_form', as: 'show_password_reset_form'
@@ -48,11 +49,13 @@ Rails.application.routes.draw do
       get '/all_fixtures' => 'results#all_incoming_matches', as: 'current_season_matches'
       post '/edit_fixture_squad' => 'fixture_squads#add_first_11', as: 'update_squad'
 
-      resources :transfers, :events, :sponsor, :roles
+      resources :transfers, :events, :sponsor, :roles, :favourites
 
       scope 'players' do
         get '/search' => 'players#search_player', as: 'player_search'
       end
+
+      delete '/unfavourite' => 'favourites#unfavourite', as: 'unfavourite'
 
       scope 'matches/:match_id' do
         put '/edit' => 'fixtures#update', as: 'edit_match'

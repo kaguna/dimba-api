@@ -27,23 +27,39 @@ module Api
       end
 
       def show_team_home_fixtures
-        render json: TeamSeasonLeagueGamesQuery.call('home_team_id', params[:team_id], false), relevant: true
+        render json: TeamSeasonLeagueGamesQuery.call('home_team_id', params[:team_id], false),
+                      relevant: true,
+                      scope: {
+                        current_user: current_user,
+                        show: 'all'
+                      }
       end
 
       def show_team_away_fixtures
-        render json: TeamSeasonLeagueGamesQuery.call('away_team_id', params[:team_id], false), relevant: true
+        render json: TeamSeasonLeagueGamesQuery.call('away_team_id', params[:team_id], false),
+                      relevant: true,
+                      scope: {
+                        current_user: current_user,
+                        show: 'all'
+                      }
       end
 
       def h2h_matches
         teams_ids = params[:team_id].split(',')
-        render json: Fixture.h2h_team_matches(teams_ids, params[:per_page], params[:page])
+        h2h_matches = Fixture.h2h_team_matches(teams_ids, params[:per_page], params[:page])
+        serialized_h2h_matches = ActiveModelSerializers::SerializableResource.new(h2h_matches[:fixtures],
+                                                                      each_serializer: FixtureSerializer,
+                                                                      scope: { current_user: current_user,
+                                                                               show: 'details' })
+        render json: { count: h2h_matches[:count], fixtures: serialized_h2h_matches }, status: :ok
       end
 
       def index
         fixtures = Fixture.league_fixtures(league_id: params[:league_id], per_page: params[:per_page], page: params[:page])
         serialized_fxts = ActiveModel::Serializer::CollectionSerializer.new(
           fixtures[:fixtures],
-          serializer: FixtureSerializer
+          serializer: FixtureSerializer,
+          scope: { current_user: current_user, show: 'all'},
         ).as_json
         grouped_fixtures = serialized_fxts.group_by { |x| x[:match_day].to_date }
         render json: { count: fixtures[:count], fixtures: grouped_fixtures.to_a }
@@ -54,7 +70,7 @@ module Api
           render json: { error: 'The fixture is not available.' },
                  status: :bad_request
         else
-          render json: @fixture, status: :ok
+          render json: @fixture, scope: { current_user: current_user, show: 'details'}, status: :ok
         end
       end
 

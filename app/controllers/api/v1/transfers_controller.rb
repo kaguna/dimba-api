@@ -40,7 +40,7 @@ module Api
       end
 
       def show_team_transfers
-        render json: get_team_transfers, status: :ok
+        render json: get_team_transfers, scope: { current_user: current_user }, status: :ok
       end
 
       private

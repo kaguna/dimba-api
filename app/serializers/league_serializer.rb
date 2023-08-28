@@ -1,5 +1,11 @@
 class LeagueSerializer < ActiveModel::Serializer
-  attributes :id, :title, :official, :current_season, :friendly, :has_played_matches, :sponsors
+  include FavouriteConcern
+
+  attributes :id, :title, :friendly, :has_played_matches
+  attribute :official, if: -> { detailed? }
+  attribute :current_season, if: -> { detailed? }
+  attribute :sponsors, if: -> { detailed? }
+  attribute :favourited, if: -> { current_user.present? }
 
   def title
     object.title.titleize
@@ -26,5 +32,17 @@ class LeagueSerializer < ActiveModel::Serializer
 
   def friendly
     object.friendly?
+  end
+
+  def favourited
+    favourited?(category: 'league', category_id: object.id, user: current_user)
+  end
+
+  def current_user
+    scope[:current_user]
+  end
+
+  def detailed?
+    scope[:show] === "details"
   end
 end

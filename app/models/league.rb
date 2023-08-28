@@ -11,10 +11,23 @@ class League < ApplicationRecord
 
   validates :title, uniqueness: { case_sensitive: false }
 
-  scope :active, -> {  where(active: true).order(title: :asc) }
-  scope :sponsors, -> {  sponsors.order(budget_amount: :asc) }
+  scope :active, -> { where(active: true).order(title: :asc) }
+  scope :sponsors, -> { sponsors.order(budget_amount: :asc) }
+  scope :ordered_by_favourites, lambda { |current_user:|
+    joins('LEFT OUTER JOIN favourites ON leagues.id = favourites.category_id AND favourites.category = 2')
+      .select("leagues.*,
+                CASE WHEN favourites.category_id in (#{ids.join(',')}) and
+                favourites.category = 2 and
+                favourites.user_id = #{current_user&.id}
+                THEN 1 ELSE 0 END AS favourited")
+      .order(favourited: :desc, title: :asc)
+  }
 
   def friendly?
     title.to_s.downcase.in? ['friendly', 'friendlies', 'club friendlies']
+  end
+
+  def self.all_paginated_leagues(per_page:, page:)
+    limit(per_page).offset(page)
   end
 end
